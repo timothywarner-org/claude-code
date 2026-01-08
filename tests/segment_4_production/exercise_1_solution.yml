@@ -1,0 +1,326 @@
+# Exercise 1: GitHub Actions Workflow - Complete Solution
+#
+# This is a complete, production-ready workflow for integrating Claude Code
+# with GitHub Actions for automated code review.
+#
+# Save this file as: .github/workflows/claude-review.yml
+
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**.js'
+      - '**.jsx'
+      - '**.py'
+      - '**.go'
+      - '**.rs'
+      - '**.java'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to review'
+        required: true
+        type: number
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+# Prevent concurrent reviews on the same PR
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  MAX_FILES_TO_REVIEW: 20
+  MAX_DIFF_SIZE: 50000
+
+jobs:
+  # Pre-check job to validate the PR
+  pre-check:
+    name: Pre-Review Checks
+    runs-on: ubuntu-latest
+    outputs:
+      should_review: ${{ steps.check.outputs.should_review }}
+      changed_files: ${{ steps.files.outputs.all_changed_files }}
+      files_count: ${{ steps.files.outputs.all_changed_files_count }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **/*.ts
+            **/*.tsx
+            **/*.js
+            **/*.jsx
+            **/*.py
+            **/*.go
+            **/*.rs
+            **/*.java
+
+      - name: Check if review needed
+        id: check
+        run: |
+          FILES_COUNT=${{ steps.files.outputs.all_changed_files_count }}
+
+          if [ "$FILES_COUNT" -eq 0 ]; then
+            echo "No reviewable files changed"
+            echo "should_review=false" >> $GITHUB_OUTPUT
+          elif [ "$FILES_COUNT" -gt ${{ env.MAX_FILES_TO_REVIEW }} ]; then
+            echo "Too many files changed ($FILES_COUNT), limiting review"
+            echo "should_review=true" >> $GITHUB_OUTPUT
+          else
+            echo "Reviewing $FILES_COUNT files"
+            echo "should_review=true" >> $GITHUB_OUTPUT
+          fi
+
+  # Main review job
+  review:
+    name: Claude Code Review
+    runs-on: ubuntu-latest
+    needs: pre-check
+    if: needs.pre-check.outputs.should_review == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Claude Code CLI
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Generate diff content
+        id: diff
+        run: |
+          # Get the PR diff
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+
+          # Check diff size
+          DIFF_SIZE=$(wc -c < pr_diff.txt)
+          echo "Diff size: $DIFF_SIZE bytes"
+
+          if [ "$DIFF_SIZE" -gt "${{ env.MAX_DIFF_SIZE }}" ]; then
+            echo "Diff too large, truncating..."
+            head -c ${{ env.MAX_DIFF_SIZE }} pr_diff.txt > pr_diff_truncated.txt
+            echo -e "\n\n... (diff truncated due to size)" >> pr_diff_truncated.txt
+            mv pr_diff_truncated.txt pr_diff.txt
+          fi
+
+          # Save for next step
+          echo "diff_file=pr_diff.txt" >> $GITHUB_OUTPUT
+
+      - name: Run Claude Code Review
+        id: claude-review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Prepare the review prompt
+          cat << 'PROMPT' > review_prompt.txt
+          You are an expert code reviewer. Analyze the following code changes and provide feedback.
+
+          Focus on:
+          1. **Bugs & Errors**: Logic errors, null pointer issues, race conditions
+          2. **Security**: Injection vulnerabilities, auth issues, data exposure
+          3. **Performance**: Inefficient algorithms, memory leaks, unnecessary operations
+          4. **Best Practices**: Code style, naming, documentation, error handling
+          5. **Testing**: Missing tests, edge cases not covered
+
+          Format your response as:
+          ## Summary
+          Brief overview of the changes
+
+          ## Issues Found
+          - 🔴 **Critical**: [description] (file:line)
+          - 🟡 **Warning**: [description] (file:line)
+          - 🔵 **Info**: [description] (file:line)
+
+          ## Suggestions
+          Specific improvements with code examples if helpful
+
+          ## Verdict
+          ✅ Approve / ⚠️ Needs Changes / ❌ Request Changes
+
+          ---
+          Changed files: ${{ needs.pre-check.outputs.changed_files }}
+
+          Diff content:
+          PROMPT
+
+          cat pr_diff.txt >> review_prompt.txt
+
+          # Run Claude review with timeout
+          timeout 300 claude -p "$(cat review_prompt.txt)" --print > review_output.txt 2>&1 || {
+            echo "Claude review timed out or failed"
+            echo "## Review Error" > review_output.txt
+            echo "The automated review could not be completed. Please request manual review." >> review_output.txt
+          }
+
+          # Save output
+          echo "review<<EOF" >> $GITHUB_OUTPUT
+          cat review_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Analyze review results
+        id: analyze
+        run: |
+          REVIEW="${{ steps.claude-review.outputs.review }}"
+
+          # Check for critical issues
+          if echo "$REVIEW" | grep -qi "🔴.*critical\|security vulnerability\|critical bug"; then
+            echo "severity=critical" >> $GITHUB_OUTPUT
+            echo "blocking=true" >> $GITHUB_OUTPUT
+          elif echo "$REVIEW" | grep -qi "🟡.*warning\|needs changes"; then
+            echo "severity=warning" >> $GITHUB_OUTPUT
+            echo "blocking=false" >> $GITHUB_OUTPUT
+          else
+            echo "severity=info" >> $GITHUB_OUTPUT
+            echo "blocking=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const review = `${{ steps.claude-review.outputs.review }}`;
+            const severity = '${{ steps.analyze.outputs.severity }}';
+
+            // Format the comment
+            let icon = '🤖';
+            if (severity === 'critical') icon = '🚨';
+            else if (severity === 'warning') icon = '⚠️';
+            else icon = '✅';
+
+            const body = `${icon} **Claude Code Review**
+
+            ${review}
+
+            ---
+            <sub>Automated review by Claude Code • [Documentation](https://docs.anthropic.com/claude-code)</sub>`;
+
+            // Check for existing comment to update
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(c =>
+              c.user.type === 'Bot' &&
+              c.body.includes('Claude Code Review')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+              console.log('Updated existing review comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+              console.log('Created new review comment');
+            }
+
+      - name: Add PR labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const severity = '${{ steps.analyze.outputs.severity }}';
+
+            // Remove existing review labels
+            const labelsToRemove = ['review:critical', 'review:warning', 'review:passed'];
+            for (const label of labelsToRemove) {
+              try {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  name: label
+                });
+              } catch (e) {
+                // Label might not exist, that's fine
+              }
+            }
+
+            // Add new label
+            const labelMap = {
+              'critical': 'review:critical',
+              'warning': 'review:warning',
+              'info': 'review:passed'
+            };
+
+            const newLabel = labelMap[severity];
+            if (newLabel) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: [newLabel]
+              });
+            }
+
+      - name: Fail on critical issues
+        if: steps.analyze.outputs.blocking == 'true'
+        run: |
+          echo "::error::Critical issues found in code review. Please address before merging."
+          exit 1
+
+  # Summary job
+  summary:
+    name: Review Summary
+    runs-on: ubuntu-latest
+    needs: [pre-check, review]
+    if: always()
+
+    steps:
+      - name: Generate job summary
+        run: |
+          echo "## 🤖 Claude Code Review Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| PR Number | #${{ github.event.pull_request.number }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Files Changed | ${{ needs.pre-check.outputs.files_count }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Review Status | ${{ needs.review.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.review.result }}" == "failure" ]; then
+            echo "⚠️ **Action Required**: Please address the issues found in the review." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.review.result }}" == "success" ]; then
+            echo "✅ Review completed successfully." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ Review was skipped or cancelled." >> $GITHUB_STEP_SUMMARY
+          fi
