@@ -11,7 +11,8 @@
       "Bash(cat:*)",
       "Bash(unix2dos)",
       "Bash(python3:*)",
-      "Bash(npx markdownlint-cli2:*)"
+      "Bash(npx markdownlint-cli2:*)",
+      "Bash(wc:*)"
     ]
   }
 }

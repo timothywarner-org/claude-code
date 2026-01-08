@@ -1,0 +1,77 @@
+{
+  "url": "https://api.github.com/repos/acme-corp/webapp/pulls/847",
+  "id": 1892847561,
+  "number": 847,
+  "state": "open",
+  "title": "feat: Add user authentication middleware and JWT validation",
+  "user": {
+    "login": "jsmith-dev",
+    "id": 28461923,
+    "avatar_url": "https://avatars.githubusercontent.com/u/28461923?v=4",
+    "type": "User"
+  },
+  "body": "## Summary\nThis PR adds JWT-based authentication middleware to protect API routes.\n\n## Changes\n- New `authMiddleware.js` with token validation\n- Updated user routes to require authentication\n- Added tests for auth flow\n\n## Testing\n- [x] Unit tests pass\n- [x] Integration tests pass\n- [ ] Manual testing on staging",
+  "created_at": "2024-01-15T14:32:18Z",
+  "updated_at": "2024-01-15T16:45:22Z",
+  "head": {
+    "ref": "feature/auth-middleware",
+    "sha": "a1b2c3d4e5f6789012345678901234567890abcd"
+  },
+  "base": {
+    "ref": "main",
+    "sha": "9876543210fedcba9876543210fedcba98765432"
+  },
+  "mergeable": true,
+  "additions": 127,
+  "deletions": 8,
+  "changed_files": 4,
+  "files": [
+    {
+      "sha": "abc123def456789",
+      "filename": "src/middleware/authMiddleware.js",
+      "status": "added",
+      "additions": 52,
+      "deletions": 0,
+      "changes": 52,
+      "patch": "@@ -0,0 +1,52 @@\n+const jwt = require('jsonwebtoken');\n+const { UnauthorizedError } = require('../errors');\n+\n+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-prod';\n+\n+/**\n+ * Middleware to validate JWT tokens from Authorization header\n+ */\n+const authMiddleware = (req, res, next) => {\n+  const authHeader = req.headers.authorization;\n+\n+  if (!authHeader || !authHeader.startsWith('Bearer ')) {\n+    return next(new UnauthorizedError('Missing or invalid authorization header'));\n+  }\n+\n+  const token = authHeader.substring(7);\n+\n+  try {\n+    const decoded = jwt.verify(token, JWT_SECRET);\n+    req.user = {\n+      id: decoded.sub,\n+      email: decoded.email,\n+      roles: decoded.roles || []\n+    };\n+    next();\n+  } catch (err) {\n+    if (err.name === 'TokenExpiredError') {\n+      return next(new UnauthorizedError('Token has expired'));\n+    }\n+    return next(new UnauthorizedError('Invalid token'));\n+  }\n+};\n+\n+/**\n+ * Middleware to check for specific roles\n+ */\n+const requireRole = (...roles) => {\n+  return (req, res, next) => {\n+    if (!req.user) {\n+      return next(new UnauthorizedError('Authentication required'));\n+    }\n+    const hasRole = roles.some(role => req.user.roles.includes(role));\n+    if (!hasRole) {\n+      return next(new UnauthorizedError('Insufficient permissions'));\n+    }\n+    next();\n+  };\n+};\n+\n+module.exports = { authMiddleware, requireRole };"
+    },
+    {
+      "sha": "def456abc789012",
+      "filename": "src/routes/userRoutes.js",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 5,
+      "changes": 17,
+      "patch": "@@ -1,8 +1,10 @@\n const express = require('express');\n const router = express.Router();\n const userController = require('../controllers/userController');\n+const { authMiddleware, requireRole } = require('../middleware/authMiddleware');\n \n-router.get('/users', userController.listUsers);\n-router.get('/users/:id', userController.getUser);\n-router.put('/users/:id', userController.updateUser);\n-router.delete('/users/:id', userController.deleteUser);\n+router.get('/users', authMiddleware, userController.listUsers);\n+router.get('/users/:id', authMiddleware, userController.getUser);\n+router.put('/users/:id', authMiddleware, userController.updateUser);\n+router.delete('/users/:id', authMiddleware, requireRole('admin'), userController.deleteUser);\n+router.get('/users/:id/audit', authMiddleware, requireRole('admin', 'auditor'), userController.getAuditLog);\n \n module.exports = router;"
+    },
+    {
+      "sha": "789012abc345def",
+      "filename": "tests/middleware/authMiddleware.test.js",
+      "status": "added",
+      "additions": 58,
+      "deletions": 0,
+      "changes": 58,
+      "patch": "@@ -0,0 +1,58 @@\n+const { authMiddleware, requireRole } = require('../../src/middleware/authMiddleware');\n+const jwt = require('jsonwebtoken');\n+\n+describe('authMiddleware', () => {\n+  const mockNext = jest.fn();\n+  const mockRes = {};\n+\n+  beforeEach(() => {\n+    jest.clearAllMocks();\n+  });\n+\n+  it('should reject requests without authorization header', () => {\n+    const mockReq = { headers: {} };\n+    authMiddleware(mockReq, mockRes, mockNext);\n+    expect(mockNext).toHaveBeenCalledWith(expect.any(Error));\n+  });\n+\n+  it('should reject invalid token format', () => {\n+    const mockReq = { headers: { authorization: 'InvalidFormat token' } };\n+    authMiddleware(mockReq, mockRes, mockNext);\n+    expect(mockNext).toHaveBeenCalledWith(expect.any(Error));\n+  });\n+\n+  it('should accept valid JWT and attach user to request', () => {\n+    const token = jwt.sign(\n+      { sub: 'user-123', email: 'test@example.com', roles: ['user'] },\n+      'dev-secret-change-in-prod'\n+    );\n+    const mockReq = { headers: { authorization: `Bearer ${token}` } };\n+    \n+    authMiddleware(mockReq, mockRes, mockNext);\n+    \n+    expect(mockNext).toHaveBeenCalledWith();\n+    expect(mockReq.user).toEqual({\n+      id: 'user-123',\n+      email: 'test@example.com',\n+      roles: ['user']\n+    });\n+  });\n+});\n+\n+describe('requireRole', () => {\n+  it('should allow access when user has required role', () => {\n+    const mockReq = { user: { roles: ['admin', 'user'] } };\n+    const mockNext = jest.fn();\n+    \n+    requireRole('admin')(mockReq, {}, mockNext);\n+    expect(mockNext).toHaveBeenCalledWith();\n+  });\n+\n+  it('should deny access when user lacks required role', () => {\n+    const mockReq = { user: { roles: ['user'] } };\n+    const mockNext = jest.fn();\n+    \n+    requireRole('admin')(mockReq, {}, mockNext);\n+    expect(mockNext).toHaveBeenCalledWith(expect.any(Error));\n+  });\n+});"
+    },
+    {
+      "sha": "345def678ghi901",
+      "filename": "src/errors/index.js",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 3,
+      "changes": 8,
+      "patch": "@@ -5,8 +5,10 @@ class AppError extends Error {\n   }\n }\n \n-class NotFoundError extends AppError {\n-  constructor(message = 'Resource not found') {\n-    super(message, 404);\n+class UnauthorizedError extends AppError {\n+  constructor(message = 'Unauthorized') {\n+    super(message, 401);\n   }\n }\n+\n+module.exports = { AppError, UnauthorizedError };"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1756234891,
+      "user": { "login": "senior-reviewer" },
+      "state": "CHANGES_REQUESTED",
+      "body": "Good structure overall, but the JWT secret handling needs improvement for production security.",
+      "submitted_at": "2024-01-15T15:20:00Z"
+    }
+  ],
+  "comments": 3,
+  "review_comments": 2
+}

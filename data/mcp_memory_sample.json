@@ -1,0 +1,79 @@
+{
+  "entities": [
+    {
+      "name": "webapp-project",
+      "entityType": "project",
+      "observations": [
+        "React 18 frontend with TypeScript",
+        "Node.js/Express backend API",
+        "PostgreSQL database with Prisma ORM",
+        "Deployed on AWS ECS with CloudFront CDN",
+        "Uses GitHub Actions for CI/CD"
+      ]
+    },
+    {
+      "name": "user-preferences",
+      "entityType": "preferences",
+      "observations": [
+        "Prefers functional components over class components",
+        "Uses 2-space indentation",
+        "Favors named exports over default exports",
+        "Likes descriptive variable names over abbreviations",
+        "Prefers async/await over .then() chains"
+      ]
+    },
+    {
+      "name": "auth-service",
+      "entityType": "component",
+      "observations": [
+        "Located in src/services/auth/",
+        "Uses JWT with RS256 algorithm",
+        "Refresh tokens stored in HttpOnly cookies",
+        "Access tokens expire after 15 minutes",
+        "Has rate limiting: 5 login attempts per minute"
+      ]
+    },
+    {
+      "name": "database-schema",
+      "entityType": "architecture",
+      "observations": [
+        "Users table has soft delete via deleted_at column",
+        "All tables use UUID primary keys",
+        "Audit log table tracks all mutations",
+        "Uses database-level encryption for PII fields"
+      ]
+    },
+    {
+      "name": "team-conventions",
+      "entityType": "conventions",
+      "observations": [
+        "PR titles must follow conventional commits format",
+        "All new endpoints require OpenAPI documentation",
+        "Feature flags managed via LaunchDarkly",
+        "Error codes follow pattern: DOMAIN_ACTION_ERROR"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "auth-service",
+      "to": "webapp-project",
+      "relationType": "part_of"
+    },
+    {
+      "from": "database-schema",
+      "to": "webapp-project",
+      "relationType": "defines_structure_for"
+    },
+    {
+      "from": "user-preferences",
+      "to": "webapp-project",
+      "relationType": "applies_to"
+    },
+    {
+      "from": "team-conventions",
+      "to": "webapp-project",
+      "relationType": "governs"
+    }
+  ]
+}

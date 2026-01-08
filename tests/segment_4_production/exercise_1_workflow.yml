@@ -1,0 +1,80 @@
+# Exercise 1: GitHub Actions Workflow - Starter Template
+#
+# This is a starter workflow for integrating Claude Code with GitHub Actions.
+# Complete the TODOs to create a working code review pipeline.
+#
+# Save this file as: .github/workflows/claude-review.yml
+
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**.ts'
+      - '**.js'
+      - '**.py'
+      - '**.go'
+      - '**.rs'
+
+# TODO: Add appropriate permissions
+# Hint: You need read access to contents and write access to pull-requests
+permissions:
+  contents: read
+  # Add more permissions here
+
+# Prevent concurrent reviews on the same PR
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Claude Code Review
+    runs-on: ubuntu-latest
+
+    # TODO: Add environment configuration if needed
+    # environment: production
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for accurate diffs
+
+      # TODO: Set up Node.js for Claude Code CLI
+      # Hint: Use actions/setup-node@v4
+
+      # TODO: Install Claude Code CLI
+      # Hint: npm install -g @anthropic-ai/claude-code
+
+      # TODO: Get list of changed files
+      # Hint: Use tj-actions/changed-files@v44 or git diff
+
+      # TODO: Run Claude Code review on changed files
+      # Hint: Use claude -p with a review prompt
+      # Remember to use secrets.ANTHROPIC_API_KEY
+
+      # TODO: Post review as PR comment
+      # Hint: Use actions/github-script@v7
+
+      # TODO: Check for blocking issues and fail if found
+
+      # Placeholder step (remove when implementing)
+      - name: Placeholder
+        run: echo "Implement the workflow steps above"
+
+  # Optional: Add a summary job
+  summary:
+    name: Review Summary
+    runs-on: ubuntu-latest
+    needs: review
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Review Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Review completed for PR #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
