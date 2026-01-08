@@ -10,7 +10,8 @@
       "Bash(perl -pi -e:*)",
       "Bash(cat:*)",
       "Bash(unix2dos)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(npx markdownlint-cli2:*)"
     ]
   }
 }
