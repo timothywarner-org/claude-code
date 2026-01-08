@@ -1,0 +1,35 @@
+{
+  "name": "@claude-code-course/memory-server",
+  "version": "1.0.0",
+  "description": "MCP server for persistent project memory - stores decisions, conventions, and context",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "memory-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "memory",
+    "context",
+    "anthropic"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

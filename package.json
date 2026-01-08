@@ -1,0 +1,57 @@
+{
+  "name": "claude-code-course",
+  "version": "1.0.0",
+  "description": "Claude Code and Large-Context Reasoning - O'Reilly Live Learning Course",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "verify": "tsx scripts/verify-setup.ts",
+    "mcp:memory": "tsx mcp_servers/memory_server/server.ts",
+    "segment1:context": "tsx segment_1_fundamentals/01_context_window_demo.ts",
+    "segment1:streaming": "tsx segment_1_fundamentals/02_streaming_responses.ts",
+    "segment1:tools": "tsx segment_1_fundamentals/03_tool_use.ts",
+    "segment1:mcp-intro": "tsx segment_1_fundamentals/04_mcp_intro.ts",
+    "segment2:review": "tsx segment_2_claude_code/02_code_review_workflow.ts",
+    "segment2:refactor": "tsx segment_2_claude_code/03_legacy_refactoring.ts",
+    "segment3:memory": "tsx segment_3_mcp/02_json_memory_server/server.ts",
+    "segment3:github": "tsx segment_3_mcp/03_github_integration.ts",
+    "segment4:review-bot": "tsx segment_4_production/03_code_review_bot.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.25.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Tim Warner",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timothywarner-org/claude-code.git"
+  },
+  "keywords": [
+    "claude",
+    "anthropic",
+    "mcp",
+    "ai",
+    "llm",
+    "model-context-protocol"
+  ]
+}

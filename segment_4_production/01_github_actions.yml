@@ -1,0 +1,212 @@
+# Claude-Powered CI/CD Pipeline
+#
+# This GitHub Actions workflow demonstrates how to integrate Claude
+# into your CI/CD pipeline for automated code review, documentation
+# generation, and release notes.
+#
+# Setup:
+# 1. Add ANTHROPIC_API_KEY to repository secrets
+# 2. Customize the triggers and jobs as needed
+
+name: Claude CI/CD
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  NODE_VERSION: '20'
+
+jobs:
+  # ==========================================================================
+  # JOB 1: Automated Code Review on PRs
+  # ==========================================================================
+  code-review:
+    name: Claude Code Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for diff
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+          echo "diff_size=$(wc -c < pr_diff.txt)" >> $GITHUB_OUTPUT
+
+      - name: Run Claude code review
+        if: steps.diff.outputs.diff_size > 0
+        run: |
+          npx tsx scripts/claude-review.ts \
+            --diff pr_diff.txt \
+            --output review.md
+
+      - name: Post review comment
+        if: steps.diff.outputs.diff_size > 0
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('review.md', 'utf8');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## 🤖 Claude Code Review\n\n${review}`
+            });
+
+  # ==========================================================================
+  # JOB 2: Documentation Check
+  # ==========================================================================
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for outdated docs
+        run: |
+          npx tsx scripts/check-docs.ts \
+            --base origin/${{ github.base_ref }} \
+            --head HEAD
+
+  # ==========================================================================
+  # JOB 3: Generate Release Notes
+  # ==========================================================================
+  release-notes:
+    name: Generate Release Notes
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get previous tag
+        id: prev_tag
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes with Claude
+        run: |
+          npx tsx scripts/generate-release-notes.ts \
+            --from "${{ steps.prev_tag.outputs.tag }}" \
+            --to "${{ github.ref_name }}" \
+            --output release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
+
+  # ==========================================================================
+  # JOB 4: Security Scan
+  # ==========================================================================
+  security-scan:
+    name: Claude Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security scan
+        id: scan
+        run: |
+          npx tsx scripts/security-scan.ts \
+            --output security_report.json
+
+      - name: Check for critical issues
+        run: |
+          CRITICAL=$(jq '.critical | length' security_report.json)
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "::error::Found $CRITICAL critical security issues"
+            exit 1
+          fi
+
+      - name: Post security report
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('security_report.json', 'utf8'));
+
+            let body = '## 🔒 Security Scan Results\n\n';
+
+            if (report.critical.length > 0) {
+              body += '### ❌ Critical Issues\n';
+              report.critical.forEach(issue => {
+                body += `- **${issue.file}**: ${issue.message}\n`;
+              });
+            }
+
+            if (report.warnings.length > 0) {
+              body += '\n### ⚠️ Warnings\n';
+              report.warnings.forEach(issue => {
+                body += `- **${issue.file}**: ${issue.message}\n`;
+              });
+            }
+
+            if (report.critical.length === 0 && report.warnings.length === 0) {
+              body += '✅ No security issues found!';
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
