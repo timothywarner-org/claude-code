@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(markitdown:*)"
+      "Bash(markitdown:*)",
+      "Bash(npx markdownlint:*)",
+      "Bash(powershell -Command \"\\(Get-Content CLAUDE.md -Raw\\) -replace ''This course teaches:\\\\r?\\\\n- Claude'', ''This course teaches:\\\\r\\\\n\\\\r\\\\n- Claude'' | Set-Content CLAUDE.md -NoNewline\")",
+      "Bash(powershell -Command:*)",
+      "Bash(node -e:*)",
+      "Bash(xxd:*)",
+      "Bash(perl -pi -e:*)",
+      "Bash(cat:*)",
+      "Bash(unix2dos)",
+      "Bash(python3:*)"
     ]
   }
 }

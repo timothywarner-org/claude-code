@@ -44,6 +44,7 @@ npx prettier --write .
 ## Course Content Focus
 
 This course teaches:
+
 - Claude's 200K context window for full-codebase analysis
 - Model Context Protocol (MCP) for persistent memory
 - Claude Code CLI for terminal-first workflows

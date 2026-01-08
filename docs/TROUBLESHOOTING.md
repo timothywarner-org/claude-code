@@ -11,12 +11,14 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Check your .env file:**
+
    ```bash
    cat .env
    # Should show: ANTHROPIC_API_KEY=sk-ant-...
    ```
 
 2. **Load the environment:**
+
    ```bash
    # macOS/Linux
    source .env
@@ -32,6 +34,7 @@ Common issues and solutions for the Claude Code course.
    ```
 
 3. **Set directly in terminal:**
+
    ```bash
    export ANTHROPIC_API_KEY=sk-ant-your-key-here
    ```
@@ -65,12 +68,14 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Reinstall dependencies:**
+
    ```bash
    rm -rf node_modules package-lock.json
    npm install
    ```
 
 2. **Check import extensions:**
+
    ```typescript
    // Wrong
    import { something } from './module';
@@ -86,6 +91,7 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Ensure package.json has type module:**
+
    ```json
    {
      "type": "module"
@@ -93,6 +99,7 @@ Common issues and solutions for the Claude Code course.
    ```
 
 2. **Check tsconfig.json module settings:**
+
    ```json
    {
      "compilerOptions": {
@@ -109,11 +116,13 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Update TypeScript:**
+
    ```bash
    npm install typescript@latest
    ```
 
 2. **Skip lib check:**
+
    ```json
    {
      "compilerOptions": {
@@ -131,17 +140,20 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Install globally:**
+
    ```bash
    npm install -g @anthropic-ai/claude-code
    ```
 
 2. **Check npm global path:**
+
    ```bash
    npm config get prefix
    # Add this to your PATH if needed
    ```
 
 3. **Use npx instead:**
+
    ```bash
    npx @anthropic-ai/claude-code
    ```
@@ -153,6 +165,7 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **macOS/Linux - Fix npm permissions:**
+
    ```bash
    mkdir ~/.npm-global
    npm config set prefix '~/.npm-global'
@@ -161,6 +174,7 @@ Common issues and solutions for the Claude Code course.
    ```
 
 2. **Or use sudo (not recommended):**
+
    ```bash
    sudo npm install -g @anthropic-ai/claude-code
    ```
@@ -172,6 +186,7 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Test server manually:**
+
    ```bash
    cd mcp_servers/memory
    npm run dev
@@ -179,11 +194,13 @@ Common issues and solutions for the Claude Code course.
    ```
 
 2. **Check Claude Code MCP config:**
+
    ```bash
    claude mcp list
    ```
 
 3. **Remove and re-add:**
+
    ```bash
    claude mcp remove memory
    claude mcp add memory -- npx tsx /path/to/server.ts
@@ -200,11 +217,13 @@ Common issues and solutions for the Claude Code course.
 1. **Check internet connection**
 
 2. **Test API endpoint:**
+
    ```bash
    curl https://api.anthropic.com/v1/messages -I
    ```
 
 3. **Check proxy settings:**
+
    ```bash
    # If behind a proxy
    export HTTPS_PROXY=http://proxy:port
@@ -219,6 +238,7 @@ Common issues and solutions for the Claude Code course.
 1. **Update Node.js to latest version**
 
 2. **For corporate environments:**
+
    ```bash
    # Not recommended for production
    export NODE_TLS_REJECT_UNAUTHORIZED=0
@@ -233,11 +253,13 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Make hooks executable:**
+
    ```bash
    chmod +x .git/hooks/*
    ```
 
 2. **Check hook script:**
+
    ```bash
    cat .git/hooks/pre-commit
    ```
@@ -249,11 +271,13 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Only review changed files:**
+
    ```bash
    git diff --cached --name-only | head -10
    ```
 
 2. **Skip hooks when needed:**
+
    ```bash
    git commit --no-verify -m "Quick fix"
    ```
@@ -267,6 +291,7 @@ Common issues and solutions for the Claude Code course.
 **Solutions:**
 
 1. **Increase Node.js memory:**
+
    ```bash
    export NODE_OPTIONS="--max-old-space-size=4096"
    ```
@@ -286,6 +311,7 @@ Common issues and solutions for the Claude Code course.
    - Summarize instead of including full content
 
 2. **Use streaming:**
+
    ```typescript
    const stream = client.messages.stream({...});
    ```

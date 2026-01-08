@@ -34,16 +34,19 @@ npx tsx scripts/verify-setup.ts
 ### 1. Install Node.js
 
 #### macOS (Homebrew)
+
 ```bash
 brew install node@20
 ```
 
 #### Windows (Chocolatey)
+
 ```powershell
 choco install nodejs --version=20.0.0
 ```
 
 #### Linux (nvm)
+
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 nvm install 20
