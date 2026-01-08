@@ -125,9 +125,11 @@ Arguments:
 ## Storage Location
 
 By default, memory is stored at:
+
 - `~/.claude-memory/memory.json`
 
 Override with environment variables:
+
 - `MEMORY_DIR`: Directory for memory storage
 - `MEMORY_FILE`: Full path to memory file
 

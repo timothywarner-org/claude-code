@@ -5,6 +5,7 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ## Phase 1: Pilot (Weeks 1-2)
 
 ### Goals
+
 - Validate Claude Code for your specific workflow
 - Identify quick wins and potential blockers
 - Build internal champions
@@ -17,6 +18,7 @@ A step-by-step guide for rolling out Claude Code to your development team.
    - Volunteers who are curious about AI tools
 
 2. **Set Up Infrastructure**
+
    ```bash
    # Create team API key with usage limits
    # Set up shared MCP servers
@@ -44,6 +46,7 @@ A step-by-step guide for rolling out Claude Code to your development team.
    - What would make it better?
 
 ### Deliverables
+
 - [ ] Pilot feedback document
 - [ ] Cost analysis
 - [ ] List of effective use cases
@@ -52,25 +55,29 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ## Phase 2: Training (Weeks 3-4)
 
 ### Goals
+
 - Equip all developers with Claude Code skills
 - Establish team conventions
 - Create shared resources
 
 ### Training Curriculum
 
-**Session 1: Fundamentals (2 hours)**
+#### Session 1: Fundamentals (2 hours)
+
 - Claude Code installation and setup
 - Basic commands and workflows
 - Context management (CLAUDE.md)
 - Hands-on: First code review
 
-**Session 2: Advanced Usage (2 hours)**
+#### Session 2: Advanced Usage (2 hours)
+
 - MCP servers and persistent memory
 - Custom slash commands
 - Git hook integration
 - Hands-on: Set up project memory
 
-**Session 3: Production Patterns (2 hours)**
+#### Session 3: Production Patterns (2 hours)
+
 - CI/CD integration
 - Cost optimization
 - Security considerations
@@ -98,6 +105,7 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ```
 
 ### Deliverables
+
 - [ ] Training recordings
 - [ ] Quick reference guide
 - [ ] FAQ document
@@ -106,25 +114,29 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ## Phase 3: Rollout (Weeks 5-8)
 
 ### Goals
+
 - Full team adoption
 - Integrate into standard workflow
 - Measure impact
 
 ### Rollout Checklist
 
-**Week 5: Infrastructure**
+#### Week 5: Infrastructure
+
 - [ ] All developers have API access
 - [ ] Shared MCP servers deployed
 - [ ] CI/CD integration enabled
 - [ ] Cost monitoring in place
 
-**Week 6: Onboarding**
+#### Week 6: Onboarding
+
 - [ ] All developers complete training
 - [ ] Team conventions documented
 - [ ] Support channel created
 - [ ] Office hours scheduled
 
-**Week 7-8: Full Usage**
+#### Week 7-8: Full Usage
+
 - [ ] Claude Code used in daily workflow
 - [ ] Feedback collected and addressed
 - [ ] Best practices refined
@@ -132,7 +144,7 @@ A step-by-step guide for rolling out Claude Code to your development team.
 
 ### Change Management
 
-**Common Concerns and Responses**
+#### Common Concerns and Responses
 
 | Concern | Response |
 |---------|----------|
@@ -169,20 +181,23 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ## Phase 4: Optimization (Ongoing)
 
 ### Goals
+
 - Maximize ROI
 - Continuous improvement
 - Share learnings
 
 ### Monthly Review
 
-**Metrics to Track**
+#### Metrics to Track
+
 - API costs by team/project
 - Usage patterns (which features most used)
 - Time saved (self-reported)
 - Code quality metrics
 - Developer satisfaction
 
-**Review Template**
+#### Review Template
+
 ```markdown
 ## Monthly Claude Code Review
 
@@ -254,17 +269,20 @@ A step-by-step guide for rolling out Claude Code to your development team.
 ## Resources
 
 ### Templates
+
 - [CLAUDE.md template](../CLAUDE.md)
 - [Team settings template](.claude/settings.json)
-- [Training slides](#)
-- [ROI calculator](#)
+- Training slides (coming soon)
+- ROI calculator (coming soon)
 
 ### Support
+
 - Internal Slack: #claude-code-help
 - Office hours: Wednesdays 2-3pm
 - Documentation: /docs/claude-code/
 
 ### External Resources
+
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
 - [MCP Servers Repository](https://github.com/modelcontextprotocol/servers)
 - [Anthropic Discord](https://discord.gg/anthropic)

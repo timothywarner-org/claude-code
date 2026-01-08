@@ -404,7 +404,7 @@ Pre-built servers available from Anthropic:
 
 Browse more at [github.com/modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)
 
-## Resources
+## Additional Resources
 
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
