@@ -1,0 +1,46 @@
+extends: existence
+message: "AI fingerprint: '%s'. Rewrite with concrete specifics instead of this clichéd phrase."
+level: warning
+ignorecase: true
+tokens:
+  - rich tapestry
+  - rich tapestries
+  - tapestry of
+  - intricate tapestry
+  - complex and multifaceted
+  - multifaceted and complex
+  - intricate interplay
+  - delicate balance
+  - delicate interplay
+  - dynamic interplay
+  - crucial role
+  - played a crucial role
+  - plays a crucial role
+  - vital role
+  - pivotal role
+  - key role
+  - instrumental role
+  - cutting-edge
+  - game-changer
+  - game-changing
+  - paradigm shift
+  - sea change
+  - tipping point
+  - watershed moment
+  - double-edged sword
+  - slippery slope
+  - tip of the iceberg
+  - at the forefront
+  - on the cutting edge
+  - paving the way
+  - laid the groundwork
+  - lays the groundwork
+  - sets the stage
+  - set the stage
+  - a testament to
+  - stands as a testament
+  - serve as a reminder
+  - serves as a reminder
+  - it remains to be seen
+  - only time will tell
+  - the jury is still out

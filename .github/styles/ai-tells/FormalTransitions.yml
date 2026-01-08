@@ -1,0 +1,36 @@
+extends: existence
+message: "AI transition: '%s'. Delete it, or use a simpler connector like 'and', 'but', or 'so'."
+level: suggestion
+ignorecase: true
+tokens:
+  - Moreover
+  - Furthermore
+  - Additionally
+  - Consequently
+  - Subsequently
+  - Nevertheless
+  - Nonetheless
+  - Conversely
+  - Accordingly
+  - Hence
+  - Thus
+  - Therefore
+  - Thereby
+  - Henceforth
+  - Likewise
+  - Similarly
+  - In addition
+  - In contrast
+  - On the contrary
+  - By contrast
+  - As a result
+  - For instance
+  - For example
+  - In particular
+  - Specifically
+  - Notably
+  - Importantly
+  - Significantly
+  - Crucially
+  - Essentially
+  - Fundamentally

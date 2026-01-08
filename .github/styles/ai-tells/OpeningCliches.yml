@@ -1,0 +1,31 @@
+extends: existence
+message: "AI opening: '%s'. Start with your actual point instead of this generic lead-in."
+level: warning
+ignorecase: true
+tokens:
+  - In today's rapidly evolving
+  - In today's fast-paced
+  - In today's digital age
+  - In today's ever-changing
+  - In today's interconnected
+  - In the realm of
+  - In the world of
+  - In the landscape of
+  - In the ever-evolving landscape
+  - In an era where
+  - In an age where
+  - In this day and age
+  - Embarking on a journey
+  - Embark on a journey
+  - Embarking on this journey
+  - As we navigate
+  - As we delve into
+  - As we explore
+  - When it comes to
+  - Picture this
+  - Imagine a world where
+  - Have you ever wondered
+  - In recent years
+  - Throughout history
+  - Since the dawn of
+  - From time immemorial

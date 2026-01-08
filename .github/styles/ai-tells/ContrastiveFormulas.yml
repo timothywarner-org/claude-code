@@ -1,0 +1,64 @@
+extends: existence
+message: "AI rhetoric: '%s'. State the positive claim directly without the 'not X, but Y' formula."
+level: warning
+tokens:
+  # "It's not just X; it's Y" patterns
+  - "[Ii]t'?s not just [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ii]t isn'?t just [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ii]t'?s not merely [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ii]t'?s not simply [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ii]t'?s not only [^;,—:]+[;,—:] it'?s [^.!?]+"
+
+  # "It's not about X; it's about Y" patterns
+  - "[Ii]t'?s not about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+  - "[Ii]t isn'?t about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+  - "[Ii]t'?s not really about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+
+  # "This isn't X; it's Y" patterns
+  - "[Tt]his isn'?t just [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his isn'?t merely [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his isn'?t simply [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his is not just [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his is not merely [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his isn'?t merely about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+  - "[Tt]his isn'?t just about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+  - "[Tt]his isn'?t about [^;,—:]+[;,—:] it'?s about [^.!?]+"
+
+  # "It's more than X; it's Y" patterns
+  - "[Ii]t'?s more than [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ii]t'?s more than just [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his is more than [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]his is more than just [^;,—:]+[;,—:] it'?s [^.!?]+"
+
+  # "It's less about X and more about Y" patterns
+  - "[Ii]t'?s less about [^;,—:]+ and more about [^.!?]+"
+  - "[Ii]t'?s less about [^;,—:]+, more about [^.!?]+"
+  - "[Tt]his is less about [^;,—:]+ and more about [^.!?]+"
+
+  # "X isn't the point; Y is" patterns
+  - "[^.!?]+ isn'?t the point[;,—:] [^.!?]+ is"
+  - "[^.!?]+ is not the point[;,—:] [^.!?]+ is"
+
+  # "The real X isn't Y; it's Z" patterns
+  - "[Tt]he real [^;,—:]+ isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]he true [^;,—:]+ isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+
+  # "What matters isn't X; it's Y" patterns
+  - "[Ww]hat matters isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ww]hat matters is not [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Ww]hat'?s important isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+
+  # "The question isn't X; it's Y" patterns
+  - "[Tt]he question isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]he question is not [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]he issue isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]he problem isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+  - "[Tt]he challenge isn'?t [^;,—:]+[;,—:] it'?s [^.!?]+"
+
+  # "Yes, X, but Y" dismissive acknowledgment
+  - "[Yy]es, [^,]+, but the real [^.!?]+"
+  - "[Ss]ure, [^,]+, but what really [^.!?]+"
+
+  # "It's not whether X; it's how/why/when Y"
+  - "[Ii]t'?s not whether [^;,—:]+[;,—:] it'?s (?:how|why|when|what) [^.!?]+"
+  - "[Ii]t'?s not if [^;,—:]+[;,—:] it'?s (?:how|why|when|what) [^.!?]+"
