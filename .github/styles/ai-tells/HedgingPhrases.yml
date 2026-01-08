@@ -1,0 +1,33 @@
+extends: existence
+message: "AI hedge: '%s'. Delete this throat-clearing and state your point directly."
+level: suggestion
+ignorecase: true
+tokens:
+  - It's important to note that
+  - It is important to note that
+  - It's worth noting that
+  - It is worth noting that
+  - It's worth mentioning that
+  - It is worth mentioning that
+  - It should be noted that
+  - It bears mentioning
+  - It goes without saying
+  - Needless to say
+  - Generally speaking
+  - Broadly speaking
+  - For the most part
+  - By and large
+  - All things considered
+  - That being said
+  - That said
+  - With that said
+  - Having said that
+  - On the other hand
+  - At the same time
+  - To be sure
+  - To some extent
+  - In some ways
+  - In many ways
+  - In a sense
+  - As such
+  - As it were
