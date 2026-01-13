@@ -4,28 +4,29 @@
 
 [![Website TechTrainerTim.com](https://img.shields.io/badge/Website-TechTrainerTim.com-0a66c2)](https://techtrainertim.com) [![GitHub timothywarner-org](https://img.shields.io/badge/GitHub-timothywarner--org-181717?logo=github)](https://github.com/timothywarner-org) [![Node.js 20+](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**O'Reilly Live Learning Course** | 4 Hours | Claude Code + MCP + 200K Context
+**O'Reilly Live Learning Course** | 4 Hours | Claude Code + MCP + Agents + Skills
 
-While other AI assistants lose context after a few files, Claude's revolutionary 200K context window can analyze entire codebases in a single conversation. With Model Context Protocol (MCP), that intelligence persists across sessions. This course teaches developers how to leverage Claude's unmatched context capabilities for real-world development.
+Master Claude Code CLI, MCP servers, agentic workflows, and custom skills. This hands-on course takes you from installation to production-ready AI-assisted development workflows.
 
 ## Course Overview
 
 | Segment | Focus | Difficulty | Key Skills |
 |---------|-------|------------|------------|
-| Segment 1 | Claude Fundamentals & Unique Architecture | Intro | 200K context, streaming, tool use, constitutional AI |
-| Segment 2 | Claude Code CLI Deep Dive | Intermediate | Terminal workflows, git hooks, code review automation |
-| Segment 3 | MCP Servers & Advanced Integration | Intermediate | MCP architecture, persistent memory, tool connectivity |
-| Segment 4 | Production Workflows & Enterprise Strategy | Advanced | CI/CD integration, cost optimization, team adoption |
+| Segment 1 | Claude Code Quick Start | Beginner | Installation, CLI basics, terminal workflows |
+| Segment 2 | MCP (Model Context Protocol) | Intermediate | Installing servers via CLI, memory persistence |
+| Segment 3 | Agents | Intermediate | Agentic loops, autonomous operations, boundaries |
+| Segment 4 | Skills + Agents | Advanced | Custom skills, production workflows, CI/CD |
 
 ## What You'll Build
 
-A production-ready **Claude development environment** with persistent memory:
+A production-ready **Claude development environment** with persistent memory and custom automation:
 
 | Component | Purpose | Capabilities |
 |-----------|---------|--------------|
-| **MCP Memory Server** | Persistent Context | Remembers project architecture, API patterns, team conventions |
-| **Claude Code Setup** | Terminal Workflows | Automated PR reviews, refactoring, deployment assistance |
-| **CI/CD Integration** | GitHub Actions | Claude-powered code review bot, documentation generation |
+| **Claude Code Setup** | Terminal Workflows | Code review, refactoring, commit messages |
+| **MCP Memory Server** | Persistent Context | Remembers decisions, entities, relationships |
+| **Custom Skills** | Automation | Reusable slash commands for your team |
+| **Agent Workflows** | Autonomous Operations | Multi-step tasks with proper boundaries |
 
 ## Prerequisites
 
@@ -57,46 +58,31 @@ claude-code/
 │       ├── client.ts                   # Anthropic client factory
 │       └── logger.ts                   # Colorful logging utility
 │
-├── segment_1_fundamentals/             # Claude Architecture & Context
-│   ├── 01_context_window_demo.ts       # 200K context in action
-│   ├── 02_streaming_responses.ts       # Streaming patterns
-│   ├── 03_tool_use.ts                  # Function calling (tools)
-│   └── 04_mcp_intro.ts                 # MCP concepts
+├── segment_1_quickstart/               # Claude Code Quick Start
+│   ├── 01_installation.md              # Setup guide
+│   ├── 02_verify_setup.ts              # Verify installation
+│   └── 03_terminal_workflows.ts        # Basic CLI workflows
 │
-├── segment_2_claude_code/              # Claude Code CLI Deep Dive
-│   ├── 01_installation.md              # Setup and configuration
-│   ├── 02_code_review_workflow.ts      # Code review, testing, deployment
-│   ├── 03_legacy_refactoring.ts        # Refactoring with Claude
-│   └── 04_git_hooks.ts                 # Automated PR reviews
-│
-├── segment_3_mcp/                      # MCP Servers & Integration
-│   ├── 01_mcp_architecture.ts          # Understanding MCP protocol
-│   ├── 02_json_memory_server/          # Demo: Persistent JSON storage
-│   │   ├── server.ts
-│   │   └── README.md
-│   ├── 03_github_integration.ts        # Connecting to GitHub
-│   ├── 04_slack_integration.ts         # Connecting to Slack
-│   └── 05_security_considerations.md   # Enterprise deployment
-│
-├── segment_4_production/               # Production Workflows
-│   ├── 01_github_actions.yml           # CI/CD with Claude API
-│   ├── 02_documentation_pipeline.ts    # Auto-generate docs
-│   ├── 03_code_review_bot.ts           # Claude-powered PR reviews
-│   ├── 04_cost_optimization.md         # When to use Claude vs alternatives
-│   └── 05_team_adoption.md             # Pilot → training → scale playbook
-│
-├── mcp_servers/
-│   └── memory/                         # Production MCP memory server
-│       ├── src/index.ts
-│       ├── package.json
+├── segment_2_mcp/                      # Model Context Protocol
+│   ├── 01_mcp_quickstart.md            # MCP installation guide
+│   ├── 02_mcp_architecture.ts          # Understanding MCP
+│   └── memory_server/                  # JSON memory server
+│       ├── server.ts
 │       └── README.md
 │
-├── scripts/
-│   ├── verify-setup.ts                 # Verify installation
-│   ├── claude-review.ts                # Claude code review
-│   ├── generate-release-notes.ts       # Release notes generator
-│   ├── security-scan.ts                # Security scanning
-│   └── check-docs.ts                   # Documentation checker
+├── segment_3_agents/                   # Agentic Workflows
+│   ├── 01_agents_intro.md              # Agent concepts
+│   ├── 02_agent_loop.ts                # Plan-Execute-Observe loop
+│   └── 03_agent_boundaries.ts          # Permissions and safety
+│
+├── segment_4_skills_agents/            # Skills + Agents
+│   ├── 01_skills_intro.md              # Creating custom skills
+│   └── 02_production_workflows.ts      # Code review, docs, releases
+│
+├── .claude/
+│   └── commands/                       # Custom slash commands
+│       ├── review.md                   # /project:review skill
+│       └── fix-issue.md                # /project:fix-issue skill
 │
 └── docs/
     ├── SETUP.md                        # Detailed setup guide
@@ -129,175 +115,180 @@ claude-code/
 4. **Verify setup**
 
    ```bash
-   npx tsx scripts/verify-setup.ts
+   npm run segment1:verify
    ```
 
-5. **Run your first example**
+5. **Run your first workflow**
 
    ```bash
-   npx tsx segment_1_fundamentals/01_context_window_demo.ts
+   npm run segment1:workflows
    ```
+
+## NPM Scripts
+
+```bash
+# Segment 1: Quick Start
+npm run segment1:verify      # Verify Claude API setup
+npm run segment1:workflows   # Terminal workflow demos
+
+# Segment 2: MCP
+npm run segment2:architecture  # MCP architecture visualization
+npm run segment2:memory        # Start memory server
+
+# Segment 3: Agents
+npm run segment3:agent-loop   # Agent loop demonstration
+npm run segment3:boundaries   # Permission boundaries demo
+
+# Segment 4: Skills + Agents
+npm run segment4:workflows    # Production workflow demos
+
+# Utilities
+npm run mcp:memory           # Start MCP memory server
+npm run build                # Compile TypeScript
+npm run lint                 # Run ESLint
+npm run format               # Run Prettier
+```
 
 ## Segment Summaries
 
-### Segment 1: Claude Fundamentals & Unique Architecture
+### Segment 1: Claude Code Quick Start
 
-**Scenario:** Understand what makes Claude's context capabilities unique
+**Scenario:** Get up and running with Claude Code CLI in minutes
 
 **What you'll learn:**
 
-- Claude's constitutional AI and why it matters for code safety
-- 200K context window—analyzing entire codebases at once
-- Streaming responses for better user experience
-- Tool use (function calling) and agentic patterns
-- Introduction to Model Context Protocol (MCP)
+- Installing Claude Code (`npm install -g @anthropic-ai/claude-code`)
+- Essential CLI commands and flags
+- Terminal workflows: streaming, code review, refactoring
+- Configuration files (`.claude/settings.json`, `CLAUDE.md`)
 
-**Skills:** Large-context analysis, streaming, tool use, MCP basics
+**Key commands:**
+
+```bash
+claude                        # Start interactive session
+claude "review this file"     # One-shot query
+claude --model sonnet         # Choose model
+claude --allowedTools "Read"  # Restrict tools
+```
 
 ---
 
-### Segment 2: Claude Code CLI Deep Dive
+### Segment 2: MCP (Model Context Protocol)
 
-**Scenario:** Master terminal-first AI-assisted development
+**Scenario:** Give Claude persistent memory across sessions
 
 **What you'll learn:**
 
-- Installing and configuring Claude Code CLI
-- Terminal workflows: code review, testing, deployment
-- Refactoring legacy codebases with Claude Code
-- Integration with git hooks for automated PR reviews
+- What MCP is and why it matters
+- Installing MCP servers with the Claude CLI
+- MCP primitives: Tools, Resources, Prompts
+- Using our JSON memory server for persistent context
 
-**Skills:** Claude Code CLI, terminal workflows, git integration
+**Key commands:**
+
+```bash
+# Add memory server
+claude mcp add memory -- npx tsx segment_2_mcp/memory_server/server.ts
+
+# List installed servers
+claude mcp list
+
+# Use memory tools
+> store_memory entity "UserService" content "Handles authentication"
+> recall_memories query "authentication"
+```
 
 ---
 
-### Segment 3: MCP Servers & Advanced Integration
+### Segment 3: Agents
 
-**Scenario:** Build persistent memory that survives sessions
+**Scenario:** Let Claude work autonomously with proper boundaries
 
 **What you'll learn:**
 
-- Understanding Model Context Protocol architecture
-- Building a JSON-based MCP memory server
-- Connecting Claude to GitHub, Slack, and internal APIs
-- Security considerations for enterprise deployment
+- What makes Claude "agentic"
+- The agent loop: Plan → Execute → Observe → Adjust
+- Permission levels and tool restrictions
+- Safe patterns for autonomous operations
 
-**Skills:** MCP servers, tool integration, persistent memory patterns
+**Permission levels:**
+
+```bash
+claude                                    # Default (confirms each action)
+claude --allowedTools "Read,Glob,Grep"    # Read-only tools pre-approved
+claude --dangerously-skip-permissions     # Full autonomy (use carefully!)
+```
 
 ---
 
-### Segment 4: Production Workflows & Enterprise Strategy
+### Segment 4: Skills + Agents
 
-**Scenario:** Deploy Claude-powered workflows at scale
+**Scenario:** Create reusable workflows and production integrations
 
 **What you'll learn:**
 
-- CI/CD integration with GitHub Actions and Claude API
-- Documentation generation pipeline
-- Building a Claude-powered code review bot
-- Cost optimization: when to use Claude vs other tools
-- Team adoption playbook: pilot → training → scale
+- Creating custom skills with `.claude/commands/*.md`
+- Dynamic arguments with `$ARGUMENTS`
+- Production workflows: code review, documentation, releases
+- CI/CD integration with GitHub Actions
 
-**Skills:** CI/CD integration, cost management, enterprise deployment
+**Skills example:**
+
+```markdown
+<!-- .claude/commands/fix-issue.md -->
+Fix GitHub issue #$ARGUMENTS
+
+1. Read the issue details
+2. Implement the fix
+3. Write tests
+4. Create commit message
+```
+
+Usage: `/project:fix-issue 123`
 
 ## Key Code Examples
 
-### 200K Context: Full Codebase Analysis
+### Claude API Client Setup
 
 ```typescript
 import Anthropic from '@anthropic-ai/sdk';
-import { readFileSync } from 'fs';
 
-const client = new Anthropic();
-
-// Load entire codebase into context
-const fullCodebase = readFileSync('codebase_dump.txt', 'utf-8');  // ~150K tokens
+const client = new Anthropic();  // Uses ANTHROPIC_API_KEY env var
 
 const response = await client.messages.create({
   model: 'claude-sonnet-4-20250514',
-  max_tokens: 4096,
-  messages: [{
-    role: 'user',
-    content: `Analyze this codebase and identify:
-1. Architecture patterns used
-2. Potential security vulnerabilities
-3. Areas needing refactoring
-
-${fullCodebase}`
-  }]
+  max_tokens: 1024,
+  messages: [{ role: 'user', content: 'Review this code for security issues...' }]
 });
 ```
 
-### MCP Memory Server: Persistent Project Context
+### MCP Memory Server
 
 ```typescript
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 
-const server = new McpServer({ name: 'project-memory', version: '1.0.0' });
+const server = new McpServer({ name: 'memory', version: '1.0.0' });
 
-// Store project knowledge that persists across sessions
-server.tool(
-  'remember_decision',
-  'Store an architectural decision',
-  {
-    title: z.string(),
-    description: z.string(),
-    rationale: z.string(),
-  },
-  async ({ title, description, rationale }) => {
-    // Save to persistent storage
-    saveDecision({ title, description, rationale, date: new Date() });
-    return { content: [{ type: 'text', text: `Remembered: ${title}` }] };
-  }
-);
-
-server.tool(
-  'recall_decisions',
-  'Recall past decisions',
-  { topic: z.string() },
-  async ({ topic }) => {
-    const relevant = findDecisions(topic);
-    return { content: [{ type: 'text', text: JSON.stringify(relevant, null, 2) }] };
-  }
-);
-
-const transport = new StdioServerTransport();
-await server.connect(transport);
+server.tool('store_memory', 'Store information', {
+  entity: z.string(),
+  content: z.string()
+}, async ({ entity, content }) => {
+  // Save to persistent storage
+  return { content: [{ type: 'text', text: `Stored: ${entity}` }] };
+});
 ```
 
-### Claude Code: Git Hook Integration
+### Custom Skill with Arguments
 
-```typescript
-#!/usr/bin/env npx tsx
-import Anthropic from '@anthropic-ai/sdk';
-import { execSync } from 'child_process';
+```markdown
+<!-- .claude/commands/review.md -->
+Review the changes in the current branch:
 
-function getStagedDiff(): string {
-  return execSync('git diff --cached', { encoding: 'utf-8' });
-}
-
-async function reviewWithClaude(diff: string): Promise<string> {
-  const client = new Anthropic();
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 1024,
-    messages: [{
-      role: 'user',
-      content: `Review this diff for security issues, performance concerns, and code style:
-
-${diff}`
-    }]
-  });
-  return response.content[0].type === 'text' ? response.content[0].text : '';
-}
-
-const diff = getStagedDiff();
-if (diff) {
-  const review = await reviewWithClaude(diff);
-  console.log(review);
-}
+1. Run `git diff main...HEAD`
+2. Analyze for security, performance, style issues
+3. Rate severity: critical, warning, suggestion
+4. Provide file and line references
 ```
 
 ## Claude vs Copilot: When to Use Each
@@ -308,19 +299,19 @@ if (diff) {
 | Persistent project memory | **Yes** (MCP) | No | MCP servers maintain state |
 | Line-by-line autocomplete | No | **Yes** | Copilot optimized for inline |
 | Complex refactoring | **Yes** | Limited | Claude reasons across files |
-| Documentation generation | **Yes** | Limited | Rich structured output |
+| Custom workflows | **Yes** (Skills) | No | Skills enable automation |
 
 ## Course Schedule
 
 | Time | Activity |
 |------|----------|
-| 0:00 - 0:50 | Segment 1: Claude Fundamentals & Unique Architecture |
+| 0:00 - 0:50 | Segment 1: Claude Code Quick Start |
 | 0:50 - 1:00 | Q&A + Break |
-| 1:00 - 1:50 | Segment 2: Claude Code CLI Deep Dive |
+| 1:00 - 1:50 | Segment 2: MCP (Model Context Protocol) |
 | 1:50 - 2:00 | Q&A + Break |
-| 2:00 - 2:50 | Segment 3: MCP Servers & Advanced Integration |
+| 2:00 - 2:50 | Segment 3: Agents |
 | 2:50 - 3:00 | Q&A + Break |
-| 3:00 - 3:50 | Segment 4: Production Workflows & Enterprise Strategy |
+| 3:00 - 3:50 | Segment 4: Skills + Agents |
 | 3:50 - 4:00 | Wrap-up, resources, next steps |
 
 ## Learning Resources
@@ -352,10 +343,13 @@ echo $ANTHROPIC_API_KEY  # Verify it's set
 npm install -g @anthropic-ai/claude-code
 
 # MCP server won't start
-cd mcp_servers/memory && npm run dev
+npm run mcp:memory
 
 # Dependency issues
 rm -rf node_modules && npm install
+
+# Verify setup
+npm run segment1:verify
 ```
 
 ## Instructor
