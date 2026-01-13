@@ -1,24 +1,27 @@
 {
   "name": "claude-code-course",
-  "version": "1.0.0",
-  "description": "Claude Code and Large-Context Reasoning - O'Reilly Live Learning Course",
+  "version": "2.0.0",
+  "description": "Claude and Claude Code for Developers - O'Reilly/Pearson Course",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "verify": "tsx scripts/verify-setup.ts",
-    "mcp:memory": "tsx mcp_servers/memory_server/server.ts",
-    "segment1:context": "tsx segment_1_fundamentals/01_context_window_demo.ts",
-    "segment1:streaming": "tsx segment_1_fundamentals/02_streaming_responses.ts",
-    "segment1:tools": "tsx segment_1_fundamentals/03_tool_use.ts",
-    "segment1:mcp-intro": "tsx segment_1_fundamentals/04_mcp_intro.ts",
-    "segment2:review": "tsx segment_2_claude_code/02_code_review_workflow.ts",
-    "segment2:refactor": "tsx segment_2_claude_code/03_legacy_refactoring.ts",
-    "segment3:memory": "tsx segment_3_mcp/02_json_memory_server/server.ts",
-    "segment3:github": "tsx segment_3_mcp/03_github_integration.ts",
-    "segment4:review-bot": "tsx segment_4_production/03_code_review_bot.ts"
+    "verify": "npx tsx segment_1_quickstart/02_verify_setup.ts",
+
+    "segment1:verify": "tsx segment_1_quickstart/02_verify_setup.ts",
+    "segment1:workflows": "tsx segment_1_quickstart/03_terminal_workflows.ts",
+
+    "segment2:architecture": "tsx segment_2_mcp/02_mcp_architecture.ts",
+    "segment2:memory": "tsx segment_2_mcp/memory_server/server.ts",
+
+    "segment3:agent-loop": "tsx segment_3_agents/02_agent_loop.ts",
+    "segment3:boundaries": "tsx segment_3_agents/03_agent_boundaries.ts",
+
+    "segment4:workflows": "tsx segment_4_skills_agents/02_production_workflows.ts",
+
+    "mcp:memory": "tsx segment_2_mcp/memory_server/server.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
@@ -52,6 +55,9 @@
     "mcp",
     "ai",
     "llm",
-    "model-context-protocol"
+    "model-context-protocol",
+    "claude-code",
+    "agents",
+    "skills"
   ]
 }
