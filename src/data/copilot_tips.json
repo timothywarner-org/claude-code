@@ -1,0 +1,432 @@
+{
+  "tips": [
+    {
+      "id": "agent-001",
+      "title": "Use Agent Mode for Autonomous Multi-Step Tasks",
+      "description": "Agent mode lets Copilot autonomously determine which files to alter, propose code changes and terminal commands, and iterate until the task is complete. Use it for complex, multi-step tasks where you want Copilot to figure out the solution path. Start with Ctrl+Shift+I or select Agent mode in chat.",
+      "category": "Agent Mode & Automation",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "agent-002",
+      "title": "Steer Copilot Agent Mid-Task",
+      "description": "While Copilot agent is working on a task, you can provide steering input to course-correct. For example: 'Use our existing ErrorHandler utility class instead of writing custom try-catch blocks.' This lets you refine the agent's approach without starting over.",
+      "category": "Agent Mode & Automation",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "agent-003",
+      "title": "Create Custom Agents for Specialized Tasks",
+      "description": "Define custom agent profiles in .md files with YAML frontmatter. Create specialists like a 'readme-creator' agent that focuses only on documentation, or a 'refactor-specialist' for legacy code. Copilot Chat automatically delegates to the right agent based on your prompt.",
+      "category": "Agent Mode & Automation",
+      "difficulty": "advanced",
+      "impact": "high"
+    },
+    {
+      "id": "agent-004",
+      "title": "Use Coding Agent for Background PR Work",
+      "description": "GitHub Copilot coding agent works in the background on GitHub, automating branch creation, commits, PR opening, and descriptions. Developers can steer via PR reviews. Every step is tracked in commits and logs, enabling team collaboration and transparency.",
+      "category": "Agent Mode & Automation",
+      "difficulty": "advanced",
+      "impact": "high"
+    },
+    {
+      "id": "nes-001",
+      "title": "Enable Next Edit Suggestions (NES) for Flow State",
+      "description": "Next Edit Suggestions predicts where your next edit should be and what it should contain based on your current changes. Enable via github.copilot.nextEditSuggestions.enabled setting. Press Tab to navigate to and accept suggested edits across your file.",
+      "category": "Next Edit Suggestions",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "nes-002",
+      "title": "Let NES Handle Repetitive Pattern Changes",
+      "description": "When making repetitive edits (like renaming a variable everywhere, adding a parameter to multiple functions), NES recognizes the pattern and suggests the remaining changes. Tab through each suggestion rather than hunting for each location manually.",
+      "category": "Next Edit Suggestions",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "custom-001",
+      "title": "Create a copilot-instructions.md for Your Repository",
+      "description": "Add a .github/copilot-instructions.md file to provide project-specific context automatically included in every chat request. Document your tech stack, coding conventions, architectural patterns, and build commands. This dramatically improves suggestion quality.",
+      "category": "Custom Instructions",
+      "difficulty": "intermediate",
+      "impact": "critical"
+    },
+    {
+      "id": "custom-002",
+      "title": "Document Build and Validation Steps in Instructions",
+      "description": "Include exact commands for bootstrap, build, test, lint, and run in your copilot-instructions.md. Document any quirks, timing issues, or order dependencies. The agent can then replicate your validation pipeline without searching each time.",
+      "category": "Custom Instructions",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "custom-003",
+      "title": "Use Task-Specific .instructions.md Files",
+      "description": "Create multiple *.instructions.md files for different contexts (e.g., backend-api.instructions.md, frontend.instructions.md). Use glob patterns in settings to automatically include the right instructions based on which files you're working with.",
+      "category": "Custom Instructions",
+      "difficulty": "advanced",
+      "impact": "high"
+    },
+    {
+      "id": "custom-004",
+      "title": "Configure Instructions for Commit Messages and PRs",
+      "description": "Use VS Code settings like github.copilot.chat.commitMessageGeneration.instructions and pullRequestDescriptionGeneration.instructions to define your team's conventions. Reference external .md files for complex guidelines shared across the team.",
+      "category": "Custom Instructions",
+      "difficulty": "intermediate",
+      "impact": "medium"
+    },
+    {
+      "id": "custom-005",
+      "title": "Link to Existing Documentation in Instructions",
+      "description": "Reference your existing docs in copilot-instructions.md: link to PRODUCT.md for vision, ARCHITECTURE.md for design principles, CONTRIBUTING.md for practices. Tell Copilot to suggest updates if it finds conflicts during work.",
+      "category": "Custom Instructions",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "mcp-001",
+      "title": "Extend Copilot with MCP Servers",
+      "description": "The Model Context Protocol (MCP) lets Copilot integrate with external systems like databases, APIs, and custom tools. Agent mode automatically uses MCP servers when tasks require external integration. Configure MCP servers in your project settings.",
+      "category": "MCP Integration",
+      "difficulty": "advanced",
+      "impact": "high"
+    },
+    {
+      "id": "prompt-001",
+      "title": "Provide Top-Level Comments for Context",
+      "description": "Add a high-level comment at the top of your file describing the overall purpose and goals. This gives Copilot context about what you're building, especially for boilerplate generation. Include details about frameworks, patterns, and expected outcomes.",
+      "category": "Prompting Techniques",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "prompt-002",
+      "title": "Use Descriptive Function Names",
+      "description": "Name your functions descriptively (e.g., 'sortArrayOfObjectsByProperty' instead of 'foo'). Copilot uses function names to infer intent and generate more accurate implementations. Follow good naming conventions as you would for human readers.",
+      "category": "Prompting Techniques",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "prompt-003",
+      "title": "Write Specific Function Comments",
+      "description": "Include detailed specifications in function comments with exact requirements, constraints, and edge cases. Single, specific, short comments help Copilot provide targeted suggestions rather than generic implementations.",
+      "category": "Prompting Techniques",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "prompt-004",
+      "title": "Break Down Complex Tasks",
+      "description": "Split large requests into smaller, focused prompts. Instead of asking Copilot to build an entire feature at once, request individual components step by step. This leads to higher quality, more maintainable code.",
+      "category": "Prompting Techniques",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "prompt-005",
+      "title": "Provide Examples in Prompts",
+      "description": "Include examples of expected input/output in your prompts, especially for data processing or string manipulation tasks. Examples help ground the model and produce more accurate implementations.",
+      "category": "Prompting Techniques",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "shortcut-001",
+      "title": "Accept Suggestions with Tab",
+      "description": "Press Tab to accept Copilot's inline suggestion. This is the fastest way to incorporate generated code into your workflow. Use Esc to dismiss suggestions you don't want.",
+      "category": "IDE Shortcuts",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "shortcut-002",
+      "title": "Cycle Through Alternative Suggestions",
+      "description": "Use Alt + ] (Windows/Linux) or Option + ] (macOS) to see the next suggestion, and Alt + [ or Option + [ for the previous one. Copilot often generates multiple valid solutions worth exploring.",
+      "category": "IDE Shortcuts",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "shortcut-003",
+      "title": "Trigger Inline Suggestions Manually",
+      "description": "Press Alt + \\ (Windows/Linux) or Option + \\ (macOS) to manually trigger Copilot suggestions when they don't appear automatically. Useful after pausing or when editing existing code.",
+      "category": "IDE Shortcuts",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "shortcut-004",
+      "title": "Open Inline Chat with Ctrl+I",
+      "description": "Press Ctrl + I (Windows/Linux) or Cmd + I (macOS) to open inline chat directly in your code. Perfect for quick fixes, explanations, or generating code without leaving your current context.",
+      "category": "IDE Shortcuts",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "shortcut-005",
+      "title": "Use AI-Powered Symbol Renaming",
+      "description": "Press F2 to rename a symbol and get AI-powered suggestions for the new name. Copilot considers your codebase context to suggest meaningful names that match your conventions.",
+      "category": "IDE Shortcuts",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "codegen-001",
+      "title": "Set Imports and References First",
+      "description": "Manually set the includes/imports you need before asking Copilot to generate code. This tells Copilot which frameworks, libraries, and versions to use, avoiding outdated or incorrect dependencies.",
+      "category": "Code Generation",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "codegen-002",
+      "title": "Write Tests First for TDD",
+      "description": "Write your test cases first, then let Copilot implement functions that pass those tests. This test-driven development approach produces more focused implementations and provides sample code context.",
+      "category": "Code Generation",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "codegen-003",
+      "title": "Start Implementation, Let Copilot Complete",
+      "description": "Begin writing a function's logic and let Copilot complete the pattern. Starting with a few lines gives Copilot clear direction on your coding style and the approach you prefer.",
+      "category": "Code Generation",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "codegen-004",
+      "title": "Use /new in Chat to Scaffold Projects",
+      "description": "Use the /new slash command to scaffold entire applications quickly. Describe what you want to build and Copilot generates the complete project structure with all necessary files.",
+      "category": "Code Generation",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "chat-001",
+      "title": "Use Slash Commands for Common Tasks",
+      "description": "Use built-in slash commands like /explain, /fix, /tests, /doc, and /optimize for quick access to common operations. These are shortcuts to well-crafted prompts optimized for specific tasks.",
+      "category": "Chat Features",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "chat-002",
+      "title": "Attach Files with #file Reference",
+      "description": "Use #file:filename.ts to explicitly include specific files in your chat context. This scopes Copilot to relevant code and generates more accurate, context-aware suggestions.",
+      "category": "Chat Features",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "chat-003",
+      "title": "Use @workspace for Project-Wide Questions",
+      "description": "The @workspace agent is aware of your entire workspace and can answer questions about project structure, find code across files, and understand relationships between components.",
+      "category": "Chat Features",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "chat-004",
+      "title": "Start New Threads When Switching Topics",
+      "description": "Click the + sign to start new conversation threads when switching topics. This keeps conversations focused and prevents irrelevant context from affecting suggestions.",
+      "category": "Chat Features",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "chat-005",
+      "title": "Choose the Right Copilot Tool for the Task",
+      "description": "Use inline suggestions for coding flow, Chat for brainstorming and exploration, and Agent mode for high-level requirements needing autonomous implementation. Match the tool to your task type.",
+      "category": "Chat Features",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "context-001",
+      "title": "Keep Relevant Files Open",
+      "description": "Open related files in your editor to provide Copilot with broader context. Copilot analyzes currently open files to inform its suggestions. Close irrelevant files when switching tasks.",
+      "category": "Workspace Context",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "context-002",
+      "title": "Use #editor for Open Files Context",
+      "description": "In VS Code, use #editor in the chat interface to provide Copilot with context from all currently opened files. This gives broader project awareness for complex questions.",
+      "category": "Workspace Context",
+      "difficulty": "intermediate",
+      "impact": "medium"
+    },
+    {
+      "id": "context-003",
+      "title": "Provide Sample Code Patterns",
+      "description": "Include example code in your project showing your preferred patterns and coding standards. Copilot learns from existing code to match your style and practices across new suggestions.",
+      "category": "Workspace Context",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "context-004",
+      "title": "Highlight Code Before Asking Questions",
+      "description": "Select relevant code in your editor before asking Copilot Chat questions. This provides targeted context and generates more specific, useful responses about that exact code.",
+      "category": "Workspace Context",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "review-001",
+      "title": "Use Copilot for Code Review",
+      "description": "Enable github.copilot.chat.reviewSelection.enabled and select code to get AI-powered review feedback. Configure reviewSelection.instructions with your team's coding guidelines for consistent reviews.",
+      "category": "Code Review",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "review-002",
+      "title": "Create Review Guidelines in Markdown Files",
+      "description": "Store backend-review-guidelines.md and frontend-review-guidelines.md files, then reference them in your VS Code settings. Copilot applies these guidelines consistently when reviewing code.",
+      "category": "Code Review",
+      "difficulty": "intermediate",
+      "impact": "medium"
+    },
+    {
+      "id": "security-001",
+      "title": "Always Review Suggestions Before Accepting",
+      "description": "Copilot can make mistakes. Always understand and validate suggested code before implementing it. Consider functionality, security implications, readability, and long-term maintainability.",
+      "category": "Security & Privacy",
+      "difficulty": "beginner",
+      "impact": "critical"
+    },
+    {
+      "id": "security-002",
+      "title": "Use Automated Testing to Validate Suggestions",
+      "description": "Pair Copilot-generated code with linting, code scanning, and IP scanning tools. Automated tests add an extra security layer to catch issues Copilot might introduce.",
+      "category": "Security & Privacy",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "security-003",
+      "title": "Block Suggestions Matching Public Code",
+      "description": "Enable settings to block suggestions that match public code if you need to avoid potential licensing issues. Available in individual and organization Copilot settings.",
+      "category": "Security & Privacy",
+      "difficulty": "advanced",
+      "impact": "medium"
+    },
+    {
+      "id": "security-004",
+      "title": "Use /vulnerability for Security Analysis",
+      "description": "Use the /vulnerability slash command in Copilot Chat to analyze selected code for potential security issues. This helps identify common vulnerabilities like injection attacks before they reach production.",
+      "category": "Security & Privacy",
+      "difficulty": "intermediate",
+      "impact": "high"
+    },
+    {
+      "id": "workflow-001",
+      "title": "Use Comment-Driven Development",
+      "description": "Write a code comment describing what you want, then let inline suggestions generate the implementation. Comments serve as prompts and documentation simultaneously.",
+      "category": "Workflow Optimization",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "workflow-002",
+      "title": "Generate Unit Tests with /tests",
+      "description": "Select a function and use /tests to generate comprehensive unit tests. Copilot creates tests covering typical cases, edge cases, and error conditions based on the function signature and logic.",
+      "category": "Workflow Optimization",
+      "difficulty": "beginner",
+      "impact": "high"
+    },
+    {
+      "id": "workflow-003",
+      "title": "Auto-Generate Commit Messages",
+      "description": "Look for the sparkle icon in the commit message box. Copilot analyzes your staged changes and generates meaningful commit messages following conventional commit patterns.",
+      "category": "Workflow Optimization",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "workflow-004",
+      "title": "Use /doc to Generate Documentation",
+      "description": "Select code and use /doc to generate comprehensive documentation including JSDoc, docstrings, or inline comments. Copilot explains parameters, return values, and usage examples.",
+      "category": "Workflow Optimization",
+      "difficulty": "beginner",
+      "impact": "medium"
+    },
+    {
+      "id": "workflow-005",
+      "title": "Explain Unfamiliar Code with /explain",
+      "description": "Select any code block and use /explain to get a detailed breakdown of what it does. Perfect for understanding legacy code, third-party libraries, or complex algorithms.",
+      "category": "Workflow Optimization",
+      "difficulty": "beginner",
+      "impact": "high"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Agent Mode & Automation",
+      "description": "Leverage Copilot's autonomous capabilities for complex, multi-step tasks"
+    },
+    {
+      "name": "Next Edit Suggestions",
+      "description": "Use NES to stay in flow with predictive edit navigation"
+    },
+    {
+      "name": "Custom Instructions",
+      "description": "Configure project-specific context and guidelines for better suggestions"
+    },
+    {
+      "name": "MCP Integration",
+      "description": "Extend Copilot with external tools via Model Context Protocol"
+    },
+    {
+      "name": "Prompting Techniques",
+      "description": "Craft effective prompts to get better code suggestions"
+    },
+    {
+      "name": "IDE Shortcuts",
+      "description": "Essential keyboard shortcuts for maximum efficiency"
+    },
+    {
+      "name": "Code Generation",
+      "description": "Techniques for generating high-quality code"
+    },
+    {
+      "name": "Chat Features",
+      "description": "Master Copilot Chat for interactive assistance"
+    },
+    {
+      "name": "Workspace Context",
+      "description": "Optimize context for more accurate suggestions"
+    },
+    {
+      "name": "Code Review",
+      "description": "Use AI-powered code review for quality assurance"
+    },
+    {
+      "name": "Security & Privacy",
+      "description": "Best practices for secure AI-assisted development"
+    },
+    {
+      "name": "Workflow Optimization",
+      "description": "Integrate Copilot into your daily development workflow"
+    }
+  ],
+  "metadata": {
+    "version": "2.0.0",
+    "lastUpdated": "2026-01-13",
+    "totalTips": 45,
+    "sources": [
+      "GitHub Copilot Documentation",
+      "VS Code Copilot Documentation",
+      "Copilot Customization Guide"
+    ]
+  }
+}

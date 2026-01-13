@@ -1,0 +1,169 @@
+{
+  "memory_items": [
+    {
+      "id": "mem-001",
+      "type": "pattern",
+      "title": "MCP Memory Server - Schema Design for Course Project",
+      "content": "Building persistent memory server with 3 primitives: tools (actions), resources (read-only data), prompts (templates). Using JSON storage at ./data/memory.json. Schema includes: decisions[], conventions[], notes[], context{}. Each entity has id, title, description, tags[], date. Need to implement CRUD operations via tool handlers. Key pattern: separate in-memory state from file persistence for demo/reset capability. Use @mcp.tool() decorator with zodSchema for parameter validation. Handler signature: async def handler(ctx: Context, **params) -> dict. Return format: {content: [{type: 'text', text: result}]}.",
+      "tags": ["mcp-server", "tool-use"],
+      "project": "memory-server",
+      "created_at": "2026-01-10T14:30:00Z",
+      "updated_at": "2026-01-12T09:15:00Z"
+    },
+    {
+      "id": "mem-002",
+      "type": "config",
+      "title": "PR Review Bot - Custom Review Rules",
+      "content": "Review configuration for automated code review:\n\n```json\n{\n  \"maxDiffSize\": 50000,\n  \"checkSecurity\": true,\n  \"checkPerformance\": true,\n  \"severityThresholds\": {\n    \"block\": [\"critical\"],\n    \"warn\": [\"warning\"],\n    \"info\": [\"info\"]\n  },\n  \"reviewRules\": [\n    \"No hardcoded credentials\",\n    \"All functions must have type hints\",\n    \"Maximum function length: 50 lines\",\n    \"Use pathlib over os.path\"\n  ]\n}\n```\n\nIntegration: GitHub Actions workflow triggers on pull_request events. Store ANTHROPIC_API_KEY in repo secrets. Use Claude Sonnet for cost efficiency ($3/1M tokens).",
+      "tags": ["production-workflow", "claude-api"],
+      "project": "capstone",
+      "created_at": "2026-01-08T16:45:00Z",
+      "updated_at": "2026-01-08T16:45:00Z"
+    },
+    {
+      "id": "mem-003",
+      "type": "decision",
+      "title": "Legacy Refactoring Strategy - Data Pipeline",
+      "content": "Target file: data_pipeline_legacy.py - God class anti-pattern with 450 LOC.\n\nRefactoring plan:\n1. Extract magic numbers to dataclass config (DataPipelineConfig)\n2. Split SRP violations:\n   - FileHandler (read/write operations)\n   - DataTransformer (validation, normalization)\n   - ReportGenerator (output formatting)\n3. Add type hints throughout (use mypy --strict)\n4. Create pytest harness BEFORE changes:\n   - Test current behavior with known inputs\n   - Validate output checksums match\n5. Refactor incrementally, run tests after each step\n6. Final validation: compare output with baseline\n\nEstimated effort: 3 hours. Risk: medium (complex state management).",
+      "tags": ["context-window", "claude-api"],
+      "project": "exercises",
+      "created_at": "2026-01-09T10:20:00Z",
+      "updated_at": "2026-01-11T13:30:00Z"
+    },
+    {
+      "id": "mem-004",
+      "type": "note",
+      "title": "Cost Management - Model Selection Matrix",
+      "content": "Claude model selection for cost optimization:\n\n**Sonnet ($3/1M input, $15/1M output):**\n- Code review (non-critical)\n- Documentation generation\n- Simple queries\n- Batch processing\n\n**Opus ($15/1M input, $75/1M output):**\n- Architecture design\n- Security audits\n- Complex refactoring\n- Production incidents\n\n**Token estimation:**\n- Code: ~3 chars/token\n- Prose: ~4 chars/token\n- JSON: ~2.5 chars/token\n\n**Optimization strategies:**\n1. Implement prompt caching (SHA256 hash)\n2. Batch file reviews (5-10 files per request)\n3. Use context window efficiently (load related files only)\n4. Track usage with tiktoken: `len(encoding.encode(text))`\n\nMonthly budget target: <$200 for team of 5 developers.",
+      "tags": ["cost-optimization", "claude-api"],
+      "project": "capstone",
+      "created_at": "2026-01-07T11:00:00Z",
+      "updated_at": "2026-01-10T15:45:00Z"
+    },
+    {
+      "id": "mem-005",
+      "type": "snippet",
+      "title": "Building Custom MCP Tools - Complete Pattern",
+      "content": "MCP tool implementation pattern:\n\n```typescript\nimport { Server } from '@modelcontextprotocol/sdk/server/index.js';\nimport { z } from 'zod';\n\nconst server = new Server({\n  name: 'my-tool-server',\n  version: '1.0.0'\n}, { capabilities: { tools: {} } });\n\nserver.tool(\n  'get_weather',\n  'Get weather for a city',\n  {\n    city: z.string().describe('City name'),\n    units: z.enum(['celsius', 'fahrenheit']).optional()\n  },\n  async ({ city, units = 'celsius' }) => {\n    // Tool implementation\n    const weather = await fetchWeather(city, units);\n    return {\n      content: [{\n        type: 'text',\n        text: `Weather in ${city}: ${weather.temp}°${units[0].toUpperCase()}`\n      }]\n    };\n  }\n);\n```\n\nRegistration: `npx -y @modelcontextprotocol/inspector npx tsx ./server.ts`\nClaude integration: Add to ~/.config/claude/settings.json under mcpServers.",
+      "tags": ["tool-use", "mcp-server"],
+      "project": "exercises",
+      "created_at": "2026-01-11T09:30:00Z",
+      "updated_at": "2026-01-11T09:30:00Z"
+    },
+    {
+      "id": "mem-006",
+      "type": "config",
+      "title": "GitHub Actions CI/CD - Claude Review Workflow",
+      "content": "Complete GitHub Actions workflow for automated code review:\n\n```yaml\nname: Claude Code Review\non:\n  pull_request:\n    types: [opened, synchronize]\n\njobs:\n  review:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n        with:\n          fetch-depth: 0\n      \n      - name: Get changed files\n        id: changed\n        run: |\n          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed.txt\n          echo \"files=$(cat changed.txt | tr '\\n' ' ')\" >> $GITHUB_OUTPUT\n      \n      - name: Review with Claude\n        env:\n          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}\n        run: |\n          python scripts/review.py --files \"${{ steps.changed.files }}\"\n      \n      - name: Post comments\n        uses: actions/github-script@v6\n        with:\n          script: |\n            const fs = require('fs');\n            const comments = JSON.parse(fs.readFileSync('review.json'));\n            for (const comment of comments) {\n              await github.rest.pulls.createReviewComment({...comment});\n            }\n```\n\nStore API key: Settings → Secrets → Actions → New repository secret.",
+      "tags": ["production-workflow", "claude-api"],
+      "project": "capstone",
+      "created_at": "2026-01-06T14:00:00Z",
+      "updated_at": "2026-01-09T16:20:00Z"
+    },
+    {
+      "id": "mem-007",
+      "type": "note",
+      "title": "200K Context Window - Effective Usage Patterns",
+      "content": "Claude's 200K token context window (~150K words, ~500 pages) enables full codebase analysis.\n\n**Effective patterns:**\n1. Load all related files with clear delimiters:\n```\nFILE: src/auth/login.ts\n===\n[file content]\n===\n\nFILE: src/auth/middleware.ts\n===\n[file content]\n===\n```\n\n2. Track token usage:\n```python\nimport tiktoken\nenc = tiktoken.get_encoding('cl100k_base')\ntokens = len(enc.encode(prompt))\nprint(f'Using {tokens:,} / 200,000 tokens ({tokens/2000:.1f}%)')\n```\n\n3. Cross-file analysis prompts:\n- \"Trace this request from controller to database\"\n- \"Find all files that import UserService\"\n- \"Identify inconsistent error handling patterns\"\n\n4. Use MCP memory server to persist insights:\n- Don't reload unchanged code\n- Store architectural decisions\n- Cache frequently accessed patterns\n\n**Anti-patterns:**\n- Loading node_modules or vendor code\n- Including test fixtures/sample data\n- Repeating unchanged context across sessions",
+      "tags": ["context-window", "claude-api"],
+      "project": "general",
+      "created_at": "2026-01-12T08:15:00Z",
+      "updated_at": "2026-01-12T08:15:00Z"
+    },
+    {
+      "id": "mem-008",
+      "type": "troubleshooting",
+      "title": "MCP Server Registration & Debugging",
+      "content": "Common MCP server issues and solutions:\n\n**Issue: Server not appearing in Claude**\nSolution: Check ~/.config/claude/settings.json (or Windows equivalent):\n```json\n{\n  \"mcpServers\": {\n    \"memory-server\": {\n      \"command\": \"npx\",\n      \"args\": [\"tsx\", \"./src/memory_server.ts\"],\n      \"env\": {\n        \"API_KEY\": \"${ANTHROPIC_API_KEY}\"\n      }\n    }\n  }\n}\n```\n\n**Issue: \"Tool not found\" errors**\nSolution: Verify tool registration with MCP Inspector:\n```bash\nnpx @modelcontextprotocol/inspector npx tsx ./server.ts\n```\nCheck Tools tab shows all expected tools.\n\n**Issue: Environment variables not loading**\nSolution: Use explicit .env path:\n```python\nfrom dotenv import load_dotenv\nfrom pathlib import Path\nload_dotenv(Path(__file__).parent / '.env', override=False)\n```\n\n**Issue: stdio transport errors**\nSolution: Ensure clean JSON-RPC output (no print statements to stdout):\n```python\nimport logging\nlogging.basicConfig(stream=sys.stderr)  # Log to stderr, not stdout\n```\n\n**Debug commands:**\n- `claude tool list` - Show all registered MCP servers\n- `claude tool call memory-server get_memory --id mem-001` - Test tool directly",
+      "tags": ["mcp-server", "debugging"],
+      "project": "general",
+      "created_at": "2026-01-05T13:45:00Z",
+      "updated_at": "2026-01-13T07:30:00Z"
+    },
+    {
+      "id": "mem-009",
+      "type": "snippet",
+      "title": "Streaming Response Implementation Pattern",
+      "content": "Implement streaming for better UX in long-running operations:\n\n```python\nfrom anthropic import Anthropic\n\nclient = Anthropic(api_key=os.environ['ANTHROPIC_API_KEY'])\n\nasync def stream_review(code: str):\n    \"\"\"Stream code review with progressive output.\"\"\"\n    async with client.messages.stream(\n        model='claude-sonnet-4-20250514',\n        max_tokens=4096,\n        messages=[{\n            'role': 'user',\n            'content': f'Review this code:\\n\\n{code}'\n        }]\n    ) as stream:\n        async for event in stream:\n            if event.type == 'content_block_delta':\n                if event.delta.type == 'text_delta':\n                    yield event.delta.text\n\n# Usage:\nasync for chunk in stream_review(code):\n    print(chunk, end='', flush=True)\n```\n\n**Benefits:**\n- Perceived performance improvement\n- Early error detection\n- Progressive UI updates\n- Essential for long refactoring/review tasks\n\n**Token counting with streaming:**\n```python\ntotal_tokens = 0\nasync for chunk in stream:\n    total_tokens += len(encoding.encode(chunk))\n    yield chunk\nprint(f'\\nUsed {total_tokens} tokens', file=sys.stderr)\n```",
+      "tags": ["claude-api", "production-workflow"],
+      "project": "exercises",
+      "created_at": "2026-01-04T10:00:00Z",
+      "updated_at": "2026-01-04T10:00:00Z"
+    },
+    {
+      "id": "mem-010",
+      "type": "prd",
+      "title": "Capstone Project - AI Code Review System Requirements",
+      "content": "**Project:** Complete AI-powered code review system for team workflows\n\n**Components (100 points total):**\n\n1. **MCP Memory Server (30 points)**\n   - Persistent storage of team conventions\n   - Project-specific patterns and anti-patterns\n   - Historical decisions and rationale\n   - CRUD operations via MCP tools\n   - Search/filter by tags and projects\n\n2. **GitHub Actions Review Workflow (25 points)**\n   - Trigger on pull_request events\n   - Analyze changed files with Claude\n   - Post structured review comments\n   - Set PR labels based on severity\n   - Cost tracking and budgets\n\n3. **Documentation Generator (25 points)**\n   - Extract docstrings and type hints\n   - Generate API documentation (Markdown)\n   - Create Mermaid architecture diagrams\n   - Link to GitHub source lines\n   - Update on merge to main\n\n4. **Cost Management Dashboard (20 points)**\n   - Token counting per request\n   - Model selection recommendations\n   - Budget alerts (daily/weekly/monthly)\n   - Usage analytics by developer/project\n   - Optimization suggestions\n\n**Deliverables:**\n- Working code (all 4 components integrated)\n- README with setup instructions\n- Sample PR demonstrating review workflow\n- Documentation site deployed (GitHub Pages)\n- 10-minute presentation/demo\n\n**Timeline:** 3-4 hours of focused work\n\n**Success criteria:**\n- All tests passing\n- Successfully reviews sample PR\n- Documentation generated automatically\n- Cost tracking accurate within 5%\n- Can run in any repo with minimal config",
+      "tags": ["production-workflow", "mcp-server", "claude-api"],
+      "project": "capstone",
+      "created_at": "2026-01-03T09:00:00Z",
+      "updated_at": "2026-01-12T14:00:00Z"
+    }
+  ],
+  "tags": [
+    {
+      "name": "mcp-server",
+      "description": "Model Context Protocol server development, tools, resources, prompts"
+    },
+    {
+      "name": "claude-api",
+      "description": "Claude API usage, streaming, token optimization, cost management"
+    },
+    {
+      "name": "tool-use",
+      "description": "Function calling, tool schemas, Zod validation, parameter handling"
+    },
+    {
+      "name": "context-window",
+      "description": "Large context usage, token counting, codebase analysis strategies"
+    },
+    {
+      "name": "production-workflow",
+      "description": "CI/CD, GitHub Actions, code review automation, team workflows"
+    },
+    {
+      "name": "debugging",
+      "description": "Troubleshooting, common errors, debugging techniques, solutions"
+    },
+    {
+      "name": "cost-optimization",
+      "description": "Token budgets, model selection, caching, efficiency strategies"
+    }
+  ],
+  "types": [
+    {
+      "name": "note",
+      "description": "General project notes and observations"
+    },
+    {
+      "name": "prd",
+      "description": "Product requirements documents and project specifications"
+    },
+    {
+      "name": "snippet",
+      "description": "Code snippets and implementation examples"
+    },
+    {
+      "name": "decision",
+      "description": "Architecture decisions and technical choices"
+    },
+    {
+      "name": "pattern",
+      "description": "Design patterns and best practices"
+    },
+    {
+      "name": "config",
+      "description": "Configuration files and settings"
+    },
+    {
+      "name": "troubleshooting",
+      "description": "Error solutions and debugging guides"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2026-01-13T07:30:00Z",
+    "total_items": 10
+  }
+}
