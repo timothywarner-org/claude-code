@@ -73,16 +73,35 @@ claude-code/
 ├── segment_3_agents/                   # Agentic Workflows
 │   ├── 01_agents_intro.md              # Agent concepts
 │   ├── 02_agent_loop.ts                # Plan-Execute-Observe loop
-│   └── 03_agent_boundaries.ts          # Permissions and safety
+│   ├── 03_agent_boundaries.ts          # Permissions and safety
+│   └── 04_custom_agents.md             # Building custom agents
 │
 ├── segment_4_skills_agents/            # Skills + Agents
 │   ├── 01_skills_intro.md              # Creating custom skills
 │   └── 02_production_workflows.ts      # Code review, docs, releases
 │
 ├── .claude/
-│   └── commands/                       # Custom slash commands
-│       ├── review.md                   # /project:review skill
-│       └── fix-issue.md                # /project:fix-issue skill
+│   ├── agents/                         # Custom agents (subagents)
+│   │   ├── code-quality-coach.md       # Mentoring agent + code-review skill
+│   │   ├── release-manager.md          # DevOps agent + deploy-prep skill
+│   │   └── claude-code-tutor.md        # Teaching agent for this course
+│   └── commands/                       # Custom slash commands (skills)
+│       ├── code-review/                # Multi-file code review skill
+│       │   ├── code-review.md          # Main workflow with frontmatter
+│       │   ├── SECURITY_CHECKLIST.md   # OWASP Top 10 reference
+│       │   ├── PERFORMANCE_GUIDE.md    # Performance patterns
+│       │   └── scripts/                # Automated scanners
+│       │       ├── security_scan.py
+│       │       └── lint_check.py
+│       └── deploy-prep/                # Multi-file deployment skill
+│           ├── deploy-prep.md          # Main workflow
+│           ├── CHANGELOG_FORMAT.md     # Formatting rules
+│           ├── SEMVER_GUIDE.md         # Version guidance
+│           ├── scripts/                # Automation scripts
+│           │   ├── preflight_check.py
+│           │   └── generate_changelog.py
+│           └── templates/              # Release templates
+│               └── RELEASE_TEMPLATE.md
 │
 └── docs/
     ├── SETUP.md                        # Detailed setup guide
@@ -209,7 +228,8 @@ claude mcp list
 - What makes Claude "agentic"
 - The agent loop: Plan → Execute → Observe → Adjust
 - Permission levels and tool restrictions
-- Safe patterns for autonomous operations
+- Creating custom agents (subagents)
+- Agents that leverage Skills
 
 **Permission levels:**
 
@@ -218,6 +238,11 @@ claude                                    # Default (confirms each action)
 claude --allowedTools "Read,Glob,Grep"    # Read-only tools pre-approved
 claude --dangerously-skip-permissions     # Full autonomy (use carefully!)
 ```
+
+**Example agents included:**
+- `code-quality-coach` - Mentoring agent that uses the code-review skill
+- `release-manager` - DevOps agent that uses the deploy-prep skill
+- `claude-code-tutor` - Teaching agent for learning Claude Code
 
 ---
 
@@ -232,19 +257,33 @@ claude --dangerously-skip-permissions     # Full autonomy (use carefully!)
 - Production workflows: code review, documentation, releases
 - CI/CD integration with GitHub Actions
 
-**Skills example:**
+**Example skills included:**
 
-```markdown
-<!-- .claude/commands/fix-issue.md -->
-Fix GitHub issue #$ARGUMENTS
-
-1. Read the issue details
-2. Implement the fix
-3. Write tests
-4. Create commit message
+```
+.claude/commands/
+├── code-review/          # Security & performance review
+│   ├── code-review.md    # Main workflow + frontmatter
+│   ├── SECURITY_CHECKLIST.md
+│   ├── PERFORMANCE_GUIDE.md
+│   └── scripts/
+│       ├── security_scan.py
+│       └── lint_check.py
+└── deploy-prep/          # Release preparation
+    ├── deploy-prep.md
+    ├── CHANGELOG_FORMAT.md
+    ├── SEMVER_GUIDE.md
+    ├── scripts/
+    │   ├── preflight_check.py
+    │   └── generate_changelog.py
+    └── templates/
+        └── RELEASE_TEMPLATE.md
 ```
 
-Usage: `/project:fix-issue 123`
+Usage:
+```bash
+/project:code-review feature/auth    # Review a branch
+/project:deploy-prep minor --dry-run # Prepare minor release
+```
 
 ## Key Code Examples
 
@@ -279,16 +318,29 @@ server.tool('store_memory', 'Store information', {
 });
 ```
 
-### Custom Skill with Arguments
+### Advanced Skill with Frontmatter and Scripts
 
 ```markdown
-<!-- .claude/commands/review.md -->
-Review the changes in the current branch:
+<!-- .claude/commands/code-review/code-review.md -->
+---
+name: code-review
+description: Comprehensive code review with security scanning
+allowed-tools: Read, Glob, Grep, Bash(git:*, python:*)
+argument-hint: "[branch|file|--staged]"
+---
 
-1. Run `git diff main...HEAD`
-2. Analyze for security, performance, style issues
-3. Rate severity: critical, warning, suggestion
-4. Provide file and line references
+# Code Review Workflow
+
+## Step 1: Run Automated Scans
+```bash
+python .claude/commands/code-review/scripts/security_scan.py
+```
+
+## Step 2: Manual Analysis
+For security patterns, see [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)
+
+## Step 3: Output Report
+Generate JSON with issues, severity, and suggestions.
 ```
 
 ## Claude vs Copilot: When to Use Each

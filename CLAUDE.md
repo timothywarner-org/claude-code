@@ -89,10 +89,18 @@ A complete MCP server demonstrating persistent memory:
 
 ### Custom Skills (`.claude/commands/`)
 
-Example skills included:
+Multi-file skills with scripts and documentation:
 
-- `review.md` - Code review workflow
-- `fix-issue.md` - GitHub issue fix workflow
+- `code-review/` - Security scanning, performance analysis, lint checks
+- `deploy-prep/` - Pre-flight validation, changelog generation, release prep
+
+### Custom Agents (`.claude/agents/`)
+
+Specialized agents that leverage skills:
+
+- `code-quality-coach.md` - Mentoring agent using code-review skill
+- `release-manager.md` - DevOps agent using deploy-prep skill
+- `claude-code-tutor.md` - Teaching agent for Claude Code concepts
 
 ### Key Dependencies
 

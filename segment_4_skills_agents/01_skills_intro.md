@@ -8,7 +8,8 @@ Skills are custom slash commands that:
 
 - Define reusable prompts and workflows
 - Can be invoked with `/project:skill-name`
-- Support dynamic arguments
+- Support dynamic arguments with `$ARGUMENTS`
+- Can include scripts, templates, and supporting documentation
 - Combine with agents for powerful automation
 
 ```
@@ -16,265 +17,299 @@ Skills are custom slash commands that:
 │                           Skills System                                  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│   User types: /project:review                                            │
+│   User types: /project:code-review                                       │
 │                    │                                                     │
 │                    ▼                                                     │
 │   ┌─────────────────────────────────┐                                   │
-│   │  .claude/commands/review.md     │                                   │
-│   │  ─────────────────────────────  │                                   │
-│   │  Review the current changes     │                                   │
-│   │  focusing on:                   │                                   │
-│   │  1. Security issues             │                                   │
-│   │  2. Performance problems        │──────► Claude executes            │
-│   │  3. Missing tests               │        the workflow               │
+│   │  .claude/commands/code-review/  │                                   │
+│   │  ├── code-review.md             │ ◄── Main skill file               │
+│   │  ├── SECURITY_CHECKLIST.md      │ ◄── Supporting docs               │
+│   │  ├── PERFORMANCE_GUIDE.md       │                                   │
+│   │  └── scripts/                   │                                   │
+│   │      ├── security_scan.py       │ ◄── Executable scripts            │
+│   │      └── lint_check.py          │                                   │
 │   └─────────────────────────────────┘                                   │
+│                    │                                                     │
+│                    ▼                                                     │
+│   Claude executes workflow, running scripts and loading docs as needed  │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Creating Skills
+## Skill Capabilities
 
-### Step 1: Create Commands Directory
+### Simple Skills (Markdown Only)
 
-```bash
-mkdir -p .claude/commands
-```
-
-### Step 2: Create a Skill File
-
-Create `.claude/commands/review.md`:
+Basic skills are single markdown files:
 
 ```markdown
-Review the changes in the current branch:
-
-1. Run `git diff main...HEAD`
-2. Analyze each changed file for:
-   - Security vulnerabilities
-   - Performance issues
-   - Missing error handling
-   - Code style violations
-3. Provide actionable feedback
-4. Suggest improvements with code examples
+<!-- .claude/commands/greet.md -->
+Say hello to $ARGUMENTS and wish them a great day!
 ```
 
-### Step 3: Use the Skill
+### Advanced Skills (Multi-File)
 
-```bash
-claude
-> /project:review
+Production skills include multiple components:
+
+```
+my-skill/
+├── my-skill.md           # Main skill file with frontmatter
+├── REFERENCE.md          # Supporting documentation
+├── EXAMPLES.md           # Usage examples
+├── scripts/
+│   ├── validate.py       # Validation script
+│   └── process.sh        # Processing script
+└── templates/
+    └── output.md         # Output templates
 ```
 
-## Skill Examples
+## Frontmatter Options
+
+Skills support YAML frontmatter for advanced configuration:
+
+```yaml
+---
+name: code-review
+description: Comprehensive code review with security scanning
+allowed-tools: Read, Glob, Grep, Bash(git:*, npm:test, python:*)
+argument-hint: "[branch|file|--staged]"
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/validate.sh"
+---
+```
+
+### Available Frontmatter Fields
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| `name` | Skill identifier | `code-review` |
+| `description` | When Claude should use this skill | `Review PRs and staged changes` |
+| `allowed-tools` | Pre-approved tools (no confirmation) | `Read, Glob, Bash(git:*)` |
+| `argument-hint` | Show expected arguments | `[branch] [--dry-run]` |
+| `hooks` | Pre/post tool execution hooks | See hooks section |
+| `context` | Run in isolated context | `fork` |
+| `model` | Override model for this skill | `claude-opus-4-5-20251101` |
+
+## Example Skills in This Project
 
 ### Code Review Skill
 
-`.claude/commands/review.md`:
+Location: `.claude/commands/code-review/`
 
-```markdown
-Perform a comprehensive code review:
-
-1. Get the diff: `git diff main...HEAD`
-2. For each changed file, check:
-   - Security: SQL injection, XSS, auth issues
-   - Performance: N+1 queries, unnecessary loops
-   - Style: Consistent naming, proper types
-   - Tests: Coverage for new code
-3. Rate severity: critical, warning, suggestion
-4. Provide specific line references
+```
+code-review/
+├── code-review.md          # Main workflow
+├── SECURITY_CHECKLIST.md   # OWASP Top 10 reference
+├── PERFORMANCE_GUIDE.md    # Performance patterns
+└── scripts/
+    ├── security_scan.py    # Automated security scanning
+    └── lint_check.py       # ESLint/TypeScript/Prettier checks
 ```
 
-### Fix Issue Skill
-
-`.claude/commands/fix-issue.md`:
-
-```markdown
-Fix GitHub issue #$ARGUMENTS
-
-1. Read the issue details
-2. Understand the root cause
-3. Implement the fix
-4. Write tests for the fix
-5. Create a descriptive commit message
+**Usage:**
+```bash
+/project:code-review                    # Review current branch
+/project:code-review feature/auth       # Review specific branch
+/project:code-review --staged           # Review staged changes only
+/project:code-review src/api.ts         # Review specific file
 ```
 
-Usage: `/project:fix-issue 123`
+**Features:**
+- Runs automated security scans (Python script)
+- Checks for OWASP Top 10 vulnerabilities
+- Analyzes performance patterns
+- Outputs structured JSON report
 
-### Deploy Skill
+### Deploy Prep Skill
 
-`.claude/commands/deploy.md`:
+Location: `.claude/commands/deploy-prep/`
 
-```markdown
-Prepare for deployment:
-
-1. Run the test suite
-2. Check for uncommitted changes
-3. Verify branch is up to date
-4. Build the project
-5. Run linting
-6. Report any issues found
-
-If all checks pass, output the deploy command.
+```
+deploy-prep/
+├── deploy-prep.md          # Main workflow
+├── CHANGELOG_FORMAT.md     # Changelog formatting rules
+├── SEMVER_GUIDE.md         # Version bump guidance
+├── scripts/
+│   ├── preflight_check.py  # Pre-deployment validation
+│   └── generate_changelog.py  # Changelog generation
+└── templates/
+    └── RELEASE_TEMPLATE.md # GitHub release template
 ```
 
-### Generate Docs Skill
-
-`.claude/commands/docs.md`:
-
-```markdown
-Generate documentation for $ARGUMENTS
-
-1. Find the file or module
-2. Read the source code
-3. Generate JSDoc comments for functions
-4. Create a README section with:
-   - Overview
-   - Usage examples
-   - API reference
-5. Output the documentation
+**Usage:**
+```bash
+/project:deploy-prep                    # Default patch bump
+/project:deploy-prep minor              # Minor version bump
+/project:deploy-prep major --dry-run    # Preview major bump
 ```
 
-Usage: `/project:docs src/api`
+**Features:**
+- Validates git state, tests, and build
+- Generates changelog from conventional commits
+- Includes release templates
+- Supports dry-run mode
 
-## Skills with Arguments
+## Creating Your Own Skills
 
-Use `$ARGUMENTS` for dynamic input:
-
-`.claude/commands/refactor.md`:
-
-```markdown
-Refactor the component: $ARGUMENTS
-
-1. Read the current implementation
-2. Identify improvement opportunities
-3. Apply the following patterns:
-   - Extract repeated logic
-   - Use composition over inheritance
-   - Add proper TypeScript types
-4. Ensure tests still pass
-```
-
-Usage: `/project:refactor UserProfile`
-
-## Combining Skills with Agents
-
-### Agentic Skill Workflow
-
-`.claude/commands/full-review.md`:
-
-```markdown
-Perform a full code review and fix workflow:
-
-## Phase 1: Analysis
-1. Get all changes with `git diff main...HEAD`
-2. Identify all issues (security, performance, style)
-
-## Phase 2: Fix
-3. Fix each issue, starting with critical ones
-4. Run tests after each fix
-
-## Phase 3: Cleanup
-5. Run linter and fix any issues
-6. Update documentation if needed
-
-## Phase 4: Complete
-7. Create a summary of all changes
-8. Suggest a commit message
-```
-
-### Running Skills with Agent Mode
+### Step 1: Create Directory Structure
 
 ```bash
-# Run skill with pre-approved tools
-claude --allowedTools "Read,Glob,Grep,Edit,Write"
-> /project:full-review
+mkdir -p .claude/commands/my-skill/scripts
 ```
+
+### Step 2: Create Main Skill File
+
+```markdown
+<!-- .claude/commands/my-skill/my-skill.md -->
+---
+name: my-skill
+description: Brief description for when Claude should use this
+allowed-tools: Read, Glob, Grep
+argument-hint: "[arg1] [--flag]"
+---
+
+# My Skill Workflow
+
+Execute this workflow for $ARGUMENTS.
+
+## Step 1: Gather Information
+
+First, understand the context by reading relevant files.
+
+## Step 2: Run Validation
+
+```bash
+python .claude/commands/my-skill/scripts/validate.py $1
+```
+
+## Step 3: Generate Output
+
+Produce structured output in this format:
+...
+```
+
+### Step 3: Add Supporting Files
+
+- **Documentation**: Reference guides Claude can load when needed
+- **Scripts**: Executable Python/Bash scripts for automation
+- **Templates**: Output formats and examples
+
+### Step 4: Test Your Skill
+
+```bash
+claude
+> /project:my-skill test-argument
+```
+
+## Tool Restrictions
+
+The `allowed-tools` field uses patterns:
+
+```yaml
+allowed-tools: Read, Glob, Grep, Bash(git:*, npm:test)
+```
+
+| Pattern | Meaning |
+|---------|---------|
+| `Read` | Allow Read tool |
+| `Bash(git:*)` | Allow Bash only for git commands |
+| `Bash(npm:test)` | Allow only `npm test` |
+| `Bash(python:*)` | Allow Python script execution |
+
+## Hooks
+
+Skills can define hooks that run before/after tool calls:
+
+```yaml
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "echo 'About to run Bash command'"
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "npm run lint"
+```
+
+## Skills vs. Slash Commands
+
+| Feature | Skills (Agent-Invoked) | Commands (User-Invoked) |
+|---------|------------------------|-------------------------|
+| Location | `.claude/skills/` | `.claude/commands/` |
+| Invocation | Claude decides when to use | User types `/project:name` |
+| Best for | Background capabilities | Explicit workflows |
+| Discovery | Automatic via description | Manual via `/` menu |
 
 ## Best Practices
 
-### 1. Be Specific
+### 1. Write Clear Descriptions
 
-❌ Bad:
-```markdown
-Review the code and fix problems.
+The `description` field determines when Claude uses a skill automatically:
+
+```yaml
+# Good - specific triggers
+description: Run security scans on code changes, PRs, or before deployment
+
+# Bad - too vague
+description: Help with code
 ```
 
-✅ Good:
-```markdown
-Review the code for:
-1. SQL injection vulnerabilities
-2. Missing input validation
-3. Hardcoded credentials
+### 2. Use Progressive Disclosure
 
-For each issue found, provide:
-- File and line number
-- Description of the problem
-- Suggested fix with code
-```
-
-### 2. Define Success Criteria
+Keep the main skill file concise. Put detailed reference material in separate files:
 
 ```markdown
-The refactoring is complete when:
-- [ ] All tests pass
-- [ ] No TypeScript errors
-- [ ] Linting passes
-- [ ] Code coverage unchanged
+## Quick Reference
+Essential info here (under 50 lines)
+
+## Detailed Documentation
+For full security checklist, see [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)
 ```
 
-### 3. Handle Errors
+### 3. Make Scripts Portable
 
-```markdown
-If tests fail after a change:
-1. Identify the failing test
-2. Determine if test or code is wrong
-3. Fix the appropriate one
-4. Re-run tests
+Scripts should:
+- Use common languages (Python, Bash)
+- Handle missing dependencies gracefully
+- Output JSON for easy parsing
+- Exit with proper codes
+
+### 4. Document Expected Arguments
+
+```yaml
+argument-hint: "[branch|file|--staged] [--dry-run]"
 ```
 
-### 4. Use Step-by-Step
+### 5. Test Thoroughly
 
-```markdown
-Step 1: Search for TODO comments
-Step 2: List all findings
-Step 3: Prioritize by severity
-Step 4: Fix high-priority items first
-Step 5: Verify each fix with tests
-```
+- Test with various argument combinations
+- Test script error handling
+- Test on different platforms
 
 ## Sharing Skills
 
-### Team Skills Repository
+### Team Skills (Git)
 
-```bash
-# Create a shared skills repo
-mkdir team-claude-skills
-cd team-claude-skills
+Commit `.claude/commands/` to your repository. Team members get skills automatically.
 
-# Add skills
-cp ~/.claude/commands/*.md ./commands/
+### Personal Skills
 
-# Team members can install
-cp -r ./commands ~/.claude/commands/
-```
+Store in `~/.claude/commands/` for skills available across all projects.
 
-### Project Skills
+### Plugins
 
-Include skills in `.claude/commands/` and commit to your repo. Team members get them automatically.
-
-## Built-in Slash Commands
-
-Claude Code also has built-in commands:
-
-| Command | Description |
-|---------|-------------|
-| `/help` | Show available commands |
-| `/clear` | Clear conversation |
-| `/mcp` | List MCP tools |
-| `/project:*` | Your custom skills |
+Package skills with other Claude Code extensions for distribution.
 
 ## Next Steps
 
-1. Create a `/project:review` skill for your project
-2. Add project-specific skills to `.claude/commands/`
-3. Combine skills with agent mode for powerful workflows
-4. Share useful skills with your team
+1. Explore the example skills in `.claude/commands/`
+2. Run `/project:code-review` on your current branch
+3. Try `/project:deploy-prep --dry-run`
+4. Create a custom skill for your workflow
