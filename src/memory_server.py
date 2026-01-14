@@ -96,6 +96,23 @@ def load_memory_data() -> dict:
     return {"memory_items": [], "tags": [], "types": [], "metadata": {}}
 
 
+def save_memory_data() -> None:
+    """Save memory items back to JSON file."""
+    data = load_memory_data()
+    data["memory_items"] = get_memory_store()
+    
+    # Ensure data directory exists
+    DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Write to temp file first, then rename (atomic operation)
+    temp_file = DATA_FILE.with_suffix('.tmp')
+    with open(temp_file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    
+    temp_file.replace(DATA_FILE)
+    logger.info("Memory data saved to disk")
+
+
 def load_memories() -> list[dict]:
     """Load just the memory items list."""
     data = load_memory_data()
@@ -301,6 +318,9 @@ def add_memory(
 
     memories.append(new_memory)
 
+    # Persist to disk
+    save_memory_data()
+
     logger.info(f"Added memory: {new_id}")
 
     return {
@@ -495,6 +515,9 @@ def update_memory(
             # Update timestamp
             mem["updated_at"] = datetime.utcnow().isoformat() + "Z"
 
+            # Persist to disk
+            save_memory_data()
+
             logger.info(f"Updated memory: {memory_id}")
 
             return {
@@ -527,6 +550,9 @@ def delete_memory(memory_id: str) -> dict:
     for i, mem in enumerate(memories):
         if mem["id"].lower() == memory_id.lower():
             deleted = memories.pop(i)
+
+            # Persist to disk
+            save_memory_data()
 
             logger.info(f"Deleted memory: {memory_id}")
 
