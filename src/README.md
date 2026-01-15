@@ -8,9 +8,10 @@ A FastMCP server for storing and retrieving project notes, PRDs, and code contex
 - 🏷️ **Smart Tagging** — 7 predefined course-relevant tags for easy categorization
 - 🔍 **Powerful Search** — Find memories by keyword, tag, type, or project
 - 🤖 **DeepSeek Optimization** — Condense memories for token-efficient context injection
+- 📋 **Pre-computed Summaries** — Each memory includes a ~25-token summary for quick retrieval
 - 💾 **Intelligent Caching** — 1-hour TTL cache to avoid redundant API calls
 - 🎯 **7 Memory Types** — Note, PRD, snippet, decision, pattern, config, troubleshooting
-- 📊 **Statistics** — Track usage by tag, type, and project
+- 📊 **Statistics & Token Counts** — Track usage and token budgets across memories
 - 🔌 **API Testing** — Built-in connectivity tests for DeepSeek and GitHub
 
 ## Quick Start
@@ -91,13 +92,15 @@ All tests should pass (includes mocked DeepSeek/GitHub API tests).
 | Tool | Parameters | Description |
 |------|------------|-------------|
 | `add_memory` | title, content, type, tags[], project | Create new memory |
-| `get_memory` | memory_id | Retrieve specific memory |
+| `get_memory` | memory_id | Retrieve specific memory (full content) |
+| `get_memory_summary` | memory_id | Get lightweight summary (~30-50 tokens) |
 | `search_memory` | search_term, tag?, type?, project? | Search with filters |
-| `get_optimized_memory` | memory_id, max_tokens?, use_cache? | Get token-optimized memory |
+| `get_optimized_memory` | memory_id, max_tokens?, use_cache? | Get DeepSeek-optimized memory |
 | `update_memory` | memory_id, title?, content?, tags?, project? | Update existing memory |
 | `delete_memory` | memory_id | Delete memory (in-memory) |
 | `list_by_tag` | tag | Get all memories with tag |
 | `list_by_type` | type | Get all memories of type |
+| `list_memories_brief` | (none) | List all memories with token counts |
 | `reset_memory` | (none) | Restore deleted memories |
 | `test_apis` | (none) | Test DeepSeek/GitHub connectivity |
 
@@ -132,15 +135,30 @@ When you call `get_optimized_memory`, the server:
    - Unnecessary context
 7. **Falls back** to raw content if optimization fails
 
+### Token Efficiency Tools
+
+The server offers **three levels** of token efficiency:
+
+| Tool | Tokens | Use Case |
+|------|--------|----------|
+| `get_memory_summary` | ~30-50 | Quick overview, deciding what to fetch |
+| `get_optimized_memory` | ~400 (configurable) | Context injection, preserves technical details |
+| `get_memory` | ~600-900 | Full content when needed |
+
 ### Token Efficiency Example
 
 ```python
-# Original memory: 2500 tokens
-result = get_optimized_memory("mem-003", max_tokens=1500)
+# List all memories with token counts to plan context budget
+brief = list_memories_brief()
+# Returns: { "total_tokens": 7500, "memories": [{"id": "mem-001", "token_count": 750}, ...] }
 
-# Optimized: ~1450 tokens (42% reduction)
-# All code blocks, commands, and configs preserved
-# Technical accuracy maintained
+# Quick preview without full content
+summary = get_memory_summary("mem-003")
+# Returns: ~40 tokens with id, title, type, tags, summary
+
+# DeepSeek-optimized version
+result = get_optimized_memory("mem-003", max_tokens=400)
+# Returns: ~400 tokens (50%+ reduction), all code/configs preserved
 ```
 
 ### Cache Benefits
@@ -174,18 +192,23 @@ result = get_optimized_memory("mem-003", max_tokens=1500)
 
 ## Sample Data
 
-The server includes 10 realistic course memories:
+The server includes 10 realistic course memories, each with:
+- Full content (600-900 tokens)
+- Pre-computed summary (~25 tokens)
+- Tags and project association
 
-1. MCP Memory Server architecture patterns
-2. PR Review Bot configuration
-3. Legacy refactoring strategies
-4. Cost management and model selection
-5. MCP tool implementation patterns
-6. GitHub Actions CI/CD workflows
-7. Context window usage best practices
-8. MCP server registration and debugging
-9. Streaming response implementation
-10. Capstone project requirements
+**Memory Topics:**
+
+1. **mem-001** — MCP Memory Server architecture patterns
+2. **mem-002** — DeepSeek integration and token optimization config
+3. **mem-003** — FastMCP vs Raw MCP SDK decision record
+4. **mem-004** — Course structure and learning objectives
+5. **mem-005** — Python MCP tool implementation reference
+6. **mem-006** — Common MCP server issues and solutions
+7. **mem-007** — Project file structure and organization
+8. **mem-008** — Memory Server PRD and requirements
+9. **mem-009** — MCP Inspector usage reference
+10. **mem-010** — In-memory state vs file persistence decision
 
 ## VS Code Integration
 
@@ -252,14 +275,22 @@ search_memory("error", type="troubleshooting")
 search_memory("review", project="capstone")
 ```
 
-### Optimized Retrieval
+### Token-Efficient Retrieval
 
 ```python
-# Get condensed version (default 1500 tokens)
+# List all memories with token counts to plan retrieval
+list_memories_brief()
+# Returns: { "count": 10, "total_tokens": 7500, "memories": [...] }
+
+# Get quick summary (~40 tokens) without full content
+get_memory_summary("mem-001")
+# Returns: id, title, type, tags, summary only
+
+# Get DeepSeek-optimized version (default 400 tokens)
 get_optimized_memory("mem-007")
 
 # Custom token budget
-get_optimized_memory("mem-010", max_tokens=1000)
+get_optimized_memory("mem-010", max_tokens=300)
 
 # Skip cache (force fresh optimization)
 get_optimized_memory("mem-003", use_cache=False)
