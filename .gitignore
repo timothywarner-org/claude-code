@@ -141,3 +141,4 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .claude/settings.local.json
+~$warner-claude-code.pptx

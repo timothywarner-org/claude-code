@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "memory-server": {
+      "command": "C:\\github\\claude-code\\src\\.venv\\Scripts\\python.exe",
+      "args": ["memory_server.py"]
+    }
+  }
+}

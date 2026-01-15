@@ -14,12 +14,14 @@ Resources:
 Tools:
     - add_memory - Create a new memory item
     - get_memory - Retrieve a specific memory by ID
+    - get_memory_summary - Get lightweight summary (~30-50 tokens)
     - search_memory - Search memories by keyword/tag/type
     - get_optimized_memory - Get token-optimized memory via DeepSeek
     - update_memory - Update an existing memory
     - delete_memory - Delete a memory (in-memory only)
     - list_by_tag - Get all memories with a specific tag
     - list_by_type - Get all memories of a specific type
+    - list_memories_brief - List all memories with token counts
     - reset_memory - Restore deleted memories
     - test_apis - Test DeepSeek and GitHub API connectivity
 
@@ -310,6 +312,15 @@ def add_memory(
     }
 
 
+def _find_memory_by_id(memory_id: str) -> Optional[dict]:
+    """Internal helper to find a memory by ID. Returns the memory dict or None."""
+    memories = get_memory_store()
+    for mem in memories:
+        if mem["id"].lower() == memory_id.lower():
+            return mem
+    return None
+
+
 @mcp.tool()
 def get_memory(memory_id: str) -> dict:
     """
@@ -321,15 +332,15 @@ def get_memory(memory_id: str) -> dict:
     Returns:
         The memory item if found, or error if not found.
     """
+    mem = _find_memory_by_id(memory_id)
+
+    if mem:
+        return {
+            "success": True,
+            "memory": mem
+        }
+
     memories = get_memory_store()
-
-    for mem in memories:
-        if mem["id"].lower() == memory_id.lower():
-            return {
-                "success": True,
-                "memory": mem
-            }
-
     return {
         "success": False,
         "error": f"Memory '{memory_id}' not found",
@@ -413,7 +424,7 @@ def search_memory(
 @mcp.tool()
 def get_optimized_memory(
     memory_id: str,
-    max_tokens: int = 1500,
+    max_tokens: int = 400,
     use_cache: bool = True
 ) -> dict:
     """
@@ -431,13 +442,17 @@ def get_optimized_memory(
     Returns:
         Optimized memory content with optimization metadata.
     """
-    # First get the memory
-    result = get_memory(memory_id)
+    # First get the memory using internal helper (not the tool)
+    memory = _find_memory_by_id(memory_id)
 
-    if not result["success"]:
-        return result
+    if not memory:
+        memories = get_memory_store()
+        return {
+            "success": False,
+            "error": f"Memory '{memory_id}' not found",
+            "available_ids": [m["id"] for m in memories[:5]]
+        }
 
-    memory = result["memory"]
     original_content = memory["content"]
 
     # Attempt optimization
@@ -605,6 +620,87 @@ def list_by_type(type: Literal["note", "prd", "snippet", "decision", "pattern", 
         "count": len(matches),
         "type": type,
         "memories": matches
+    }
+
+
+@mcp.tool()
+def get_memory_summary(memory_id: str) -> dict:
+    """
+    Get a lightweight summary of a memory item for token efficiency.
+
+    Returns only id, title, type, tags, and pre-computed summary.
+    Use this instead of get_memory when you only need a quick overview.
+
+    Args:
+        memory_id: The unique identifier (e.g., mem-001)
+
+    Returns:
+        Memory summary (~30-50 tokens) or error if not found.
+    """
+    mem = _find_memory_by_id(memory_id)
+
+    if mem:
+        return {
+            "success": True,
+            "summary": {
+                "id": mem["id"],
+                "title": mem["title"],
+                "type": mem["type"],
+                "tags": mem.get("tags", []),
+                "summary": mem.get("summary", "No summary available - use get_memory for full content")
+            }
+        }
+
+    memories = get_memory_store()
+    return {
+        "success": False,
+        "error": f"Memory '{memory_id}' not found",
+        "available_ids": [m["id"] for m in memories[:5]]
+    }
+
+
+@mcp.tool()
+def list_memories_brief() -> dict:
+    """
+    List all memories with token counts for efficient context planning.
+
+    Returns id, title, type, tags, and token_count for each memory.
+    Use this to decide which memories to fetch in full based on token budget.
+
+    Returns:
+        List of all memories with metadata and token counts.
+    """
+    memories = get_memory_store()
+
+    if not memories:
+        return {
+            "success": False,
+            "error": "No memories stored yet. Use add_memory to create one."
+        }
+
+    brief_list = []
+    total_tokens = 0
+
+    for mem in memories:
+        # Count tokens in full content
+        content_tokens = deepseek_client.count_tokens(mem["content"])
+        total_tokens += content_tokens
+
+        brief_list.append({
+            "id": mem["id"],
+            "title": mem["title"],
+            "type": mem["type"],
+            "tags": mem.get("tags", []),
+            "project": mem.get("project", "general"),
+            "token_count": content_tokens,
+            "has_summary": "summary" in mem
+        })
+
+    return {
+        "success": True,
+        "count": len(brief_list),
+        "total_tokens": total_tokens,
+        "memories": brief_list
     }
 
 
