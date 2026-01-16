@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Server Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .diagram-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .legend-text {
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        .legend-text strong {
+            display: block;
+            color: #111827;
+        }
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 2rem;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MCP Server Architecture</h1>
+            <p>Model Context Protocol - FastMCP Implementation</p>
+        </header>
+
+        <div class="diagram-container">
+            <div class="mermaid">
+flowchart TB
+    subgraph CLIENT["<b>MCP CLIENT</b><br/>Claude Code"]
+        direction TB
+        CC["Claude Code CLI<br/><i>User Interface</i>"]
+        REQ["Request Handler<br/><i>JSON-RPC Client</i>"]
+        CC --> REQ
+    end
+
+    subgraph TRANSPORT["<b>TRANSPORT LAYER</b>"]
+        STDIO["<b>stdio</b><br/>stdin / stdout<br/><i>Bidirectional Stream</i>"]
+    end
+
+    subgraph SERVER["<b>MCP SERVER</b><br/>FastMCP Python"]
+        direction TB
+
+        subgraph CORE["<b>Server Core</b>"]
+            direction LR
+            INIT["<b>FastMCP</b><br/>name, version<br/>description"]
+            LIFE["<b>Lifespan</b><br/>async context<br/>manager"]
+            STATE["<b>AppState</b><br/>storage ref<br/>data path"]
+            INIT --> LIFE
+            LIFE --> STATE
+        end
+
+        subgraph PRIMITIVES["<b>MCP Primitives</b>"]
+            direction LR
+
+            subgraph TOOLS["<b>TOOLS</b><br/><i>Actions LLM executes</i>"]
+                direction TB
+                T1["create_item"]
+                T2["list_items"]
+                T3["get_item"]
+                T4["delete_item"]
+                T5["set_metadata"]
+                T6["get_metadata"]
+            end
+
+            subgraph RESOURCES["<b>RESOURCES</b><br/><i>Data LLM reads</i>"]
+                direction TB
+                R1["items://"]
+                R2["metadata://"]
+                R3["summary://"]
+                R4["items/{id}<br/><i>dynamic</i>"]
+            end
+
+            subgraph PROMPTS["<b>PROMPTS</b><br/><i>Reusable templates</i>"]
+                direction TB
+                P1["analyze_items"]
+                P2["create_item<br/>_template"]
+            end
+        end
+    end
+
+    subgraph STORAGE["<b>PERSISTENCE LAYER</b>"]
+        direction LR
+        PYDANTIC["<b>Pydantic Models</b><br/>Item, Storage<br/>Validation"]
+        JSON["<b>JSON File</b><br/>data/*.json<br/>Disk Storage"]
+        PYDANTIC -->|"serialize"| JSON
+    end
+
+    CLIENT <-->|"<b>JSON-RPC 2.0</b><br/>Request/Response"| TRANSPORT
+    TRANSPORT <--> SERVER
+    STATE -.->|"ctx.state"| TOOLS
+    STATE -.->|"ctx.state"| RESOURCES
+    STATE -.->|"ctx.state"| PROMPTS
+    TOOLS <-->|"read/write"| STORAGE
+    RESOURCES -->|"read only"| STORAGE
+
+    classDef clientBox fill:#3b82f6,stroke:#1e40af,color:#fff,stroke-width:2px
+    classDef transportBox fill:#f59e0b,stroke:#b45309,color:#fff,stroke-width:2px
+    classDef coreBox fill:#6366f1,stroke:#4338ca,color:#fff,stroke-width:2px
+    classDef toolBox fill:#10b981,stroke:#047857,color:#fff,stroke-width:2px
+    classDef resourceBox fill:#8b5cf6,stroke:#6d28d9,color:#fff,stroke-width:2px
+    classDef promptBox fill:#ec4899,stroke:#be185d,color:#fff,stroke-width:2px
+    classDef storageBox fill:#64748b,stroke:#334155,color:#fff,stroke-width:2px
+
+    class CC,REQ clientBox
+    class STDIO transportBox
+    class INIT,LIFE,STATE coreBox
+    class T1,T2,T3,T4,T5,T6 toolBox
+    class R1,R2,R3,R4 resourceBox
+    class P1,P2 promptBox
+    class PYDANTIC,JSON storageBox
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <div class="legend-text">
+                        <strong>Client Layer</strong>
+                        Claude Code CLI interface
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f59e0b;"></div>
+                    <div class="legend-text">
+                        <strong>Transport</strong>
+                        stdio bidirectional stream
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #6366f1;"></div>
+                    <div class="legend-text">
+                        <strong>Server Core</strong>
+                        FastMCP initialization
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #10b981;"></div>
+                    <div class="legend-text">
+                        <strong>Tools</strong>
+                        Actions LLM can execute
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b5cf6;"></div>
+                    <div class="legend-text">
+                        <strong>Resources</strong>
+                        Data LLM can read
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ec4899;"></div>
+                    <div class="legend-text">
+                        <strong>Prompts</strong>
+                        Reusable templates
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #64748b;"></div>
+                    <div class="legend-text">
+                        <strong>Storage</strong>
+                        Pydantic + JSON persistence
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated for Claude Code Course - MCP Server Architecture Diagram</p>
+        </footer>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: 'Segoe UI, system-ui, sans-serif',
+                fontSize: '14px',
+                primaryColor: '#6366f1',
+                primaryTextColor: '#1f2937',
+                primaryBorderColor: '#4338ca',
+                lineColor: '#6b7280',
+                secondaryColor: '#f3f4f6',
+                tertiaryColor: '#e5e7eb'
+            },
+            flowchart: {
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 60,
+                htmlLabels: true,
+                useMaxWidth: true
+            }
+        });
+    </script>
+</body>
+</html>
