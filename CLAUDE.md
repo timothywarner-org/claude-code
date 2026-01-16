@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-O'Reilly Live Learning course materials for "Claude Code and Large-Context Reasoning" - a 4-hour training focused on Claude Code CLI, MCP servers, agentic workflows, and custom skills. Uses TypeScript/JavaScript with the Anthropic SDK and MCP SDK.
+O'Reilly Live Learning course materials for "Claude Code and Large-Context Reasoning" - a 4-hour training focused on Claude Code CLI, MCP servers, agentic workflows, and custom skills. Uses TypeScript/JavaScript with the Anthropic SDK and MCP SDK, plus Python with FastMCP for MCP server examples.
 
 ## Development Commands
 
@@ -79,13 +79,32 @@ The course is organized into 4 segments:
 - `client.ts` - Anthropic client factory with model selection and cost formatting
 - `logger.ts` - Colorful console logging for demos
 
-### MCP Memory Server (`segment_2_mcp/memory_server/server.ts`)
+### MCP Memory Servers
 
-A complete MCP server demonstrating persistent memory:
+Two equivalent implementations demonstrating MCP primitives:
 
-- **Tools**: `store_memory`, `recall_memories`, `list_entities`, `delete_memory`, `create_relation`, `search_graph`
-- **Resources**: `memory://entities`, `memory://relations`
+#### TypeScript (`segment_2_mcp/memory_server/server.ts`)
+
+- **Tools**: `remember_decision`, `recall_decisions`, `add_convention`, `get_conventions`, `add_note`, `search_notes`, `set_context`, `get_context`, `memory_summary`
+- **Resources**: `memory://decisions`, `memory://conventions`, `memory://notes`, `memory://context`
 - **Storage**: JSON file at `./data/memory.json` (configurable via `MCP_MEMORY_PATH`)
+
+#### Python (`segment_2_mcp/python_memory_server/server.py`)
+
+Production-ready FastMCP server demonstrating all MCP primitives:
+
+- **Tools**: 9 tools for decisions, conventions, notes, and context
+- **Resources**: 6 resources including dynamic URI templates (`memory://decisions/{id}`)
+- **Prompts**: 4 reusable templates (decision_template, convention_template, context_review, onboarding_guide)
+- **Storage**: JSON file at `./data/python_memory.json`
+
+```bash
+# Install Python dependencies
+pip install -r segment_2_mcp/python_memory_server/requirements.txt
+
+# Add to Claude Code
+claude mcp add python-memory -- python segment_2_mcp/python_memory_server/server.py
+```
 
 ### Custom Skills (`.claude/commands/`)
 
@@ -93,6 +112,7 @@ Multi-file skills with scripts and documentation:
 
 - `code-review/` - Security scanning, performance analysis, lint checks
 - `deploy-prep/` - Pre-flight validation, changelog generation, release prep
+- `mcp-scaffold/` - Python MCP server scaffolding with FastMCP templates, validation scripts, and reference docs
 
 ### Custom Agents (`.claude/agents/`)
 
@@ -101,12 +121,18 @@ Specialized agents that leverage skills:
 - `code-quality-coach.md` - Mentoring agent using code-review skill
 - `release-manager.md` - DevOps agent using deploy-prep skill
 - `claude-code-tutor.md` - Teaching agent for Claude Code concepts
+- `python-mcp-expert.md` - Expert guide for building Python MCP servers with FastMCP
 
 ### Key Dependencies
 
+**TypeScript/JavaScript:**
 - `@anthropic-ai/sdk` - Anthropic API client
 - `@modelcontextprotocol/sdk` - MCP server/client implementation
 - `zod` - Schema validation for MCP tools
+
+**Python:**
+- `fastmcp` - Pythonic MCP server framework
+- `pydantic` - Data validation and serialization
 
 ### Environment Variables
 
