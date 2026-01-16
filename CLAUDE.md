@@ -112,7 +112,11 @@ Multi-file skills with scripts and documentation:
 
 - `code-review/` - Security scanning, performance analysis, lint checks
 - `deploy-prep/` - Pre-flight validation, changelog generation, release prep
-- `mcp-scaffold/` - Python MCP server scaffolding with FastMCP templates, validation scripts, and reference docs
+- `mcp-scaffold/` - Python MCP server scaffolding with FastMCP templates, validation scripts, and reference docs. Includes:
+  - `SKILL.md` - Main workflow with frontmatter
+  - `references/` - FASTMCP-GUIDE.md, PATTERNS.md, DEPLOYMENT.md
+  - `assets/templates/` - basic-server.py, full-server.py, requirements.txt
+  - `scripts/` - scaffold.py, validate.py, init_project.py
 
 ### Custom Agents (`.claude/agents/`)
 
@@ -138,7 +142,11 @@ Specialized agents that leverage skills:
 
 Required: `ANTHROPIC_API_KEY`
 
-Optional: `CLAUDE_MODEL`, `MCP_MEMORY_PATH`
+Optional:
+- `CLAUDE_MODEL` - Model selection (default: `claude-sonnet-4-20250514`)
+- `MCP_MEMORY_PATH` - Memory server storage path (default: `./data/memory.json`)
+- `GITHUB_TOKEN`, `GITHUB_OWNER`, `GITHUB_REPO` - For GitHub integration demos (Segments 3 & 4)
+- `SLACK_BOT_TOKEN`, `SLACK_CHANNEL_ID` - For Slack integration (Segment 3)
 
 See `.env.example` for full configuration.
 

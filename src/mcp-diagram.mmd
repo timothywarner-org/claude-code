@@ -1,0 +1,54 @@
+flowchart TB
+    subgraph CLIENT["MCP CLIENT - Claude Code"]
+        CC[Claude Code CLI]
+        REQ[Request Handler]
+        CC --> REQ
+    end
+
+    subgraph TRANSPORT["TRANSPORT LAYER"]
+        STDIO["stdio - stdin/stdout"]
+    end
+
+    subgraph SERVER["MCP SERVER - FastMCP"]
+        subgraph CORE["Server Core"]
+            INIT["Initialization"]
+            LIFE["Lifespan Manager"]
+            STATE["App State Context"]
+            INIT --> LIFE --> STATE
+        end
+
+        subgraph TOOLS["TOOLS - Actions"]
+            T1["create_item"]
+            T2["list_items"]
+            T3["get_item"]
+            T4["delete_item"]
+            T5["set_metadata"]
+            T6["get_metadata"]
+        end
+
+        subgraph RESOURCES["RESOURCES - Data"]
+            R1["items://"]
+            R2["metadata://"]
+            R3["summary://"]
+            R4["items/id"]
+        end
+
+        subgraph PROMPTS["PROMPTS - Templates"]
+            P1["analyze_items"]
+            P2["create_item_template"]
+        end
+    end
+
+    subgraph STORAGE["PERSISTENCE"]
+        JSON["JSON File"]
+        PYDANTIC["Pydantic Models"]
+        PYDANTIC --> JSON
+    end
+
+    CLIENT <-->|JSON-RPC 2.0| TRANSPORT
+    TRANSPORT <--> SERVER
+    STATE --> TOOLS
+    STATE --> RESOURCES
+    STATE --> PROMPTS
+    TOOLS <--> STORAGE
+    RESOURCES --> STORAGE
