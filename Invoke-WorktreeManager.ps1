@@ -601,7 +601,8 @@ function Merge-WorktreeBranch {
     Write-Host ""
     $cleanup = Read-Host "  Remove the worktree and branch now? (Y/n)"
     if ($cleanup -notin @("n", "N", "no")) {
-        Remove-WorktreeByObject -Worktree $target
+        $wasSquash = $strategy -eq "1"
+        Remove-WorktreeByObject -Worktree $target -SquashMerged:$wasSquash
     }
 }
 
@@ -609,8 +610,16 @@ function Remove-WorktreeByObject {
     <#
     .SYNOPSIS
         Removes a worktree and optionally its branch. Accepts a worktree object.
+    .PARAMETER SquashMerged
+        When set, the branch was squash-merged into the current branch. Squash merges
+        create a new commit with the same content, so git branch --merged will NOT
+        list the original branch -- but the changes ARE safely on the target branch.
+        This flag skips the misleading "unmerged commits" warning and deletes cleanly.
     #>
-    param([PSCustomObject]$Worktree)
+    param(
+        [PSCustomObject]$Worktree,
+        [switch]$SquashMerged
+    )
 
     Write-Tip "Removing a worktree deletes the checkout directory. The branch remains until you delete it too."
 
@@ -636,23 +645,37 @@ function Remove-WorktreeByObject {
 
     # Delete the branch
     if ($Worktree.Branch) {
-        # Check if branch is merged by comparing against the --merged list
-        $mergedBranches = git branch --merged 2>$null | ForEach-Object { $_.Trim().TrimStart('* ') }
-        $isMerged = $Worktree.Branch -in $mergedBranches
-
-        if ($isMerged) {
-            git branch -d $Worktree.Branch 2>&1 | ForEach-Object { Write-Info $_ }
-            Write-Success "Branch '$($Worktree.Branch)' deleted (was fully merged)."
-        }
-        else {
-            Write-Warn "Branch '$($Worktree.Branch)' has unmerged commits."
-            $forceDelete = Read-Host "  Force-delete the branch and lose those commits? (y/N)"
-            if ($forceDelete -in @("y", "Y", "yes")) {
-                git branch -D $Worktree.Branch 2>&1 | ForEach-Object { Write-Info $_ }
-                Write-Success "Branch '$($Worktree.Branch)' force-deleted."
+        if ($SquashMerged) {
+            # Squash merges rewrite commits, so git doesn't consider the branch "merged"
+            # even though all changes are on the target branch. Safe to force-delete.
+            Write-Tip "Squash merges create a new commit, so git reports the branch as 'unmerged' -- but your changes are safe."
+            git branch -D $Worktree.Branch 2>&1 | ForEach-Object { Write-Info $_ }
+            if (Test-GitSuccess) {
+                Write-Success "Branch '$($Worktree.Branch)' deleted (squash-merged into current branch)."
             }
             else {
-                Write-Info "Branch kept. You can delete it later: git branch -D $($Worktree.Branch)"
+                Write-Err "Failed to delete branch '$($Worktree.Branch)' (exit code $LASTEXITCODE)."
+            }
+        }
+        else {
+            # Check if branch is merged by comparing against the --merged list
+            $mergedBranches = git branch --merged 2>$null | ForEach-Object { $_.Trim().TrimStart('* ') }
+            $isMerged = $Worktree.Branch -in $mergedBranches
+
+            if ($isMerged) {
+                git branch -d $Worktree.Branch 2>&1 | ForEach-Object { Write-Info $_ }
+                Write-Success "Branch '$($Worktree.Branch)' deleted (was fully merged)."
+            }
+            else {
+                Write-Warn "Branch '$($Worktree.Branch)' has unmerged commits."
+                $forceDelete = Read-Host "  Force-delete the branch and lose those commits? (y/N)"
+                if ($forceDelete -in @("y", "Y", "yes")) {
+                    git branch -D $Worktree.Branch 2>&1 | ForEach-Object { Write-Info $_ }
+                    Write-Success "Branch '$($Worktree.Branch)' force-deleted."
+                }
+                else {
+                    Write-Info "Branch kept. You can delete it later: git branch -D $($Worktree.Branch)"
+                }
             }
         }
     }
