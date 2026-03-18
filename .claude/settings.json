@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "memory": {
+      "command": "uv",
+      "args": ["run", "python", "server.py"],
+      "cwd": "segment_2_mcp/memory_server"
+    }
+  }
+}
