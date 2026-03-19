@@ -5,9 +5,9 @@
       "url": "https://learn.microsoft.com/api/mcp"
     },
     "memory": {
+      "type": "stdio",
       "command": "uv",
-      "args": ["run", "python", "server.py"],
-      "cwd": "segment_2_mcp/memory_server"
+      "args": ["run", "--directory", "segment_2_mcp/memory_server", "python", "server.py"]
     }
   }
 }
