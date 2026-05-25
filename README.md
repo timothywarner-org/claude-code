@@ -12,23 +12,26 @@ Master Claude Code CLI, MCP servers, agentic workflows, and custom skills. This 
 
 ## Course Overview
 
+The arc is **Zero -> Context -> Agents -> Hero**. Each segment builds on the last.
+
 | Segment | Focus | Difficulty | Key Skills |
 |---------|-------|------------|------------|
-| Segment 1 | Claude Code Quick Start | Beginner | Installation, CLI basics, terminal workflows |
-| Segment 2 | MCP (Model Context Protocol) | Intermediate | Installing servers via CLI, memory persistence |
-| Segment 3 | Agents | Intermediate | Agentic loops, autonomous operations, boundaries |
-| Segment 4 | Skills + Agents | Advanced | Custom skills, production workflows, CI/CD |
+| 1 - Zero | Claude Code Quick Start | Beginner | Install, CLI basics, your first CLAUDE.md |
+| 2 - Context | CLAUDE.md at Every Scope | Beginner -> Intermediate | Hierarchy, imports, context engineering |
+| 3 - Agents | Autonomy with Boundaries | Intermediate | Agent loop, `--allowedTools`, subagents |
+| 4 - Hero | Skills, Subagents, and Reach | Intermediate -> Advanced | Dynamic context injection, subagents, consuming MCP |
 
 ## What You'll Build
 
-A production-ready **Claude development environment** with persistent memory and custom automation:
+A production-ready **Claude development environment** built on the CLAUDE.md hierarchy:
 
 | Component | Purpose | Capabilities |
 |-----------|---------|--------------|
-| **Claude Code Setup** | Terminal Workflows | Code review, refactoring, commit messages |
-| **MCP Memory Server** | Persistent Context | Remembers decisions, entities, relationships |
-| **Custom Skills** | Automation | Reusable slash commands for your team |
-| **Agent Workflows** | Autonomous Operations | Multi-step tasks with proper boundaries |
+| **CLAUDE.md Hierarchy** | Project memory at three scopes | User, project, and subdirectory rules with `@path/file.md` imports |
+| **Boundary Spec** | Real-time agent kill switch | Markdown-defined deny lists, edited live |
+| **Custom Skills** | Reusable workflows | Slash commands with dynamic context injection (`` !`bash` ``) |
+| **Subagents** | Isolated context, parallel reasoning | Frontmatter-scoped tools, models, and skills |
+| **MCP Consumption** | Reach beyond the repo | Pre-wired `microsoft-learn` server, optional build-your-own FastMCP example |
 
 ## Prerequisites
 
@@ -60,50 +63,49 @@ claude-code/
 │       ├── client.ts                   # Anthropic client factory
 │       └── logger.ts                   # Colorful logging utility
 │
-├── segment_1_quickstart/               # Claude Code Quick Start
-│   ├── 01_installation.md              # Setup guide
+├── segment_1_quickstart/               # Zero: install + first CLAUDE.md
+│   ├── 01_installation.md              # Setup + smallest useful CLAUDE.md
 │   ├── 02_verify_setup.ts              # Verify installation
-│   └── 03_terminal_workflows.ts        # Basic CLI workflows
+│   ├── 03_terminal_workflows.ts        # Basic CLI workflows
+│   └── CLAUDE.md                       # Segment 1 subdirectory rules
 │
-├── segment_2_mcp/                      # Model Context Protocol
-│   ├── 01_mcp_quickstart.md            # MCP installation guide
-│   ├── 02_mcp_architecture.ts          # Understanding MCP
-│   └── memory_server/                  # JSON memory server
-│       ├── server.ts
-│       └── README.md
+├── segment_2_context/                  # Context: CLAUDE.md at every scope
+│   ├── 01_claude_md_at_every_scope.md  # The load-bearing lesson
+│   └── CLAUDE.md                       # Lives as a worked example
 │
-├── segment_3_agents/                   # Agentic Workflows
-│   ├── 01_agents_intro.md              # Agent concepts
+├── segment_3_agents/                   # Agents: autonomy with boundaries
+│   ├── 01_agents_intro.md              # Agent loop, --allowedTools, kill switch
 │   ├── 02_agent_loop.ts                # Plan-Execute-Observe loop
 │   ├── 03_agent_boundaries.ts          # Permissions and safety
-│   └── 04_custom_agents.md             # Building custom agents
+│   ├── 04_custom_agents.md             # Subagents (Part 2)
+│   └── CLAUDE.md                       # Boundary spec (the lesson, live)
 │
-├── segment_4_skills_agents/            # Skills + Agents
-│   ├── 01_skills_intro.md              # Creating custom skills
-│   └── 02_production_workflows.ts      # Code review, docs, releases
+├── segment_4_hero/                     # Hero: skills, subagents, MCP consumption
+│   ├── 01_skills_intro.md              # Skills with dynamic context injection
+│   ├── 02_mcp_architecture.ts          # MCP architecture (advanced reference)
+│   ├── 02_production_workflows.ts      # Code review, docs, releases
+│   ├── 04_mcp_consumption.md           # Consume the microsoft-learn server
+│   ├── MCP_SPEC_CHANGELOG.md           # Spec history for advanced learners
+│   ├── memory_server/                  # Optional: build-your-own FastMCP
+│   └── CLAUDE.md                       # Segment 4 subdirectory rules
+│
+├── demos/                              # Live walkthrough punchlists
+│   ├── segment_1_zero_punchlist.md
+│   ├── segment_2_context_punchlist.md
+│   ├── segment_3_agents_punchlist.md
+│   ├── segment_4_hero_punchlist.md
+│   └── mcp-server-demo-punchlist.md    # Optional: build-your-own MCP
 │
 ├── .claude/
-│   ├── agents/                         # Custom agents (subagents)
-│   │   ├── code-quality-coach.md       # Mentoring agent + code-review skill
-│   │   ├── release-manager.md          # DevOps agent + deploy-prep skill
-│   │   └── claude-code-tutor.md        # Teaching agent for this course
-│   └── commands/                       # Custom slash commands (skills)
-│       ├── code-review/                # Multi-file code review skill
-│       │   ├── code-review.md          # Main workflow with frontmatter
-│       │   ├── SECURITY_CHECKLIST.md   # OWASP Top 10 reference
-│       │   ├── PERFORMANCE_GUIDE.md    # Performance patterns
-│       │   └── scripts/                # Automated scanners
-│       │       ├── security_scan.py
-│       │       └── lint_check.py
-│       └── deploy-prep/                # Multi-file deployment skill
-│           ├── deploy-prep.md          # Main workflow
-│           ├── CHANGELOG_FORMAT.md     # Formatting rules
-│           ├── SEMVER_GUIDE.md         # Version guidance
-│           ├── scripts/                # Automation scripts
-│           │   ├── preflight_check.py
-│           │   └── generate_changelog.py
-│           └── templates/              # Release templates
-│               └── RELEASE_TEMPLATE.md
+│   ├── settings.json                   # Project MCP wiring (microsoft-learn)
+│   ├── agents/                         # Subagents
+│   │   ├── code-quality-coach.md
+│   │   ├── release-manager.md
+│   │   ├── claude-code-tutor.md
+│   │   ├── python-mcp-expert.md
+│   │   └── terraform-architect.md
+│   └── skills/                         # Custom skills (canonical location)
+│       └── mcp-scaffold/               # FastMCP server scaffolding
 │
 └── docs/
     ├── SETUP.md                        # Detailed setup guide
@@ -152,19 +154,22 @@ claude-code/
 npm run segment1:verify      # Verify Claude API setup
 npm run segment1:workflows   # Terminal workflow demos
 
-# Segment 2: MCP
-npm run segment2:architecture  # MCP architecture visualization
-npm run segment2:memory        # Start memory server
+# Segment 2: Context (CLAUDE.md at every scope)
+# No npm scripts — the lesson is markdown and live demos. See:
+#   segment_2_context/01_claude_md_at_every_scope.md
+#   demos/segment_2_context_punchlist.md
 
 # Segment 3: Agents
 npm run segment3:agent-loop   # Agent loop demonstration
 npm run segment3:boundaries   # Permission boundaries demo
 
-# Segment 4: Skills + Agents
-npm run segment4:workflows    # Production workflow demos
+# Segment 4: Hero (skills, subagents, MCP consumption)
+npm run segment4:workflows     # Production workflow demos
+npm run segment4:architecture  # MCP architecture (advanced reference)
+npm run segment4:memory        # Start optional Python FastMCP memory server
 
 # Utilities
-npm run mcp:memory           # Start MCP memory server
+npm run mcp:memory           # Start MCP memory server (same as above)
 npm run build                # Compile TypeScript
 npm run lint                 # Run ESLint
 npm run format               # Run Prettier
@@ -172,120 +177,99 @@ npm run format               # Run Prettier
 
 ## Segment Summaries
 
-### Segment 1: Claude Code Quick Start
+### Segment 1: Zero — Claude Code Quick Start
 
-**Scenario:** Get up and running with Claude Code CLI in minutes
+**Cold open:** "You just told Claude about your project. Congratulations, it forgot the moment you closed the terminal."
 
 **What you'll learn:**
 
 - Installing Claude Code (`npm install -g @anthropic-ai/claude-code`)
-- Essential CLI commands and flags
-- Terminal workflows: streaming, code review, refactoring
-- Configuration files (`.claude/settings.json`, `CLAUDE.md`)
+- Essential CLI commands, flags, and model aliases
+- Writing the **smallest useful `CLAUDE.md`** at the repo root
+- Verifying Claude reads it on every turn
 
 **Key commands:**
 
 ```bash
 claude                        # Start interactive session
 claude "review this file"     # One-shot query
-claude --model sonnet         # Choose model
+claude --model sonnet         # Resolves to the latest Sonnet
 claude --allowedTools "Read"  # Restrict tools
 ```
 
 ---
 
-### Segment 2: MCP (Model Context Protocol)
+### Segment 2: Context — CLAUDE.md at Every Scope
 
-**Scenario:** Give Claude persistent memory across sessions
+**Cold open:** "You explained your tech stack on Monday. On Tuesday, Claude was guessing again. The fix is not just one CLAUDE.md — it's CLAUDE.md at the right scope."
 
 **What you'll learn:**
 
-- What MCP is and why it matters
-- Installing MCP servers with the Claude CLI
-- MCP primitives: Tools, Resources, Prompts
-- Using our JSON memory server for persistent context
+- The three-scope cascade: user, project, subdirectory
+- The `@path/file.md` import trick for splitting fat CLAUDE.md files
+- Five real CLAUDE.md files shipped in this repo as a worked example
+- Context engineering as disciplined CLAUDE.md authoring
 
-**Key commands:**
-
-```bash
-# Add memory server
-claude mcp add memory -- npx tsx segment_2_mcp/memory_server/server.ts
-
-# List installed servers
-claude mcp list
-
-# Use memory tools
-> store_memory entity "UserService" content "Handles authentication"
-> recall_memories query "authentication"
-```
+**No new commands** — the lesson lives entirely in the markdown hierarchy. Walk the punchlist at `demos/segment_2_context_punchlist.md`.
 
 ---
 
-### Segment 3: Agents
+### Segment 3: Agents — Autonomy with Boundaries
 
-**Scenario:** Let Claude work autonomously with proper boundaries
+**Cold open:** "You can let Claude drive ten tools in a row without asking. That is an agent. The same trick that saves you an hour can torch your branch in thirty seconds."
 
 **What you'll learn:**
 
-- What makes Claude "agentic"
-- The agent loop: Plan → Execute → Observe → Adjust
-- Permission levels and tool restrictions
-- Creating custom agents (subagents)
-- Agents that leverage Skills
+- The agent loop: Plan -> Execute -> Observe -> Adjust
+- Two autonomy levers: `--allowedTools` and a CLAUDE.md boundary spec
+- Subagents with isolated context windows (Part 2 of the story)
+- The CLAUDE.md kill switch you can edit in real time
 
 **Permission levels:**
 
 ```bash
 claude                                    # Default (confirms each action)
 claude --allowedTools "Read,Glob,Grep"    # Read-only tools pre-approved
-claude --dangerously-skip-permissions     # Full autonomy (use carefully!)
+claude --dangerously-skip-permissions     # Full autonomy (throwaway branches only)
 ```
 
-**Example agents included:**
-- `code-quality-coach` - Mentoring agent that uses the code-review skill
-- `release-manager` - DevOps agent that uses the deploy-prep skill
-- `claude-code-tutor` - Teaching agent for learning Claude Code
+**Example agents shipped:**
+- `code-quality-coach` — Mentoring agent + code-review skill
+- `release-manager` — DevOps agent + deploy-prep skill
+- `claude-code-tutor` — Teaching agent for this course
+- `python-mcp-expert` — Pair for FastMCP server building
+- `terraform-architect` — IaC expert for Azure infrastructure
 
 ---
 
-### Segment 4: Skills + Agents
+### Segment 4: Hero — Skills, Subagents, and Reach
 
-**Scenario:** Create reusable workflows and production integrations
+**Cold open:** "A skill is the answer to 'I just typed this exact 12-step prompt for the fourth time.'"
 
 **What you'll learn:**
 
-- Creating custom skills with `.claude/commands/*.md`
-- Dynamic arguments with `$ARGUMENTS`
-- Production workflows: code review, documentation, releases
-- CI/CD integration with GitHub Actions
+- **Skills** with dynamic context injection (`` !`bash` ``), `${CLAUDE_SKILL_DIR}`, and `context: fork`
+- **Subagents** in `.claude/agents/` with frontmatter-scoped tools and models
+- **MCP consumption**: query the `microsoft-learn` server already wired into `.claude/settings.json`
+- Optional homework: build your own FastMCP server (see `segment_4_hero/memory_server/`)
 
-**Example skills included:**
+**Skill anatomy** (`.claude/skills/<name>/SKILL.md` is canonical; `.claude/commands/` still works for back-compat):
 
-```
-.claude/commands/
-├── code-review/          # Security & performance review
-│   ├── code-review.md    # Main workflow + frontmatter
-│   ├── SECURITY_CHECKLIST.md
-│   ├── PERFORMANCE_GUIDE.md
-│   └── scripts/
-│       ├── security_scan.py
-│       └── lint_check.py
-└── deploy-prep/          # Release preparation
-    ├── deploy-prep.md
-    ├── CHANGELOG_FORMAT.md
-    ├── SEMVER_GUIDE.md
-    ├── scripts/
-    │   ├── preflight_check.py
-    │   └── generate_changelog.py
-    └── templates/
-        └── RELEASE_TEMPLATE.md
+```yaml
+---
+name: review-changes
+description: Review my uncommitted changes for bugs and missing tests
+allowed-tools: Read, Glob, Grep
+---
+
+## Current diff
+!`git diff HEAD`
+
+## Your task
+Flag bugs, anti-patterns, and missing tests.
 ```
 
-Usage:
-```bash
-/project:code-review feature/auth    # Review a branch
-/project:deploy-prep minor --dry-run # Prepare minor release
-```
+The `` !`git diff HEAD` `` runs at render time, before Claude sees the prompt.
 
 ## Key Code Examples
 
@@ -303,54 +287,65 @@ const response = await client.messages.create({
 });
 ```
 
-### MCP Memory Server
+### Consuming an MCP Server (Segment 4)
 
-```typescript
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
+The `microsoft-learn` server is pre-wired in `.claude/settings.json`. Inside a Claude Code session:
 
-const server = new McpServer({ name: 'memory', version: '1.0.0' });
-
-server.tool('store_memory', 'Store information', {
-  entity: z.string(),
-  content: z.string()
-}, async ({ entity, content }) => {
-  // Save to persistent storage
-  return { content: [{ type: 'text', text: `Stored: ${entity}` }] };
-});
+```text
+> /mcp                        # Browse registered servers
+> Use the microsoft-learn server to find the GA version of AKS today.
 ```
 
-### Advanced Skill with Frontmatter and Scripts
+Claude calls `microsoft_docs_search`, then optionally `microsoft_docs_fetch` for depth. No server code to write — just consume.
+
+### Building Your Own MCP Server (Optional Homework)
+
+```python
+# segment_4_hero/memory_server/server.py (excerpt)
+from fastmcp import FastMCP
+
+mcp = FastMCP("memory")
+
+@mcp.tool()
+def remember_decision(title: str, decision: str) -> str:
+    """Persist a project decision to local JSON."""
+    # ... save to ./data/memory.json
+    return f"Saved: {title}"
+```
+
+Register it:
+
+```bash
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
+```
+
+### Advanced Skill with Frontmatter and Dynamic Context Injection
 
 ```markdown
-<!-- .claude/commands/code-review/code-review.md -->
+<!-- .claude/skills/pr-summary/SKILL.md -->
 ---
-name: code-review
-description: Comprehensive code review with security scanning
-allowed-tools: Read, Glob, Grep, Bash(git:*, python:*)
-argument-hint: "[branch|file|--staged]"
+name: pr-summary
+description: Summarize the current pull request
+allowed-tools: Bash(gh *)
 ---
 
-# Code Review Workflow
+## Pull request context
+- PR diff: !`gh pr diff`
+- PR comments: !`gh pr view --comments`
+- Changed files: !`gh pr diff --name-only`
 
-## Step 1: Run Automated Scans
-```bash
-python .claude/commands/code-review/scripts/security_scan.py
+## Your task
+Summarize the PR. Flag risks. Suggest reviewers.
 ```
 
-## Step 2: Manual Analysis
-For security patterns, see [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)
-
-## Step 3: Output Report
-Generate JSON with issues, severity, and suggestions.
-```
+Three `gh` commands run at render time. Claude only sees the rendered prompt with real PR data inlined.
 
 ## Claude vs Copilot: When to Use Each
 
 | Use Case | Claude | Copilot | Why |
 |----------|--------|---------|-----|
-| Full codebase analysis | **Yes** | No | 200K context vs ~8K |
-| Persistent project memory | **Yes** (MCP) | No | MCP servers maintain state |
+| Full codebase analysis | **Yes** | No | 1M context vs ~8K |
+| Persistent project memory | **Yes** (CLAUDE.md + MCP) | No | Markdown hierarchy + MCP servers |
 | Line-by-line autocomplete | No | **Yes** | Copilot optimized for inline |
 | Complex refactoring | **Yes** | Limited | Claude reasons across files |
 | Custom workflows | **Yes** (Skills) | No | Skills enable automation |
@@ -359,14 +354,14 @@ Generate JSON with issues, severity, and suggestions.
 
 | Time | Activity |
 |------|----------|
-| 0:00 - 0:50 | Segment 1: Claude Code Quick Start |
+| 0:00 - 0:50 | Segment 1: Zero (Claude Code Quick Start) |
 | 0:50 - 1:00 | Q&A + Break |
-| 1:00 - 1:50 | Segment 2: MCP (Model Context Protocol) |
+| 1:00 - 1:50 | Segment 2: Context (CLAUDE.md at Every Scope) |
 | 1:50 - 2:00 | Q&A + Break |
-| 2:00 - 2:50 | Segment 3: Agents |
+| 2:00 - 2:50 | Segment 3: Agents (Autonomy with Boundaries) |
 | 2:50 - 3:00 | Q&A + Break |
-| 3:00 - 3:50 | Segment 4: Skills + Agents |
-| 3:50 - 4:00 | Wrap-up, resources, next steps |
+| 3:00 - 3:50 | Segment 4: Hero (Skills, Subagents, MCP Consumption) |
+| 3:50 - 4:00 | Wrap-up, capstone, next steps |
 
 ## Learning Resources
 

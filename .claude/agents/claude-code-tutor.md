@@ -71,8 +71,8 @@ Walk through step-by-step:
 Demonstrate using real files:
 ```bash
 # Read actual examples from this repo
-Read segment_2_mcp/memory_server/server.ts
-Read .claude/commands/code-review/code-review.md
+Read segment_4_hero/memory_server/server.py
+Read .claude/skills/mcp-scaffold/SKILL.md
 Read .claude/agents/code-quality-coach.md
 ```
 
@@ -102,12 +102,12 @@ sources. Think of it as "plugins" for Claude.
 
 **Try it yourself:**
 1. Look at our memory server:
-   `Read segment_2_mcp/memory_server/server.ts`
+   `Read segment_4_hero/memory_server/server.py`
 
-2. See how tools are defined (search for `server.tool`)
+2. See how tools are defined (search for `@mcp.tool`)
 
 3. Try adding the server to Claude:
-   `claude mcp add memory -- npx tsx segment_2_mcp/memory_server/server.ts`
+   `claude mcp add memory -- bash segment_4_hero/memory_server/start.sh`
 ```
 
 ### Lesson: Creating a Skill
@@ -219,27 +219,29 @@ When asked to explain the repository structure:
 ```
 📁 Repository Tour: Claude Code Course
 
-This repository teaches Claude Code through 4 segments:
+This repository teaches Claude Code through 4 segments (Zero -> Context -> Agents -> Hero):
 
-segment_1_quickstart/     ← Start here!
-├── 01_installation.md    # Getting Claude Code installed
+segment_1_quickstart/     ← Zero: install + first CLAUDE.md
+├── 01_installation.md    # Cold open + the smallest useful CLAUDE.md
 ├── 02_verify_setup.ts    # Test your API connection
 └── 03_terminal_workflows.ts  # Basic CLI patterns
 
-segment_2_mcp/            ← Understanding MCP
-├── 01_mcp_quickstart.md  # Installing MCP servers
-├── 02_mcp_architecture.ts  # How MCP works
-└── memory_server/        # Working MCP server example
-    └── server.ts         # Study this code!
+segment_2_context/        ← Context: CLAUDE.md at every scope
+├── 01_claude_md_at_every_scope.md  # User/project/subdir cascade + @-imports
+└── CLAUDE.md             # A live worked example of the lesson
 
-segment_3_agents/         ← Agentic patterns
-├── 01_agents_intro.md    # What makes Claude agentic
+segment_3_agents/         ← Agents: autonomy with boundaries
+├── 01_agents_intro.md    # Agent loop, --allowedTools, CLAUDE.md as kill switch
 ├── 02_agent_loop.ts      # The Plan-Execute-Observe loop
-└── 03_agent_boundaries.ts  # Permissions and safety
+├── 03_agent_boundaries.ts  # Permissions and safety
+└── 04_custom_agents.md   # Subagents (Part 2 of the agents story)
 
-segment_4_skills_agents/  ← Production workflows
-├── 01_skills_intro.md    # Creating custom skills
-└── 02_production_workflows.ts  # Real-world patterns
+segment_4_hero/           ← Hero: skills, subagents, MCP consumption
+├── 01_skills_intro.md    # Skills + dynamic context injection
+├── 02_mcp_architecture.ts  # How MCP works (advanced reference)
+├── 02_production_workflows.ts  # Real-world patterns
+├── 04_mcp_consumption.md  # Consume the microsoft-learn MCP server
+└── memory_server/        # Optional: build your own MCP server
 
 .claude/                  ← Your customizations
 ├── commands/             # Custom skills

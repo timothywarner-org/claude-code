@@ -1,197 +1,105 @@
-# Claude Code Agents
+# Agents, Part 1: Autonomy with Boundaries
 
-Agents enable Claude to work autonomously on multi-step tasks.
+> Part 1 of a two-part story. Part 2 is `04_custom_agents.md` (subagents with their own context window). Read them as one continuous arc: this file frames the **agent loop in your main conversation**; part 2 frames **subagents** as a force multiplier on top of it.
 
-## What is Agentic Mode?
+## Cold open
 
-In agentic mode, Claude Code can:
+You can let Claude drive ten tools in a row without asking permission each time. That is an **agent**. The same trick that saves you an hour can torch your branch in thirty seconds. This segment teaches both edges of that knife.
 
-- **Plan** multi-step operations
-- **Execute** tools autonomously
-- **Iterate** until the task is complete
-- **Recover** from errors and adjust approach
+## The mental model
+
+An **agent** is Claude with permission to take multiple actions without checking in. Same model, same conversation, different permission posture. The loop is four moves:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                        Agentic Loop                                      │
+│                        Agent Loop                                        │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│   ┌─────────┐     ┌─────────┐     ┌─────────┐     ┌─────────┐          │
-│   │  Plan   │────►│ Execute │────►│ Observe │────►│ Adjust  │          │
-│   └─────────┘     └─────────┘     └─────────┘     └────┬────┘          │
-│        ▲                                               │                │
-│        └───────────────────────────────────────────────┘                │
+│   ┌─────────┐     ┌─────────┐     ┌─────────┐     ┌─────────┐           │
+│   │  Plan   │────►│ Execute │────►│ Observe │────►│ Adjust  │           │
+│   └─────────┘     └─────────┘     └─────────┘     └────┬────┘           │
+│        ▲                                               │                 │
+│        └───────────────────────────────────────────────┘                 │
 │                        (repeat until done)                               │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Enabling Agentic Mode
+**Agents come in two forms** in Claude Code. Hold this distinction in your head for the rest of the segment.
 
-### Permission Levels
+1. **The agent loop in your main conversation** (this file). You scope what Claude may touch with `--allowedTools` and a CLAUDE.md boundary spec. Same context window you already have.
+2. **Subagents** (see `04_custom_agents.md`). Specialized assistants with **their own context window**. Spawned by description match or by `--agents` flag. Their research scrollback never bloats your main session.
+
+This file teaches the loop. Part 2 teaches the force multiplier.
+
+### Why boundaries are not optional
+
+Claude reads CLAUDE.md **on every turn**. That means the boundary file is a **kill switch you can edit in real time**. Add a "do not touch `tsconfig.json`" line, save the file, and the next tool call respects it. No restart, no flag, no config reload. Change markdown, change behavior. This is why Segment 2 spent so much time on CLAUDE.md scopes: the boundary spec is just a scoped CLAUDE.md sitting next to the code it governs.
+
+The two autonomy levers you actually use:
 
 ```bash
-# Interactive mode (default) - Claude asks before each action
-claude
+# Scoped autonomy: read-only exploration, no surprises
+claude --allowedTools "Read,Glob,Grep"
 
-# Pre-approve specific tools (semi-agentic)
-claude --allowedTools "Read,Glob,Grep,Edit,Write"
-
-# Fully autonomous (use carefully!)
+# Full autonomy: only inside a throwaway branch, never on main
 claude --dangerously-skip-permissions
 ```
 
-### Tool Permissions in Settings
+Everything in between is a CLAUDE.md decision.
 
-Create `.claude/settings.json`:
+## The demo
 
-```json
-{
-  "permissions": {
-    "allow": ["Read", "Glob", "Grep"],
-    "deny": ["Bash"]
-  }
-}
-```
+Walk through `demos/segment_3_agents_punchlist.md`. The short version:
 
-## Agent Boundaries
+1. Launch Claude with `--allowedTools "Read,Glob,Grep"` (read-only autonomy).
+2. Ask it to map this codebase's architecture.
+3. Watch it take 15+ actions without a single permission prompt.
+4. `Ctrl+D` out. Edit `segment_3_agents/CLAUDE.md` to add a deny rule.
+5. Relaunch with write tools enabled. Ask for a destructive change. Watch Claude refuse, citing your edit.
 
-Define what Claude can and cannot do:
+The punchlist has the exact commands and the expected output.
 
-### Safe for Autonomous Operation
+## Try it now (10 minutes, your own repo)
 
-- ✅ Reading files (`Read`, `Glob`, `Grep`)
-- ✅ Analyzing code structure
-- ✅ Generating documentation
-- ✅ Writing new files (with `Write`)
-- ✅ Editing existing files (with `Edit`)
-
-### Requires Human Approval
-
-- ⚠️ Running shell commands (`Bash`)
-- ⚠️ Making git commits
-- ⚠️ Modifying system configuration
-- ⚠️ External API calls
-
-### Never Allow Autonomously
-
-- ❌ Deleting files without confirmation
-- ❌ Force pushing to git
-- ❌ Modifying credentials or secrets
-- ❌ Running destructive shell commands
-
-## Agentic Patterns
-
-### Pattern 1: Explore → Plan → Execute
+Run this against a real repository of yours, not the course repo. The goal is to feel the **scoped autonomy** posture.
 
 ```bash
-# Claude explores, plans, then executes
-claude "Find all TypeScript files with TODO comments, create an issue for each"
+# 1. cd into a repo you know well
+cd path/to/your/repo
+
+# 2. Launch read-only agent
+claude --allowedTools "Read,Glob,Grep"
+
+# 3. Give it a job that needs many tool calls
+> Map this codebase. List the top-level modules, the public API surface,
+  and any tests that look stale. Output a one-page Markdown report.
+
+# 4. Watch the loop. Count the tool calls.
+# 5. When it finishes, ask:
+> What would you have done differently if you had Edit?
 ```
 
-Claude will:
-1. Search for TODO comments
-2. Analyze and categorize them
-3. Create structured issues (or output)
+What you should notice: Claude executes a dozen-plus actions, summarizes findings, and never once asks "may I read this file?" That is the agent loop. The `--allowedTools` flag is the boundary. No CLAUDE.md needed for this slice because the flag already says "read-only."
 
-### Pattern 2: Iterative Refinement
+Now imagine that same loop with `Write,Edit,Bash` added and **no** boundary spec. That is why the next file exists.
 
-```bash
-# Claude runs tests, fixes failures, repeats
-claude "Run the tests and fix any failures. Keep going until all tests pass."
-```
+## Check your understanding
 
-Claude will:
-1. Run the test suite
-2. Analyze failures
-3. Fix each issue
-4. Re-run tests
-5. Repeat until green
+1. Claude reads CLAUDE.md once at session start. **True or false?**
+2. You want Claude to refactor an auth module overnight while you sleep. Which two autonomy levers do you reach for, and in what order?
+3. What is the one architectural difference between the **agent loop** (this file) and a **subagent** (part 2)?
 
-### Pattern 3: Multi-File Refactoring
+Answers, in order: **false** (every turn); **`--allowedTools` first to scope the toolset, then a CLAUDE.md in the working directory to deny dangerous paths, and a fresh git branch as the third belt because two is never enough**; **a subagent runs in its own context window so its scrollback does not bloat the main conversation**.
 
-```bash
-# Claude refactors across the codebase
-claude "Rename the User class to Account everywhere in the codebase"
-```
+> One agent is useful. A team of small specialized agents, each with its own context window, is a force multiplier. That is `04_custom_agents.md`.
 
-Claude will:
-1. Find all references
-2. Update imports
-3. Rename the class
-4. Update tests
-5. Verify compilation
+## What you should be able to do now
 
-## Configuring Agent Behavior
+1. **Launch Claude with `--allowedTools`** to scope autonomy to a specific risk level.
+2. **Write a CLAUDE.md boundary spec** that Claude will respect on every turn (see `segment_3_agents/CLAUDE.md` in this directory for the canonical example).
+3. **Design a permission policy** that matches a real risk level: read-only for exploration, guided-edit for feature work, full-auto only inside a throwaway branch.
 
-### System Prompts for Agents
+## Next
 
-```bash
-claude --system-prompt "You are a careful code reviewer. Always explain your reasoning before making changes."
-```
-
-### With CLAUDE.md
-
-```markdown
-# Agent Instructions
-
-When working autonomously:
-1. Always create a backup before editing
-2. Run tests after each change
-3. Stop and ask if you encounter unexpected errors
-```
-
-## Monitoring Agent Actions
-
-### Verbose Mode
-
-```bash
-# See all tool calls and decisions
-claude --verbose "Refactor the auth module"
-```
-
-### Output to File
-
-```bash
-# Log agent actions for review
-claude -p "Fix all linting errors" 2>&1 | tee agent-log.txt
-```
-
-## Safety Best Practices
-
-1. **Start with read-only tools** - Let Claude explore before granting write access
-2. **Use git** - Easy rollback if something goes wrong
-3. **Set boundaries** - Be explicit about what Claude shouldn't do
-4. **Review changes** - Use `git diff` before committing
-5. **Test in isolation** - Use a branch for major refactoring
-
-## Example Agent Session
-
-```
-$ claude --allowedTools "Read,Glob,Grep,Edit,Write"
-
-> Find all deprecated functions and update them to use the new API
-
-I'll search for deprecated markers and update each one.
-
-[Searching for @deprecated annotations...]
-Found 5 deprecated functions.
-
-[Reading src/utils/oldApi.ts...]
-[Editing src/utils/oldApi.ts...]
-Updated deprecatedFunction1 to use newApi()
-
-[Reading src/services/legacy.ts...]
-[Editing src/services/legacy.ts...]
-Updated deprecatedFunction2 to use modernService()
-
-...
-
-Done! Updated 5 functions. Run `git diff` to review changes.
-```
-
-## Next Steps
-
-1. Try an autonomous task with read-only tools first
-2. Gradually expand permissions as you gain trust
-3. Continue to Segment 4 to learn about Skills
+Read `04_custom_agents.md` for subagents. Same model, isolated context, parallel exploration.

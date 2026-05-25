@@ -13,15 +13,14 @@
     "segment1:verify": "tsx segment_1_quickstart/02_verify_setup.ts",
     "segment1:workflows": "tsx segment_1_quickstart/03_terminal_workflows.ts",
 
-    "segment2:architecture": "tsx segment_2_mcp/02_mcp_architecture.ts",
-    "segment2:memory": "tsx segment_2_mcp/memory_server/server.ts",
-
     "segment3:agent-loop": "tsx segment_3_agents/02_agent_loop.ts",
     "segment3:boundaries": "tsx segment_3_agents/03_agent_boundaries.ts",
 
-    "segment4:workflows": "tsx segment_4_skills_agents/02_production_workflows.ts",
+    "segment4:architecture": "tsx segment_4_hero/02_mcp_architecture.ts",
+    "segment4:workflows": "tsx segment_4_hero/02_production_workflows.ts",
+    "segment4:memory": "bash segment_4_hero/memory_server/start.sh",
 
-    "mcp:memory": "tsx segment_2_mcp/memory_server/server.ts"
+    "mcp:memory": "bash segment_4_hero/memory_server/start.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",

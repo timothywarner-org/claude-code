@@ -1,10 +1,11 @@
 /**
- * Segment 2: MCP Architecture Overview
+ * Segment 4 (Hero): MCP Architecture Overview
  *
  * Visual explanation of Model Context Protocol architecture,
- * components, and how to build MCP servers.
+ * components, and how to build MCP servers. Originally lived in
+ * segment_2_mcp/ before the 2026-05-25 course rearchitecture.
  *
- * Run: npx tsx segment_2_mcp/02_mcp_architecture.ts
+ * Run: npx tsx segment_4_hero/02_mcp_architecture.ts
  */
 
 import { logger } from '../src/utils/logger.js';
@@ -177,8 +178,8 @@ CONFIGURATION FILES
 {
   "mcpServers": {
     "memory": {
-      "command": "npx",
-      "args": ["tsx", "./segment_2_mcp/memory_server/server.ts"]
+      "command": "bash",
+      "args": ["./segment_4_hero/memory_server/start.sh"]
     }
   }
 }
@@ -219,7 +220,7 @@ async function main(): Promise<void> {
   logger.section('Next Steps');
   console.log(`
 1. Add the memory server to Claude Code:
-   claude mcp add memory -- npx tsx ./segment_2_mcp/memory_server/server.ts
+   claude mcp add memory -- bash ./segment_4_hero/memory_server/start.sh
 
 2. Test it in Claude Code:
    claude "Remember that we use TypeScript for this project"

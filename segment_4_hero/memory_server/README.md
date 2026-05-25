@@ -141,7 +141,7 @@ offers before connecting it to Claude Code.
 ### Step 1: Start the Inspector
 
 ```bash
-cd segment_2_mcp/memory_server
+cd segment_4_hero/memory_server
 uv run -- fastmcp dev server.py
 ```
 
@@ -222,10 +222,10 @@ If you want to add it to a different project:
 
 ```bash
 # Positional stdio form (recommended)
-claude mcp add memory -- bash segment_2_mcp/memory_server/start.sh
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 
 # JSON-config alternative (same result, more portable)
-claude mcp add-json memory '{"type":"stdio","command":"bash","args":["segment_2_mcp/memory_server/start.sh"]}'
+claude mcp add-json memory '{"type":"stdio","command":"bash","args":["segment_4_hero/memory_server/start.sh"]}'
 ```
 
 This writes the server config to your project's `.claude/settings.json`.
@@ -241,7 +241,7 @@ If you're using the Claude Code VS Code extension, check
     "memory": {
       "type": "stdio",
       "command": "bash",
-      "args": ["segment_2_mcp/memory_server/start.sh"]
+      "args": ["segment_4_hero/memory_server/start.sh"]
     }
   }
 }

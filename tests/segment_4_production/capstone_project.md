@@ -1,364 +1,154 @@
-# Capstone Project: Production AI Development Pipeline
+# Capstone Project: A Multi-Scope CLAUDE.md System for Your Own Repo
 
 ## Overview
 
-Build a complete, production-ready AI development pipeline that integrates all concepts from
-the course: large context handling, MCP servers, Claude Code CLI, and CI/CD automation.
+Take the **Zero -> Context -> Agents -> Hero** arc and apply it end to end on a repo you actually own. The deliverable is a system another human can read, audit, and extend — not a one-shot demo.
 
-**Time Estimate**: 3-4 hours
+**Time estimate**: 3-4 hours
 **Difficulty**: Advanced
-**Prerequisites**: All previous segments completed
+**Prerequisites**: All four segments completed; a real repo to work in (not a scratch directory)
 
-## Project Description
+## What you are building
 
-Create an **AI-Powered Code Review and Documentation System** that:
+A working, committed **context system** that demonstrates everything the course taught you:
 
-1. Monitors a GitHub repository for changes
-2. Performs intelligent code review using Claude's 200K context
-3. Generates and updates documentation automatically
-4. Maintains project memory across sessions via MCP
-5. Optimizes API costs while maintaining quality
+1. A three-scope CLAUDE.md hierarchy with `@path/file.md` imports
+2. A boundary-spec CLAUDE.md that defines what Claude may and may not do
+3. At least one custom skill that uses **dynamic context injection** (`` !`bash` ``)
+4. At least one custom subagent with a constrained tool allowlist and an explicit model choice
+5. **Optional advanced track**: build or consume an MCP server, and an automated code-review GitHub Action
 
-## Learning Objectives
+Skip the "ship a toy MCP server" reflex — only build one if it earns its place. The point is **a system that makes you faster on a real codebase**, not a demo zoo.
 
-Upon completion, you will demonstrate mastery of:
+## Part 1 — CLAUDE.md hierarchy (35 points)
 
-1. Full-codebase analysis with 200K context window
-2. Custom MCP server development and integration
-3. Claude Code CLI automation patterns
-4. GitHub Actions CI/CD integration
-5. Production cost optimization
-6. Error handling and monitoring
+Stand up the three-scope cascade in your own repo.
 
-## Project Requirements
+**Required:**
 
-### Part 1: MCP Memory Server (30 points)
+- [ ] A **user-level** `~/.claude/CLAUDE.md` that captures your stable identity (voice, defaults, preferred stack)
+- [ ] A **project-level** `CLAUDE.md` at your repo root that captures *this* codebase (commands, architecture, conventions)
+- [ ] **At least one subdirectory** `CLAUDE.md` that narrows the rules for one hot zone (e.g. `services/auth/`, `infra/`, `tests/`)
+- [ ] Use `@path/file.md` imports to split any CLAUDE.md that crosses ~200 lines into focused rule files
+- [ ] Commit all of it. Hierarchy you cannot diff is hierarchy you cannot trust.
 
-Create an MCP server that persists project context:
+**Evidence:**
 
-**Required Features:**
+- Screenshot or transcript showing Claude answering the *same* prompt differently from inside two subdirectories — driven entirely by scope, not by your wording.
+- A short `HIERARCHY.md` that lists every CLAUDE.md you added and one sentence explaining what each one owns.
 
-- [ ] Store code patterns and conventions discovered in the codebase
-- [ ] Track review history and recurring issues
-- [ ] Maintain a "project knowledge base" with architecture decisions
-- [ ] Support namespaced storage for multi-project use
-- [ ] Implement data expiration for stale information
+## Part 2 — Boundary-spec CLAUDE.md (15 points)
 
-**Deliverables:**
+Apply the Segment 3 lesson to your own repo: a subdirectory CLAUDE.md that defines a real **kill switch**.
 
-- `mcp-project-memory/server.ts` - Complete MCP server
-- `mcp-project-memory/package.json` - Dependencies
-- Documentation of all exposed tools
+**Required:**
 
-### Part 2: Code Review Automation (25 points)
+- [ ] A `What you CAN do` and `What you CANNOT do` section with at least three rules each
+- [ ] Explicit denials for the files and commands that would actually hurt (`.env`, `package-lock.json`, destructive git, anything secret-bearing)
+- [ ] A `Before making changes` and `If something goes wrong` section so the recovery path is in writing
 
-Build a GitHub Actions workflow for automated reviews:
+**Evidence:**
 
-**Required Features:**
+- One demonstration where Claude refuses a destructive request and cites your CLAUDE.md.
+- One demonstration where you edit the boundary spec mid-session and the next tool call respects the new rule. No restart.
 
-- [ ] Trigger on PR creation and updates
-- [ ] Analyze changed files using full codebase context
-- [ ] Post structured review comments
-- [ ] Label PRs based on review severity
-- [ ] Block merge on critical issues
+## Part 3 — A custom skill with dynamic context injection (20 points)
 
-**Deliverables:**
+Build a skill that earns its place because you would type it more than once a week.
 
-- `.github/workflows/ai-review.yml` - Complete workflow
-- `scripts/review-runner.ts` - Review orchestration script
-- Configuration for customizing review behavior
+**Required:**
 
-### Part 3: Documentation Generator (25 points)
+- [ ] Lives at `.claude/skills/<your-skill-name>/SKILL.md` (canonical path)
+- [ ] Uses at least one `` !`<bash>` `` dynamic context injection — the kind that runs at render time, before Claude sees the prompt
+- [ ] Has a `description` field specific enough that Claude can auto-invoke when the trigger phrase appears
+- [ ] Has an `allowed-tools` field that restricts to the minimum
+- [ ] At least one bundled supporting file (script, reference, or template) loaded via `${CLAUDE_SKILL_DIR}/<file>`
 
-Create an automated documentation system:
+**Evidence:**
 
-**Required Features:**
+- The skill committed to your repo.
+- One transcript of you running `/your-skill-name` and getting a useful answer.
 
-- [ ] Analyze codebase structure and generate overview
-- [ ] Create/update API documentation from code
-- [ ] Generate architecture diagrams (Mermaid)
-- [ ] Maintain changelog from commit history
-- [ ] Update README sections automatically
+**Worked patterns** to crib from: `/review-changes` (Segment 4 cold open), `pr-summary` (multiple `gh` injections), `deep-research` (`context: fork` into an Explore agent).
 
-**Deliverables:**
+## Part 4 — A custom subagent (20 points)
 
-- `scripts/doc-generator.ts` - Documentation generator
-- Template files for documentation structure
-- Integration with CI/CD pipeline
+Author a subagent in `.claude/agents/<name>.md` that does one job well in an isolated context window.
 
-### Part 4: Cost Optimization Layer (20 points)
+**Required:**
 
-Implement production-ready cost management:
+- [ ] Frontmatter has `name`, `description`, `tools` (constrained), and `model` (explicit, not inherited)
+- [ ] The `description` reads like a trigger phrase, not a job title
+- [ ] System prompt scopes the agent to a single responsibility (review, mapping, summarization, etc.)
+- [ ] At least one of: the agent preloads a skill via `skills:` frontmatter, OR it uses `permissionMode` to set autonomy posture
 
-**Required Features:**
+**Evidence:**
 
-- [ ] Token counting and cost estimation
-- [ ] Budget enforcement with alerts
-- [ ] Intelligent model selection based on task
-- [ ] Response caching to reduce duplicate calls
-- [ ] Usage dashboard/reporting
+- The agent file committed.
+- One transcript showing Claude delegating to it automatically (description-matched) and returning a summary to the main conversation.
 
-**Deliverables:**
+## Optional advanced track (up to 20 bonus points)
 
-- `lib/cost-manager.ts` - Cost management module
-- Budget configuration file
-- Usage reporting script
+Pick *zero, one, or both* depending on time. The capstone passes without these.
 
-## Technical Specifications
+### Track A: Consume or build an MCP server (10 pts)
 
-### MCP Server Requirements
+Either:
 
-```typescript
-// Required tools
-interface ProjectMemoryTools {
-  // Store discovered patterns
-  store_pattern: (params: { name: string; pattern: string; examples: string[] }) => void;
-
-  // Get relevant patterns for current context
-  get_patterns: (params: { context: string; limit?: number }) => Pattern[];
-
-  // Store review feedback
-  store_review: (params: { file: string; issue: string; resolution?: string }) => void;
-
-  // Get review history for a file
-  get_review_history: (params: { file: string }) => ReviewRecord[];
-
-  // Store architecture decision
-  store_decision: (params: { title: string; context: string; decision: string; consequences: string[] }) => void;
-
-  // Query decisions
-  query_decisions: (params: { topic: string }) => Decision[];
-}
-```
-
-### GitHub Actions Requirements
-
-```yaml
-# Minimum workflow structure
-name: AI Code Review
-
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-jobs:
-  context-analysis:
-    # Load full codebase context
-
-  code-review:
-    # Run Claude review with MCP memory
-
-  documentation-check:
-    # Verify/update documentation
-
-  cost-reporting:
-    # Log usage and costs
-```
-
-### Documentation Generator Requirements
-
-```typescript
-// Required output structure
-interface Documentation {
-  overview: {
-    description: string;
-    architecture: string; // Mermaid diagram
-    technologies: string[];
-  };
-  api: {
-    endpoints: EndpointDoc[];
-    types: TypeDoc[];
-  };
-  changelog: ChangelogEntry[];
-  contributing: string;
-}
-```
-
-## Grading Rubric
-
-### Part 1: MCP Memory Server (30 points)
-
-| Criteria                    | Points | Description                           |
-| --------------------------- | ------ | ------------------------------------- |
-| Tool implementation         | 10     | All required tools work correctly     |
-| Data persistence            | 5      | Data survives server restart          |
-| Namespace support           | 5      | Multi-project isolation works         |
-| Error handling              | 5      | Graceful error handling               |
-| Code quality                | 5      | Clean, documented, typed code         |
-
-### Part 2: Code Review Automation (25 points)
-
-| Criteria                    | Points | Description                            |
-| --------------------------- | ------ | -------------------------------------- |
-| Workflow triggers           | 5      | Correct event handling                 |
-| Context loading             | 5      | Full codebase context used             |
-| Review quality              | 5      | Actionable, specific feedback          |
-| PR integration              | 5      | Comments, labels, status checks        |
-| Error recovery              | 5      | Handles failures gracefully            |
-
-### Part 3: Documentation Generator (25 points)
-
-| Criteria                    | Points | Description                            |
-| --------------------------- | ------ | -------------------------------------- |
-| Structure analysis          | 5      | Accurate codebase understanding        |
-| Documentation quality       | 5      | Clear, comprehensive output            |
-| Diagram generation          | 5      | Valid, useful Mermaid diagrams         |
-| Changelog generation        | 5      | Accurate commit history parsing        |
-| CI/CD integration           | 5      | Automated updates work                 |
-
-### Part 4: Cost Optimization (20 points)
-
-| Criteria                    | Points | Description                            |
-| --------------------------- | ------ | -------------------------------------- |
-| Token counting              | 5      | Accurate estimation                    |
-| Budget enforcement          | 5      | Alerts and limits work                 |
-| Model selection             | 5      | Intelligent routing                    |
-| Caching                     | 5      | Effective cache implementation         |
-
-### Bonus Points (up to 10)
-
-| Criteria                    | Points | Description                            |
-| --------------------------- | ------ | -------------------------------------- |
-| Exceptional code quality    | 3      | Outstanding implementation             |
-| Creative features           | 3      | Useful additions beyond requirements   |
-| Comprehensive testing       | 2      | Unit and integration tests             |
-| Security considerations     | 2      | Proper secret handling, input validation |
-
-## Submission Requirements
-
-### Repository Structure
-
-```
-capstone-project/
-├── mcp-project-memory/
-│   ├── server.ts
-│   ├── package.json
-│   └── README.md
-├── .github/
-│   └── workflows/
-│       └── ai-review.yml
-├── scripts/
-│   ├── review-runner.ts
-│   ├── doc-generator.ts
-│   └── cost-reporter.ts
-├── lib/
-│   └── cost-manager.ts
-├── config/
-│   ├── review-config.json
-│   └── budget-config.json
-├── docs/
-│   └── (generated documentation)
-├── tests/
-│   └── (test files)
-└── README.md
-```
+- Register a useful MCP server in `.claude/settings.json` (Microsoft Learn, GitHub, your team's internal one) and demonstrate it answering a question that would otherwise require copy-paste, OR
+- Use the `segment_4_hero/memory_server/` FastMCP example as a starting point and ship a server with at least one tool, one resource, and one prompt.
 
-### Documentation Requirements
+### Track B: Code-review GitHub Action (10 pts)
 
-Your README.md must include:
+Wire a GitHub Action that posts an AI code review on every PR. Reuse patterns from `tests/segment_4_production/exercise_1_github_actions.md`.
 
-1. **Project Overview** - What the system does
-2. **Architecture** - How components interact (with diagram)
-3. **Setup Instructions** - Step-by-step installation
-4. **Configuration** - All configurable options
-5. **Usage Examples** - Common use cases
-6. **Troubleshooting** - Common issues and solutions
-7. **Cost Analysis** - Expected costs for different usage patterns
+**Required if you take this track:**
 
-### Demo Requirements
+- [ ] Triggers on `pull_request` events
+- [ ] Loads relevant files with the right context posture
+- [ ] Posts structured review comments back to the PR
+- [ ] Handles failures gracefully (rate limits, missing secrets, partial diffs)
 
-Prepare a demo that shows:
+## Grading
 
-1. MCP server starting and handling requests
-2. PR triggering automated review
-3. Documentation being generated
-4. Cost dashboard showing usage
+| Part | Points | Notes |
+|------|--------|-------|
+| 1. CLAUDE.md hierarchy | 35 | Three scopes + `@-imports` + evidence of scope-driven behavior |
+| 2. Boundary spec | 15 | CAN/CANNOT lists + live edit demonstration |
+| 3. Custom skill | 20 | Dynamic context injection is required, not optional |
+| 4. Custom subagent | 20 | Isolated context + delegation demonstration |
+| Track A (MCP) | +10 | Bonus, optional |
+| Track B (Action) | +10 | Bonus, optional |
+| Code quality | 10 | Clean files, real comments, no toy `foo`/`bar`/`baz` |
 
-## Evaluation Process
+## Submission
 
-### Step 1: Automated Checks
+Push the whole thing to a public (or instructor-accessible) repo and include a top-level `CAPSTONE.md` that:
 
-- Code compiles without errors
-- All dependencies install correctly
-- Workflow syntax is valid
+1. Lists every artifact you shipped, with its path
+2. Includes the transcripts/screenshots called out as Evidence above
+3. Names one rule in your CLAUDE.md hierarchy you would *change* after using it for a week, and why
 
-### Step 2: Functional Testing
+The third item is the one that tells the instructor whether you actually used your own system.
 
-- MCP tools respond correctly
-- GitHub Actions run successfully
-- Documentation generates accurately
+## Tips for success
 
-### Step 3: Quality Review
+- **Start with the project CLAUDE.md.** Get it right at one scope before fanning out.
+- **Write your boundary spec early.** Then put it under test by trying to coax Claude into breaking it.
+- **One skill, one subagent.** Resist the urge to ship a dozen. A single skill you actually use beats a fleet of demos.
+- **Diff everything.** If your CLAUDE.md is not in git, it does not exist.
+- **Commit messages matter.** Use conventional commits. Future-you will read them.
 
-- Code style and organization
-- Error handling robustness
-- Documentation completeness
+## Frequently asked questions
 
-### Step 4: Integration Testing
+**Q: Do I have to use Azure/GitHub like the course examples?**
+A: No. Use whatever stack your repo runs on. The patterns transfer.
 
-- End-to-end flow works
-- Components communicate correctly
-- Edge cases handled
+**Q: Can I reuse my company repo?**
+A: Yes, provided you can publish your CLAUDE.md and supporting files. If anything is sensitive, fork to a sanitized capstone repo.
 
-## Tips for Success
+**Q: How long should each CLAUDE.md be?**
+A: User-level: short and stable. Project-level: a screenful at first, more once you have imports. Subdirectory: long enough to encode the local rules, no longer.
 
-### Start Early
-
-- Begin with the MCP server (foundation for other parts)
-- Test each component in isolation first
-- Integrate incrementally
-
-### Focus on Reliability
-
-- Handle API failures gracefully
-- Implement retries with backoff
-- Log extensively for debugging
-
-### Optimize for Cost
-
-- Use Haiku for simple classification tasks
-- Cache responses aggressively
-- Limit context to relevant files
-
-### Test Thoroughly
-
-- Create test PRs with known issues
-- Verify edge cases (empty PRs, large diffs)
-- Test budget limits with mock data
-
-## Resources
-
-### Reference Implementations
-
-- MCP TypeScript SDK examples
-- GitHub Actions starter workflows
-- Anthropic API documentation
-
-### Helpful Tools
-
-- `@anthropic-ai/tokenizer` - Token counting
-- `@octokit/rest` - GitHub API
-- `mermaid-cli` - Diagram generation
-
-### Support Channels
-
-- Course Slack channel
-- Office hours schedule
-- GitHub Discussions
-
-## Frequently Asked Questions
-
-**Q: Can I use existing MCP servers as a base?**
-A: You may reference them for patterns, but core implementation must be original.
-
-**Q: What if my API costs exceed expectations?**
-A: Use caching and model selection. Contact instructor if you hit budget issues.
-
-**Q: Can I add features beyond requirements?**
-A: Absolutely! Bonus points are available for creative additions.
-
-**Q: How do I handle rate limiting?**
-A: Implement exponential backoff and queue requests appropriately.
-
-**Q: What models should I use?**
-A: Recommended: Haiku for classification, Sonnet for reviews, Opus for complex analysis.
+**Q: What if my MCP server idea is just "save a JSON file"?**
+A: That is the `memory_server` already in this repo. Build something different or skip Track A.

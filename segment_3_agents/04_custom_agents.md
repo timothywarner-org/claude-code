@@ -1,12 +1,22 @@
-# Custom Agents (Subagents)
+# Agents, Part 2: Subagents
 
 <!-- src: https://code.claude.com/docs/en/sub-agents (May 2026) -->
+
+> **This is part 2 of one story.** Part 1 is `01_agents_intro.md` — read it first for the **agent loop** framing (`--allowedTools`, CLAUDE.md as kill switch, the Plan → Execute → Observe → Adjust loop). This file picks up where that one ended: same model, same loop, but now running in **its own context window**.
+
+## Cold open
+
+One agent driving fifteen tools without asking is useful. A **team** of small specialized agents, each with its own context window, each scoped to a single job, is a force multiplier. A code reviewer subagent can chew through a 200K-token diff and hand you back a 2K-token summary. Your main conversation never sees the noise. That is the trick.
+
+## The mental model
 
 Agents (Anthropic still calls them "subagents" in the official docs) are specialized assistants that run in **their own context window** with their own system prompt, their own tool allowlist, and their own permission boundary. That isolation is the whole point: a subagent's research scrollback never bloats your main conversation.
 
 ## Why an isolated context
 
-When Claude delegates to a subagent, the subagent gets a fresh 1M-token window. It runs to completion, summarizes, and returns only the result. Your main conversation sees the summary — not the 200 `Grep` calls and 80 `Read` responses that produced it. Subagents are how Claude Code keeps long sessions sane.
+When Claude delegates to a subagent, the subagent gets a fresh 1M-token window. It runs to completion, summarizes, and returns only the result. Your main conversation sees the summary, not the 200 `Grep` calls and 80 `Read` responses that produced it. Subagents are how Claude Code keeps long sessions sane.
+
+The boundary primitives you learned in part 1 (`--allowedTools`, CLAUDE.md) still apply. A subagent inherits the parent's permission posture by default and can tighten it further via the frontmatter `tools:` allowlist. Same kill switch, narrower blast radius.
 
 ## Agents vs Skills
 
@@ -332,9 +342,67 @@ Store in `~/.claude/agents/` for agents available across all your projects.
 ### Plugin Distribution
 Package agents with other Claude Code extensions.
 
-## Next Steps
+## The demo
 
-1. Read the example agents in `.claude/agents/`
-2. Try asking Claude to "coach me on code quality"
-3. Ask Claude to "prepare a release"
-4. Create your own specialized agent
+Walk the room through the three example agents already shipped in `.claude/agents/`:
+
+```bash
+ls .claude/agents/
+# code-quality-coach.md
+# release-manager.md
+# claude-code-tutor.md
+# python-mcp-expert.md
+# terraform-architect.md
+```
+
+Open `code-quality-coach.md` and read the frontmatter aloud. Five lines of YAML define **what this subagent is allowed to touch**, **which model runs it**, and **which skill it preloads**. Then trigger it:
+
+```
+> Review the auth changes on this branch and teach me what I missed.
+```
+
+Claude matches the description, spawns the subagent in a fresh context window, runs the review, returns a summary. Main conversation stays clean.
+
+## Try it now (10 minutes)
+
+Spawn a **session-scoped subagent** with `--agents` and give it a job your main session would rather not pollute with scrollback. No file required.
+
+```powershell
+# PowerShell here-string avoids JSON escape pain
+claude --agents @'
+{
+  "doc-mapper": {
+    "description": "Scans a repo and produces a one-page Markdown index of all documentation files with one-line summaries.",
+    "prompt": "You are a documentation cartographer. Read every Markdown file under the current directory, summarize each in one sentence, and return a single Markdown table. Do not edit anything. Do not run shell commands.",
+    "tools": ["Read", "Glob", "Grep"],
+    "model": "claude-haiku-4-5"
+  }
+}
+'@
+```
+
+Then in the session:
+
+```
+> Use the doc-mapper to index every .md file in this repo.
+```
+
+**What to notice:** Claude spawns the subagent, the subagent burns through 40+ tool calls in its own window, and your main conversation gets back a single tidy table. Token cost in the main context: about 2K. Token cost inside the subagent: 40K+ that you will never see again. That is the value prop.
+
+## Check your understanding
+
+1. A subagent finishes a task and returns 800 tokens of summary. How many tokens does the **main conversation** consume from the subagent's internal scrollback?
+2. You want a subagent that can run `npm test` but cannot edit any file. Which two frontmatter fields do you set, and to what?
+3. When does Claude decide to delegate to a subagent automatically (vs you spawning one explicitly)?
+
+Answers: **zero — the isolation is the entire point**; **`tools: Read, Glob, Grep, Bash` and write a `description` that makes the read-only test-runner role unambiguous**; **Claude matches the user's request against each agent's `description` field, so write descriptions like trigger phrases, not job titles**.
+
+## What you should be able to do now
+
+1. **Author a subagent file** at `.claude/agents/<name>.md` with frontmatter that scopes tools, model, and skills.
+2. **Spawn a session-scoped subagent** with `claude --agents '{...}'` for one-off jobs that should not pollute your main context.
+3. **Decide between agent-loop and subagent**: same context for tightly coupled work, isolated context whenever the side task would generate scrollback you do not want to read.
+
+## Next
+
+Segment 4 takes this further: **skills** that subagents preload, **production workflows** that chain subagents, and the boundary patterns that keep all of it from melting your repo at 2 a.m.

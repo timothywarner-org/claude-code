@@ -10,7 +10,7 @@ Demonstrates all three MCP primitives (MCP spec 2025-11-25):
     Prompts    -> Reusable templates: decision_record, convention_proposal, etc.
 
 Quick start (UV):
-    cd segment_2_mcp/memory_server
+    cd segment_4_hero/memory_server
     uv sync
     uv run python server.py
 
@@ -18,7 +18,7 @@ MCP Inspector:
     uv run -- fastmcp dev server.py
 
 Add to Claude Code:
-    claude mcp add memory -- bash segment_2_mcp/memory_server/start.sh
+    claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 
 Environment variables:
     MCP_MEMORY_PATH  Path to JSON storage (default: ./data/memory.json)

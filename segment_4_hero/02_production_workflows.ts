@@ -4,7 +4,7 @@
  * Demonstrates production-ready workflows combining
  * Claude API, skills patterns, and CI/CD integration.
  *
- * Run: npx tsx segment_4_skills_agents/02_production_workflows.ts
+ * Run: npx tsx segment_4_hero/02_production_workflows.ts
  */
 
 import Anthropic from '@anthropic-ai/sdk';

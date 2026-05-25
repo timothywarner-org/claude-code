@@ -4,9 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Last revised: 2026-05-25
 
+## How this repo teaches CLAUDE.md
+
+This repo is the worked example for Segment 2 of the course. Five CLAUDE.md files at different scopes show the hierarchy in practice:
+
+- `CLAUDE.md` (this file, repo root) — project-wide conventions
+- `segment_1_quickstart/CLAUDE.md` — minimal demo conventions
+- `segment_2_context/CLAUDE.md` — context-engineering rules
+- `segment_3_agents/CLAUDE.md` — boundary spec (what Claude may and may not do)
+- `segment_4_hero/CLAUDE.md` — skills/agents/MCP directory conventions
+
+Open all five side-by-side. Each one is loaded automatically by Claude Code when working inside that subtree. See `segment_2_context/01_claude_md_at_every_scope.md` for the full lesson.
+
 ## Project Overview
 
-O'Reilly Live Learning course materials for "Claude Code and Large-Context Reasoning" — a 4-hour training focused on Claude Code CLI, MCP servers, agentic workflows, and custom skills. Uses TypeScript/JavaScript with the Anthropic SDK for demos, plus Python with FastMCP (managed by UV) for MCP server implementations.
+O'Reilly Live Learning course materials for "Claude Code and Large-Context Reasoning," a 4-hour training. The course arc is **Zero -> Context -> Agents -> Hero**: install Claude Code, master CLAUDE.md at every scope, run autonomous agents with boundaries, then layer on skills, subagents, and MCP. Uses TypeScript/JavaScript with the Anthropic SDK for demos, plus Python with FastMCP (managed by UV) for MCP server implementations.
 
 ## Development Commands
 
@@ -28,15 +40,17 @@ npx tsx <path-to-file.ts>
 npm run segment1:verify      # Verify API setup
 npm run segment1:workflows   # Terminal workflow demos
 
-# Segment 2: MCP (Model Context Protocol)
-npm run segment2:architecture  # MCP architecture visualization
-npm run segment2:memory        # Start memory server (via UV)
+# Segment 2: Context (CLAUDE.md at Every Scope)
+# (No npm scripts in Segment 2. The lesson is markdown + live demos.)
+# The legacy MCP memory server moved to segment_4_hero/memory_server/ as
+# optional homework. To start it:
+npm run mcp:memory             # Start memory server (via UV)
 
 # Segment 3: Agents
 npm run segment3:agent-loop   # Agent loop demonstration
 npm run segment3:boundaries   # Permission boundaries demo
 
-# Segment 4: Skills + Agents
+# Segment 4: Hero (Skills, Subagents, MCP Consumption)
 npm run segment4:workflows    # Production workflow demos
 ```
 
@@ -46,20 +60,20 @@ The memory server is a Python FastMCP server managed by UV (not npm/tsx). It lau
 
 ```bash
 # Start standalone
-cd segment_2_mcp/memory_server
+cd segment_4_hero/memory_server
 uv run python server.py
 
 # Start via MCP Inspector for debugging
 uv run -- fastmcp dev server.py
 
 # Add to Claude Code
-claude mcp add memory -- bash segment_2_mcp/memory_server/start.sh
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 
 # List MCP servers
 claude mcp list
 ```
 
-The project `.claude/settings.json` registers this server via `bash segment_2_mcp/memory_server/start.sh` (stdio transport, no ports).
+The project `.claude/settings.json` registers `microsoft-learn` (Streamable HTTP) as the default MCP demo target. The local Python memory server above is optional homework, not pre-registered.
 
 ### Linting and Formatting
 
@@ -76,10 +90,10 @@ npm run format                    # Format all files (Prettier)
 
 Four segments, each with markdown guides and runnable TypeScript demos:
 
-- `segment_1_quickstart/` — Claude Code CLI installation and basic workflows
-- `segment_2_mcp/` — Model Context Protocol servers and memory persistence
-- `segment_3_agents/` — Agentic loops, autonomous operations, boundaries
-- `segment_4_skills_agents/` — Custom skills and production workflows
+- `segment_1_quickstart/` — **Zero**: Claude Code install + first `CLAUDE.md`
+- `segment_2_context/` — **Context**: CLAUDE.md at user/project/subdirectory scope, `@path/file.md` imports
+- `segment_3_agents/` — **Agents**: agent loop, `--allowedTools`, boundary spec, subagents
+- `segment_4_hero/` — **Hero**: skills (dynamic context injection), subagents, consuming MCP servers
 
 ### Utility Modules (`src/utils/`)
 
@@ -95,7 +109,7 @@ Four segments, each with markdown guides and runnable TypeScript demos:
 
 ### MCP Servers
 
-**Memory Server** (`segment_2_mcp/memory_server/server.py`) — Python FastMCP server demonstrating all three MCP primitives:
+**Memory Server** (`segment_4_hero/memory_server/server.py`) — Python FastMCP server demonstrating all three MCP primitives. Optional homework for Segment 4 learners who want to build, not just consume:
 
 - **Tools**: `remember_decision`, `recall_decisions`, `add_convention`, `get_conventions`, `add_note`, `search_notes`, `set_context`, `get_context`, `memory_summary`
 - **Resources**: `memory://decisions`, `memory://conventions`, `memory://notes`, `memory://context`
@@ -108,8 +122,8 @@ Four segments, each with markdown guides and runnable TypeScript demos:
 
 ### Registered MCP Servers (`.claude/settings.json`)
 
-- `memory` — Local FastMCP memory server via `bash segment_2_mcp/memory_server/start.sh`
-- `microsoft-learn` — HTTP MCP server at `https://learn.microsoft.com/api/mcp`
+- `microsoft-learn` — HTTP MCP server at `https://learn.microsoft.com/api/mcp` (the Segment 4 demo target)
+- `memory` (optional, not pre-registered) — Local FastMCP memory server. Add it yourself with `claude mcp add memory -- bash segment_4_hero/memory_server/start.sh` if you want to build, not just consume.
 
 ### Hooks (`hooks/`)
 
