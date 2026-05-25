@@ -151,18 +151,18 @@ function getCachedResponse(prompt: string): string | null {
 
 ```typescript
 function selectOptimalModel(task: string, inputTokens: number): string {
-  // Simple tasks: Use Haiku
+  // Simple tasks: use Haiku 4.5 for the cheapest near-frontier intelligence.
   if (task === 'classification' || task === 'extraction') {
-    return 'claude-3-haiku-20240307';
+    return 'claude-haiku-4-5-20251001';
   }
 
-  // Complex tasks with large context: Use Sonnet
-  if (inputTokens > 50000) {
-    return 'claude-3-5-sonnet-20241022';
+  // Very large context or heavy agentic coding: Opus 4.7 (1M context, $5/$25).
+  if (inputTokens > 200_000 || task === 'agentic-coding') {
+    return 'claude-opus-4-7';
   }
 
-  // Default to Sonnet for quality
-  return 'claude-3-5-sonnet-20241022';
+  // Default to Sonnet 4.6 — best speed-to-intelligence ratio, 1M context.
+  return 'claude-sonnet-4-6';
 }
 ```
 
@@ -188,11 +188,11 @@ function withCostTracking<T>(
   const start = Date.now();
 
   return fn().then((result) => {
-    const cost = calculateCost('claude-3-5-sonnet-20241022', result.usage.input_tokens, result.usage.output_tokens);
+    const cost = calculateCost('claude-sonnet-4-6', result.usage.input_tokens, result.usage.output_tokens);
 
     tracker.log({
       timestamp: new Date(),
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-6',
       inputTokens: result.usage.input_tokens,
       outputTokens: result.usage.output_tokens,
       cost,

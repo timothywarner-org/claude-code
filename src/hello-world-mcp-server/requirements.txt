@@ -1,8 +1,8 @@
 # hello-world-mcp-server MCP Server Dependencies
 # Install with: pip install -r requirements.txt
 
-# FastMCP - Pythonic MCP framework
-fastmcp>=2.0.0
+# FastMCP - Pythonic MCP framework (3.x required for lifespan_context API)
+fastmcp>=3.0.0
 
 # Pydantic - Data validation and serialization
 pydantic>=2.0.0

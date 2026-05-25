@@ -1,6 +1,8 @@
 #Claude
 **/settings.local.json
 
+research/
+
 # Logs
 logs
 *.log

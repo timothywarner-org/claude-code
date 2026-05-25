@@ -3,21 +3,22 @@
 Memory MCP Server — "Remember This"
 
 A teaching-focused MCP server that persists conversation context to local JSON.
-Demonstrates all three MCP primitives:
+Demonstrates all three MCP primitives (MCP spec 2025-11-25):
 
-    Tools      → Actions: save decisions, notes, conventions; search; summarize
-    Resources  → Read-only data: memory://decisions, memory://notes, etc.
-    Prompts    → Reusable templates: decision_record, convention_proposal, etc.
+    Tools      -> Actions: save decisions, notes, conventions; search; summarize
+    Resources  -> Read-only data: memory://decisions, memory://notes, etc.
+    Prompts    -> Reusable templates: decision_record, convention_proposal, etc.
 
 Quick start (UV):
     cd segment_2_mcp/memory_server
+    uv sync
     uv run python server.py
 
 MCP Inspector:
     uv run -- fastmcp dev server.py
 
 Add to Claude Code:
-    claude mcp add memory -- uv run --directory segment_2_mcp/memory_server python server.py
+    claude mcp add memory -- bash segment_2_mcp/memory_server/start.sh
 
 Environment variables:
     MCP_MEMORY_PATH  Path to JSON storage (default: ./data/memory.json)
@@ -123,7 +124,7 @@ def _id() -> str:
 
 @dataclass
 class AppState:
-    """Shared state available to every tool via ``ctx.state``."""
+    """Shared state passed to every tool via ctx.lifespan_context['state']."""
 
     memory: Memory
     path: Path
@@ -131,14 +132,20 @@ class AppState:
 
 @asynccontextmanager
 async def lifespan(server: FastMCP):
-    """Load memory on startup, save on shutdown."""
+    """Load memory on startup, save on shutdown.
+
+    FastMCP 3.x: lifespan must yield a dict; tools access it via
+    ctx.lifespan_context['state'].
+    """
     mem = _load(MEMORY_PATH)
     print(
         f"Loaded: {len(mem.decisions)} decisions, "
         f"{len(mem.conventions)} conventions, {len(mem.notes)} notes",
         file=sys.stderr,
     )
-    yield AppState(memory=mem, path=MEMORY_PATH)
+    # Yield a dict — FastMCP 3.x lifespan contract
+    yield {"state": AppState(memory=mem, path=MEMORY_PATH)}
+
     _save(mem, MEMORY_PATH)
     print("Memory saved on shutdown.", file=sys.stderr)
 
@@ -156,6 +163,11 @@ mcp = FastMCP(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+
+# Helper to extract AppState from any Context object.
+def _state(ctx: Context) -> AppState:
+    return ctx.lifespan_context["state"]
 
 
 # =============================================================================
@@ -177,24 +189,21 @@ async def remember_decision(
     title: str = Field(description="One-line summary, e.g. 'Use PostgreSQL for user data'"),
     description: str = Field(description="Full description of what was decided"),
     rationale: str = Field(description="Why this decision was made — trade-offs, constraints"),
-    tags: list[str] = Field(default=[], description="Categorization tags, e.g. ['database', 'backend']"),
+    tags: list[str] = Field(default=[], description="Categorization tags"),
 ) -> str:
-    state: AppState = ctx.state
+    s = _state(ctx)
     decision = Decision(
         id=_id(), title=title, description=description,
         rationale=rationale, date=datetime.now(timezone.utc).isoformat(), tags=tags,
     )
-    state.memory.decisions.append(decision)
-    _save(state.memory, state.path)
+    s.memory.decisions.append(decision)
+    _save(s.memory, s.path)
     return f"Decision saved: '{title}' (ID: {decision.id})"
 
 
 @mcp.tool(
     name="recall_decisions",
-    description=(
-        "Search past decisions by keyword or tag. "
-        "Returns matching decisions as JSON."
-    ),
+    description="Search past decisions by keyword or tag. Returns matching decisions as JSON.",
 )
 async def recall_decisions(
     ctx: Context,
@@ -202,8 +211,8 @@ async def recall_decisions(
     tag: str = Field(default="", description="Filter to decisions with this tag"),
     limit: int = Field(default=10, ge=1, le=100, description="Max results"),
 ) -> list[dict[str, Any]]:
-    state: AppState = ctx.state
-    results = list(state.memory.decisions)
+    s = _state(ctx)
+    results = list(s.memory.decisions)
 
     if tag:
         t = tag.lower()
@@ -230,14 +239,14 @@ async def recall_decisions(
 async def add_convention(
     ctx: Context,
     name: str = Field(description="Convention name, e.g. 'Immutable objects'"),
-    rule: str = Field(description="The rule in one sentence: 'Always spread, never mutate'"),
+    rule: str = Field(description="The rule in one sentence"),
     examples: list[str] = Field(default=[], description="Code snippets showing correct usage"),
     category: str = Field(default="general", description="Category: naming, structure, testing, style"),
 ) -> str:
-    state: AppState = ctx.state
+    s = _state(ctx)
     conv = Convention(id=_id(), name=name, rule=rule, examples=examples, category=category)
-    state.memory.conventions.append(conv)
-    _save(state.memory, state.path)
+    s.memory.conventions.append(conv)
+    _save(s.memory, s.path)
     return f"Convention saved: '{name}' [{category}]"
 
 
@@ -249,8 +258,8 @@ async def get_conventions(
     ctx: Context,
     category: str = Field(default="", description="Filter by category (partial match)"),
 ) -> list[dict[str, Any]]:
-    state: AppState = ctx.state
-    results = list(state.memory.conventions)
+    s = _state(ctx)
+    results = list(s.memory.conventions)
     if category:
         c = category.lower()
         results = [x for x in results if c in x.category.lower()]
@@ -263,22 +272,22 @@ async def get_conventions(
     name="save_note",
     description=(
         "Save a freeform note — meeting minutes, research findings, "
-        "context worth remembering. This is the 'remember this' tool."
+        "context worth remembering. The 'remember this' catch-all."
     ),
 )
 async def save_note(
     ctx: Context,
     title: str = Field(description="Short descriptive title"),
     content: str = Field(description="Note body (markdown supported)"),
-    tags: list[str] = Field(default=[], description="Tags for search, e.g. ['meeting', 'backend']"),
+    tags: list[str] = Field(default=[], description="Tags for search"),
 ) -> str:
-    state: AppState = ctx.state
+    s = _state(ctx)
     note = Note(
         id=_id(), title=title, content=content,
         date=datetime.now(timezone.utc).isoformat(), tags=tags,
     )
-    state.memory.notes.append(note)
-    _save(state.memory, state.path)
+    s.memory.notes.append(note)
+    _save(s.memory, s.path)
     return f"Note saved: '{title}' (ID: {note.id})"
 
 
@@ -290,10 +299,10 @@ async def search_notes(
     ctx: Context,
     query: str = Field(description="Search term"),
 ) -> list[dict[str, Any]]:
-    state: AppState = ctx.state
+    s = _state(ctx)
     q = query.lower()
     results = [
-        n for n in state.memory.notes
+        n for n in s.memory.notes
         if q in n.title.lower() or q in n.content.lower()
         or any(q in t.lower() for t in n.tags)
     ]
@@ -304,16 +313,16 @@ async def search_notes(
 
 @mcp.tool(
     name="set_context",
-    description="Store a key-value pair. Useful for project metadata like 'primary_language=TypeScript'.",
+    description="Store a key-value pair. Useful for project metadata.",
 )
 async def set_context(
     ctx: Context,
     key: str = Field(description="Key name"),
     value: str = Field(description="Value to store"),
 ) -> str:
-    state: AppState = ctx.state
-    state.memory.context[key] = value
-    _save(state.memory, state.path)
+    s = _state(ctx)
+    s.memory.context[key] = value
+    _save(s.memory, s.path)
     return f"Context set: {key} = {value}"
 
 
@@ -325,26 +334,26 @@ async def get_context(
     ctx: Context,
     key: str = Field(default="", description="Key to look up (empty = return all)"),
 ) -> dict[str, str] | str:
-    state: AppState = ctx.state
+    s = _state(ctx)
     if key:
-        return state.memory.context.get(key, f"Key not found: {key}")
-    return dict(state.memory.context)
+        return s.memory.context.get(key, f"Key not found: {key}")
+    return dict(s.memory.context)
 
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 
 @mcp.tool(
     name="memory_summary",
-    description="Get a quick overview: counts of decisions, conventions, notes, and context keys.",
+    description="Quick overview: counts of decisions, conventions, notes, and context keys.",
 )
 async def memory_summary(ctx: Context) -> dict[str, Any]:
-    state: AppState = ctx.state
+    s = _state(ctx)
     return {
-        "decisions": len(state.memory.decisions),
-        "conventions": len(state.memory.conventions),
-        "notes": len(state.memory.notes),
-        "context_keys": list(state.memory.context.keys()),
-        "last_updated": state.memory.last_updated or "never",
+        "decisions": len(s.memory.decisions),
+        "conventions": len(s.memory.conventions),
+        "notes": len(s.memory.notes),
+        "context_keys": list(s.memory.context.keys()),
+        "last_updated": s.memory.last_updated or "never",
     }
 
 
@@ -359,30 +368,30 @@ async def memory_summary(ctx: Context) -> dict[str, Any]:
     mime_type="application/json",
 )
 async def resource_decisions(ctx: Context) -> str:
-    state: AppState = ctx.state
-    return json.dumps([d.model_dump() for d in state.memory.decisions], indent=2)
+    s = _state(ctx)
+    return json.dumps([d.model_dump() for d in s.memory.decisions], indent=2)
 
 
 @mcp.resource(
     "memory://conventions",
     name="All Conventions",
-    description="Every coding convention/team standard stored in memory, as JSON.",
+    description="Every coding convention/team standard, as JSON.",
     mime_type="application/json",
 )
 async def resource_conventions(ctx: Context) -> str:
-    state: AppState = ctx.state
-    return json.dumps([c.model_dump() for c in state.memory.conventions], indent=2)
+    s = _state(ctx)
+    return json.dumps([c.model_dump() for c in s.memory.conventions], indent=2)
 
 
 @mcp.resource(
     "memory://notes",
     name="All Notes",
-    description="Every freeform note stored in memory, as JSON.",
+    description="Every freeform note, as JSON.",
     mime_type="application/json",
 )
 async def resource_notes(ctx: Context) -> str:
-    state: AppState = ctx.state
-    return json.dumps([n.model_dump() for n in state.memory.notes], indent=2)
+    s = _state(ctx)
+    return json.dumps([n.model_dump() for n in s.memory.notes], indent=2)
 
 
 @mcp.resource(
@@ -392,24 +401,24 @@ async def resource_notes(ctx: Context) -> str:
     mime_type="application/json",
 )
 async def resource_context(ctx: Context) -> str:
-    state: AppState = ctx.state
-    return json.dumps(dict(state.memory.context), indent=2)
+    s = _state(ctx)
+    return json.dumps(dict(s.memory.context), indent=2)
 
 
 @mcp.resource(
     "memory://summary",
     name="Memory Summary",
-    description="Quick stats: item counts, last-updated timestamp.",
+    description="Quick stats: item counts and last-updated timestamp.",
     mime_type="application/json",
 )
 async def resource_summary(ctx: Context) -> str:
-    state: AppState = ctx.state
+    s = _state(ctx)
     return json.dumps({
-        "decisions": len(state.memory.decisions),
-        "conventions": len(state.memory.conventions),
-        "notes": len(state.memory.notes),
-        "context_keys": len(state.memory.context),
-        "last_updated": state.memory.last_updated or "never",
+        "decisions": len(s.memory.decisions),
+        "conventions": len(s.memory.conventions),
+        "notes": len(s.memory.notes),
+        "context_keys": len(s.memory.context),
+        "last_updated": s.memory.last_updated or "never",
     }, indent=2)
 
 
@@ -438,26 +447,23 @@ def prompt_decision_record(
     parts.append("""
 ## Analysis Requested
 For each option, evaluate:
-1. **Technical Fit** — Does it solve the problem well?
-2. **Complexity** — Implementation and ongoing maintenance cost
-3. **Team Impact** — Learning curve for the team
-4. **Scalability** — How does it handle 10x growth?
-5. **Reversibility** — How costly is it to change later?
+1. Technical Fit — Does it solve the problem well?
+2. Complexity — Implementation and ongoing maintenance cost
+3. Team Impact — Learning curve and familiarity
+4. Scalability — Behavior at 10x growth
+5. Reversibility — Cost to change later
 
-Then provide a **Recommendation** with rationale, **Risks**, and **Next Steps**.
-
+Then provide a Recommendation with rationale, Risks, and Next Steps.
 Format as an ADR suitable for storing with `remember_decision`.""")
     return "\n".join(parts)
 
 
 @mcp.prompt(
     name="convention_proposal",
-    description=(
-        "Draft a new coding convention with rule, examples, and enforcement plan."
-    ),
+    description="Draft a new coding convention with rule, examples, and enforcement plan.",
 )
 def prompt_convention_proposal(
-    name: str = Field(description="Convention name, e.g. 'Immutable data patterns'"),
+    name: str = Field(description="Convention name"),
     problem: str = Field(description="The problem this convention prevents"),
 ) -> str:
     return f"""Propose a coding convention: **{name}**
@@ -466,21 +472,19 @@ def prompt_convention_proposal(
 {problem}
 
 Please define:
-1. **Rule** — One sentence: what to always/never do
-2. **Rationale** — Why this matters (bugs prevented, readability, etc.)
-3. **Good Examples** — 2-3 code snippets showing correct usage
-4. **Bad Examples** — 2-3 code snippets showing what to avoid
-5. **Exceptions** — When it's OK to deviate
-6. **Enforcement** — Linter rule, PR checklist, or automated check
+1. Rule — One sentence: what to always/never do
+2. Rationale — Why this matters
+3. Good Examples — 2-3 code snippets showing correct usage
+4. Bad Examples — 2-3 code snippets showing what to avoid
+5. Exceptions — When it's OK to deviate
+6. Enforcement — Linter rule, PR checklist, or automated check
 
 Format so it can be saved with `add_convention`."""
 
 
 @mcp.prompt(
     name="memory_review",
-    description=(
-        "Review everything in memory and surface insights, gaps, and conflicts."
-    ),
+    description="Review everything in memory and surface insights, gaps, and conflicts.",
 )
 def prompt_memory_review() -> str:
     return """Review the project memory using these resources:
@@ -490,34 +494,30 @@ def prompt_memory_review() -> str:
 - memory://context
 
 Provide:
-1. **Decisions Summary** — Key decisions and whether any are outdated
-2. **Convention Health** — Are conventions clear and consistent?
-3. **Knowledge Gaps** — What's missing that should be documented?
-4. **Conflicts** — Any decisions or conventions that contradict each other?
-5. **Recommendations** — Concrete next steps to improve the knowledge base
-
-Format as a structured report."""
+1. Decisions Summary — Key decisions and whether any are outdated
+2. Convention Health — Are conventions clear and consistent?
+3. Knowledge Gaps — What's missing that should be documented?
+4. Conflicts — Any decisions or conventions that contradict each other?
+5. Recommendations — Concrete next steps to improve the knowledge base"""
 
 
 @mcp.prompt(
     name="onboarding_guide",
-    description=(
-        "Generate a new-team-member onboarding doc from stored memory."
-    ),
+    description="Generate a new-team-member onboarding doc from stored memory.",
 )
 def prompt_onboarding_guide(
     role: str = Field(default="developer", description="Role: developer, designer, PM, etc."),
 ) -> str:
     return f"""A new **{role}** is joining the project.
 
-Using the memory resources, create a friendly onboarding guide covering:
-1. **Must-Know Decisions** — The 3-5 most important architectural choices
-2. **Coding Standards** — Conventions they need to follow from day one
-3. **Project Context** — Background info that isn't obvious from the code
-4. **Gotchas** — Common pitfalls captured in notes
-5. **Quick Reference** — Key-value context entries they should know about
+Using the memory resources, create an onboarding guide covering:
+1. Must-Know Decisions — The 3-5 most important architectural choices
+2. Coding Standards — Conventions they need to follow from day one
+3. Project Context — Background info that isn't obvious from the code
+4. Gotchas — Common pitfalls captured in notes
+5. Quick Reference — Key-value context entries they should know about
 
-Keep it concise and actionable — this is their first-day reading."""
+Keep it concise and actionable."""
 
 
 # =============================================================================
@@ -525,7 +525,7 @@ Keep it concise and actionable — this is their first-day reading."""
 # =============================================================================
 
 def main():
-    """Run the server on stdio transport."""
+    """Run the server on stdio transport (MCP spec 2025-11-25)."""
     print("Memory MCP Server v1.0.0", file=sys.stderr)
     print(f"Storage: {MEMORY_PATH.absolute()}", file=sys.stderr)
     print("Transport: stdio", file=sys.stderr)

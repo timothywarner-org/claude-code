@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "FastMCP memory server for Claude Code course - stores project notes, PRDs, and context with DeepSeek optimization"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp>=2.0.0",
+    "fastmcp>=3.0.0",
     "mcp>=1.0.0",
     "python-dotenv>=1.0.0",
     "openai>=1.0.0",

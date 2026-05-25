@@ -4,7 +4,7 @@ A grab-and-go MCP server that persists conversation context to local JSON.
 Say **"remember this"** and it gets archived. Say **"what did we decide?"**
 and it comes back.
 
-Built with [FastMCP 2](https://github.com/jlowin/fastmcp) + [UV](https://docs.astral.sh/uv/)
+Built with [FastMCP 3](https://gofastmcp.com) + [UV](https://docs.astral.sh/uv/)
 for zero-friction setup.
 
 ## Architecture
@@ -17,7 +17,7 @@ flowchart TB
         ANY["Any MCP Client"]
     end
 
-    subgraph Server["Memory MCP Server  (FastMCP 2 + Python)"]
+    subgraph Server["Memory MCP Server  (FastMCP 3 + Python)"]
         direction TB
         LIFE["Lifespan Manager<br/><i>load on start, save on shutdown</i>"]
 
@@ -221,7 +221,11 @@ You should see `memory` in the list with status "connected".
 If you want to add it to a different project:
 
 ```bash
-claude mcp add memory -- uv run --directory segment_2_mcp/memory_server python server.py
+# Positional stdio form (recommended)
+claude mcp add memory -- bash segment_2_mcp/memory_server/start.sh
+
+# JSON-config alternative (same result, more portable)
+claude mcp add-json memory '{"type":"stdio","command":"bash","args":["segment_2_mcp/memory_server/start.sh"]}'
 ```
 
 This writes the server config to your project's `.claude/settings.json`.
@@ -235,9 +239,9 @@ If you're using the Claude Code VS Code extension, check
 {
   "mcpServers": {
     "memory": {
-      "command": "uv",
-      "args": ["run", "python", "server.py"],
-      "cwd": "segment_2_mcp/memory_server"
+      "type": "stdio",
+      "command": "bash",
+      "args": ["segment_2_mcp/memory_server/start.sh"]
     }
   }
 }
@@ -248,25 +252,25 @@ If you're using the Claude Code VS Code extension, check
 Once connected, just talk naturally. Claude will call the right tools:
 
 ```
-You:  "Remember that we decided to use FastMCP 2 because v3 has
-       breaking changes to the constructor API"
+You:  "Remember that we decided to use FastMCP 3 for all new servers
+       because it ships with Streamable HTTP and elicitation support"
 
 Claude: I've saved that decision.
-        [called remember_decision with title="Use FastMCP 2, not v3",
-         rationale="v3 has breaking constructor API changes"]
+        [called remember_decision with title="Use FastMCP 3 for new servers",
+         rationale="Native Streamable HTTP transport + elicitation API in 3.x"]
 
 You:  "What decisions have we recorded?"
 
 Claude: Here's what we have so far:
         [called recall_decisions]
-        1. Use FastMCP 2, not v3 (2026-03-18)
-           Reason: v3 has breaking constructor API changes
+        1. Use FastMCP 3 for new servers (2026-05-25)
+           Reason: Native Streamable HTTP transport + elicitation API in 3.x
 
 You:  "Add a convention: always pin major versions in requirements"
 
 Claude: Convention saved.
         [called add_convention with name="Pin major versions",
-         rule="Always use >= and < constraints, e.g. >=2.0.0,<3.0.0",
+         rule="Always use >= and < constraints, e.g. >=3.0.0,<4.0.0",
          category="dependencies"]
 
 You:  "Give me a summary of everything in memory"
@@ -346,10 +350,10 @@ like after a few interactions:
   "decisions": [
     {
       "id": "1742313600-a1b2c3d4",
-      "title": "Use FastMCP 2 for MCP server",
-      "description": "Chose FastMCP 2.x over 3.x for the memory server",
-      "rationale": "FastMCP 3 has breaking changes to constructor API",
-      "date": "2026-03-18T16:00:00+00:00",
+      "title": "Use FastMCP 3 for all new MCP servers",
+      "description": "Standardize on FastMCP 3.x for new server development",
+      "rationale": "FastMCP 3 ships with Streamable HTTP transport and elicitation support",
+      "date": "2026-05-25T16:00:00+00:00",
       "tags": ["mcp", "python", "dependencies"]
     }
   ],
@@ -358,7 +362,7 @@ like after a few interactions:
       "id": "1742313700-e5f6a7b8",
       "name": "Pin major versions",
       "rule": "Always use >=X.0.0,<Y.0.0 constraints in requirements",
-      "examples": ["fastmcp>=2.0.0,<3.0.0"],
+      "examples": ["fastmcp>=3.0.0,<4.0.0"],
       "category": "dependencies"
     }
   ],
@@ -482,14 +486,18 @@ server dies unexpectedly, you only lose the last incomplete operation.
 ### Transport: stdio
 
 This server communicates over **stdio** (standard input/output) using
-JSON-RPC messages. This is the standard transport for local MCP servers:
+JSON-RPC messages. This is the standard transport for local MCP servers
+(MCP spec 2025-11-25):
 
 - **stdout** carries JSON-RPC messages (tool calls, responses, etc.)
-- **stderr** carries human-readable log messages (visible in terminal)
+- **stderr** carries log messages at any level (the 2025-11-25 spec expanded stderr from errors-only to any log level)
 - The client (Claude Code, MCP Inspector) spawns the server as a child process
 
 This is why `print(..., file=sys.stderr)` is used for logging — printing
 to stdout would corrupt the JSON-RPC stream.
+
+The other standard transport is **Streamable HTTP** (remote servers, POSTs to `/mcp`).
+The older SSE-only transport is retired as of MCP 2025-11-25.
 
 ## Troubleshooting
 
@@ -504,7 +512,7 @@ to stdout would corrupt the JSON-RPC stream.
 
 ## Further Reading
 
-- [MCP Specification](https://spec.modelcontextprotocol.io/) — The full protocol spec
+- [MCP Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) — The full protocol spec
 - [FastMCP Documentation](https://gofastmcp.com/) — The framework this server is built with
 - [Claude Code MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp-servers) — How Claude Code uses MCP servers
 - [MCP Inspector](https://github.com/modelcontextprotocol/inspector) — The testing UI

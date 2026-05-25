@@ -116,15 +116,25 @@ claude "Why is the login test failing? Check tests/auth.test.ts"
 
 ## Model Selection
 
+> **May 2026 model lineup** (`docs.anthropic.com/en/docs/about-claude/models/overview`)
+>
+> | Model | API ID | Context | Pricing (in/out / MTok) | Best for |
+> |-------|--------|---------|--------------------------|----------|
+> | **Opus 4.7** | `claude-opus-4-7` | **1M** | $5 / $25 | Agentic coding, deep reasoning |
+> | **Sonnet 4.6** | `claude-sonnet-4-6` | **1M** | $3 / $15 | Default. Best speed-to-intelligence ratio |
+> | **Haiku 4.5** | `claude-haiku-4-5` | 200k | $1 / $5 | Lightweight automation, high-frequency calls |
+>
+> Deprecated and retiring **2026-06-15**: `claude-sonnet-4-20250514`, `claude-opus-4-20250514`. Migrate before that date.
+
 ```bash
-# Use Claude Sonnet (default, fast)
+# Use the alias for the default tier (resolves to Sonnet 4.6 today)
 claude --model sonnet
 
-# Use Claude Opus (slower, more capable)
+# Use the alias for the heavyweight tier (resolves to Opus 4.7 today)
 claude --model opus
 
-# Specify exact model version
-claude --model claude-sonnet-4-20250514
+# Pin to an exact model snapshot (recommended for production scripts)
+claude --model claude-sonnet-4-6
 ```
 
 ## Useful Aliases
@@ -153,7 +163,7 @@ alias ccp="claude -p"  # Print mode for scripts
 export ANTHROPIC_API_KEY=sk-ant-api03-...
 
 # Optional
-export CLAUDE_MODEL=claude-sonnet-4-20250514
+export CLAUDE_MODEL=claude-sonnet-4-6
 export CLAUDE_CONFIG_DIR=~/.claude
 ```
 

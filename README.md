@@ -1,3 +1,5 @@
+<!-- Last modified: 2026-05-25 -->
+
 # Claude Code and Large-Context Reasoning
 
 <img src="images/cover.png" alt="Claude Code and Large-Context Reasoning cover" width="400">
@@ -295,7 +297,7 @@ import Anthropic from '@anthropic-ai/sdk';
 const client = new Anthropic();  // Uses ANTHROPIC_API_KEY env var
 
 const response = await client.messages.create({
-  model: 'claude-sonnet-4-20250514',
+  model: 'claude-sonnet-4-6',
   max_tokens: 1024,
   messages: [{ role: 'user', content: 'Review this code for security issues...' }]
 });

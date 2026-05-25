@@ -1,16 +1,23 @@
 # Custom Agents (Subagents)
 
-Agents are specialized assistants that run in isolated contexts with specific tools and behaviors.
+<!-- src: https://code.claude.com/docs/en/sub-agents (May 2026) -->
+
+Agents (Anthropic still calls them "subagents" in the official docs) are specialized assistants that run in **their own context window** with their own system prompt, their own tool allowlist, and their own permission boundary. That isolation is the whole point: a subagent's research scrollback never bloats your main conversation.
+
+## Why an isolated context
+
+When Claude delegates to a subagent, the subagent gets a fresh 1M-token window. It runs to completion, summarizes, and returns only the result. Your main conversation sees the summary — not the 200 `Grep` calls and 80 `Read` responses that produced it. Subagents are how Claude Code keeps long sessions sane.
 
 ## Agents vs Skills
 
-| Aspect | Agents | Skills |
-|--------|--------|--------|
-| **Location** | `.claude/agents/` | `.claude/commands/` |
-| **Context** | Isolated (fresh conversation) | Main conversation |
-| **Invocation** | Claude delegates automatically OR explicit request | User types `/project:name` |
-| **Best for** | Complex multi-step tasks | Reusable prompts, knowledge |
-| **Can use skills** | Yes (`skills:` field) | N/A |
+| Aspect | Agents (`.claude/agents/`) | Skills (`.claude/skills/`) |
+|--------|----------------------------|----------------------------|
+| **Location** | `.claude/agents/<name>.md` | `.claude/skills/<name>/SKILL.md` |
+| **Context** | Isolated (fresh window) | Main conversation |
+| **Invocation** | Claude delegates by description match, or you spawn one with `--agents` | You type `/<name>`, or Claude auto-invokes when the description matches |
+| **Best for** | Heavyweight side tasks, parallel exploration | Reusable workflows, knowledge injection, parameterized commands |
+| **Can use skills?** | Yes, via `skills:` frontmatter (preloaded at startup) | N/A |
+| **Custom commands?** | N/A | Custom commands have merged into skills (May 2026) — `.claude/commands/*.md` still works for backward compatibility |
 
 ## Agent File Format
 
@@ -21,7 +28,7 @@ Agents are Markdown files with YAML frontmatter:
 name: my-agent
 description: When Claude should use this agent
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 skills: code-review
 ---
 
@@ -35,13 +42,12 @@ You are [agent persona]. When invoked, you...
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Unique identifier (lowercase, hyphens) |
-| `description` | Yes | When Claude should delegate to this agent |
-| `tools` | No | Allowed tools (inherits all if omitted) |
-| `disallowedTools` | No | Explicitly denied tools |
-| `model` | No | `sonnet`, `opus`, `haiku`, or `inherit` |
-| `skills` | No | Skills to load into agent context |
-| `permissionMode` | No | Permission level for this agent |
-| `hooks` | No | PreToolUse, PostToolUse, Stop handlers |
+| `description` | Yes | Plain-English trigger — Claude reads this to decide when to delegate. Be specific. |
+| `tools` | No | Allowed tools (inherits the parent allowlist if omitted). Restrict to enforce safety. |
+| `model` | No | `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5`, the short aliases `opus`/`sonnet`/`haiku`, or `inherit` |
+| `skills` | No | Skills preloaded into the agent's context at startup |
+| `permissionMode` | No | `default`, `acceptEdits`, `dontAsk`, or `plan` |
+| `hooks` | No | PreToolUse, PostToolUse, Stop handlers scoped to this agent |
 
 ## Example Agents in This Project
 
@@ -54,7 +60,7 @@ Location: `.claude/agents/code-quality-coach.md`
 name: code-quality-coach
 description: Senior developer mentor that reviews code and teaches best practices
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 skills: code-review
 ---
 ```
@@ -79,7 +85,7 @@ Location: `.claude/agents/release-manager.md`
 name: release-manager
 description: DevOps specialist that guides through release preparation
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 skills: deploy-prep
 ---
 ```
@@ -104,7 +110,7 @@ Location: `.claude/agents/claude-code-tutor.md`
 name: claude-code-tutor
 description: Interactive tutor for learning Claude Code concepts
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 ---
 ```
 
@@ -118,6 +124,38 @@ model: sonnet
 - "Explain MCP to me"
 - "How do I create a skill?"
 - "Teach me about agents"
+
+## Session-Scoped Subagents (no file required)
+
+You can also spawn a subagent without creating a file, scoped to one session, with the `--agents` flag:
+
+```bash
+claude --agents '{
+  "quick-reviewer": {
+    "description": "Quick read-only code review",
+    "prompt": "You are a senior code reviewer. Focus on security and clarity.",
+    "tools": ["Read", "Glob", "Grep"],
+    "model": "claude-haiku-4-5"
+  }
+}'
+```
+
+PowerShell uses a here-string for the JSON to avoid escaping pain:
+
+```powershell
+claude --agents @'
+{
+  "quick-reviewer": {
+    "description": "Quick read-only code review",
+    "prompt": "You are a senior code reviewer. Focus on security and clarity.",
+    "tools": ["Read", "Glob", "Grep"],
+    "model": "claude-haiku-4-5"
+  }
+}
+'@
+```
+
+Useful for automation scripts where you want a tightly-scoped helper without committing a file.
 
 ## Creating Your Own Agent
 
@@ -138,7 +176,7 @@ touch ~/.claude/agents/my-agent.md
 name: my-agent
 description: Clear description of when to use this agent
 tools: Read, Glob, Grep  # Only what's needed
-model: sonnet
+model: claude-sonnet-4-6
 ---
 ```
 

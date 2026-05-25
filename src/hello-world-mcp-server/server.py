@@ -104,14 +104,15 @@ async def lifespan(server: FastMCP):
     Manage server lifecycle.
 
     - Startup: Load storage from disk
-    - Yield: Provide state to tools
+    - Yield: Provide state dict to tools (FastMCP 3.x uses ctx.lifespan_context)
     - Shutdown: Save storage to disk
     """
     storage = load_storage()
     print(f"Storage loaded: {len(storage.items)} items", file=sys.stderr)
 
     state = AppState(storage=storage, data_path=DATA_PATH)
-    yield state
+    # FastMCP 3.x lifespan must yield a dict; tools access it via ctx.lifespan_context
+    yield {"app_state": state}
 
     save_storage(state.storage)
     print("Storage saved.", file=sys.stderr)
@@ -145,7 +146,7 @@ async def create_item(
 
     Returns the ID of the created item.
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
 
     item = Item(
         id=generate_id(),
@@ -170,7 +171,7 @@ async def list_items(
     """
     List all items, optionally filtered by tag.
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
     results = list(state.storage.items)
 
     if tag:
@@ -187,7 +188,7 @@ async def get_item(
     """
     Get a specific item by ID.
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
 
     for item in state.storage.items:
         if item.id == item_id:
@@ -204,7 +205,7 @@ async def delete_item(
     """
     Delete an item by ID.
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
 
     for i, item in enumerate(state.storage.items):
         if item.id == item_id:
@@ -224,7 +225,7 @@ async def set_metadata(
     """
     Set a metadata key-value pair.
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
     state.storage.metadata[key] = value
     save_storage(state.storage)
     return f"Set metadata: {key} = {value}"
@@ -238,7 +239,7 @@ async def get_metadata(
     """
     Get metadata value(s).
     """
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
 
     if key:
         return state.storage.metadata.get(key, f"Key not found: {key}")
@@ -253,21 +254,21 @@ async def get_metadata(
 @mcp.resource("hello-world-mcp-server://items")
 async def resource_all_items(ctx: Context) -> str:
     """All items as JSON."""
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
     return json.dumps([i.model_dump() for i in state.storage.items], indent=2)
 
 
 @mcp.resource("hello-world-mcp-server://metadata")
 async def resource_metadata(ctx: Context) -> str:
     """All metadata as JSON."""
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
     return json.dumps(state.storage.metadata, indent=2)
 
 
 @mcp.resource("hello-world-mcp-server://summary")
 async def resource_summary(ctx: Context) -> str:
     """Storage summary."""
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
     return json.dumps({
         "item_count": len(state.storage.items),
         "metadata_keys": list(state.storage.metadata.keys()),
@@ -279,7 +280,7 @@ async def resource_summary(ctx: Context) -> str:
 @mcp.resource("hello-world-mcp-server://items/{item_id}")
 async def resource_item_by_id(ctx: Context, item_id: str) -> str:
     """Get specific item by ID."""
-    state: AppState = ctx.state
+    state: AppState = ctx.lifespan_context["app_state"]
 
     for item in state.storage.items:
         if item.id == item_id:

@@ -25,7 +25,7 @@ const { values } = parseArgs({
   options: {
     base: { type: 'string', short: 'b', default: 'origin/main' },
     head: { type: 'string', short: 'h', default: 'HEAD' },
-    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-20250514' },
+    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-6' },
   },
 });
 
@@ -100,7 +100,7 @@ async function checkDocumentation(
     .join('\n\n');
 
   const response = await client.messages.create({
-    model: values.model || 'claude-sonnet-4-20250514',
+    model: values.model || 'claude-sonnet-4-6',
     max_tokens: 1024,
     messages: [
       {

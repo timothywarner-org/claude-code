@@ -10,15 +10,15 @@ import 'dotenv/config';
 
 // Available model IDs
 export type ModelId =
-  | 'claude-sonnet-4-20250514'
-  | 'claude-sonnet-4-5-20250929'
-  | 'claude-opus-4-5-20251101';
+  | 'claude-opus-4-7'
+  | 'claude-sonnet-4-6'
+  | 'claude-haiku-4-5-20251001';
 
-// Model pricing (per million tokens as of 2025)
+// Model pricing (per million tokens as of May 2026)
 const MODEL_PRICING: Record<ModelId, { input: number; output: number }> = {
-  'claude-sonnet-4-20250514': { input: 3, output: 15 },
-  'claude-sonnet-4-5-20250929': { input: 3, output: 15 },
-  'claude-opus-4-5-20251101': { input: 15, output: 75 },
+  'claude-opus-4-7': { input: 5, output: 25 },
+  'claude-sonnet-4-6': { input: 3, output: 15 },
+  'claude-haiku-4-5-20251001': { input: 1, output: 5 },
 };
 
 /**
@@ -40,10 +40,10 @@ export function createClient(): Anthropic {
 
 /**
  * Get the configured model ID
- * Falls back to claude-sonnet-4-20250514 if not specified
+ * Falls back to claude-sonnet-4-6 if not specified
  */
 export function getModel(): ModelId {
-  const model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+  const model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
   return model as ModelId;
 }
 
@@ -66,7 +66,7 @@ export function formatCost(
   outputTokens: number,
   model: ModelId
 ): string {
-  const pricing = MODEL_PRICING[model] || MODEL_PRICING['claude-sonnet-4-20250514'];
+  const pricing = MODEL_PRICING[model] || MODEL_PRICING['claude-sonnet-4-6'];
   const inputCost = (inputTokens / 1_000_000) * pricing.input;
   const outputCost = (outputTokens / 1_000_000) * pricing.output;
   const totalCost = inputCost + outputCost;

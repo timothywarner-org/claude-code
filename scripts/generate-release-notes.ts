@@ -19,7 +19,7 @@ const { values } = parseArgs({
     from: { type: 'string', short: 'f' },
     to: { type: 'string', short: 't' },
     output: { type: 'string', short: 'o' },
-    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-20250514' },
+    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-6' },
   },
 });
 
@@ -73,7 +73,7 @@ async function generateReleaseNotes(
   contributors: string[]
 ): Promise<string> {
   const response = await client.messages.create({
-    model: values.model || 'claude-sonnet-4-20250514',
+    model: values.model || 'claude-sonnet-4-6',
     max_tokens: 2048,
     messages: [
       {

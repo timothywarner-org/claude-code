@@ -134,7 +134,7 @@ export class StreamingResponseHandler extends EventEmitter {
 
     this.options = {
       apiKey: options.apiKey,
-      model: options.model || 'claude-sonnet-4-20250514',
+      model: options.model || 'claude-sonnet-4-6',
       maxTokens: options.maxTokens || 4096,
       signal: options.signal,
     };

@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last revised: 2026-03-19
+Last revised: 2026-05-25
 
 ## Project Overview
 
@@ -169,7 +169,7 @@ Skills are in `.claude/skills/`, not `.claude/commands/` (the README references 
 Required: `ANTHROPIC_API_KEY`
 
 Optional:
-- `CLAUDE_MODEL` — Model selection (default: `claude-sonnet-4-20250514`)
+- `CLAUDE_MODEL` — Model selection (default: `claude-sonnet-4-6`)
 - `MCP_MEMORY_PATH` — Memory server storage path (default: `./data/memory.json`)
 - `GITHUB_TOKEN`, `GITHUB_OWNER`, `GITHUB_REPO` — For GitHub integration demos (Segments 3 and 4)
 - `SLACK_BOT_TOKEN`, `SLACK_CHANNEL_ID` — For Slack integration (Segment 3)

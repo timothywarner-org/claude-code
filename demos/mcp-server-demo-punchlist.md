@@ -31,9 +31,9 @@ Open a **new terminal** (keep server running):
 npx @modelcontextprotocol/inspector
 ```
 
-**In browser (http://localhost:5173):**
+**In browser (http://localhost:6274):** <!-- verify port at run time; FastMCP dev mode default is 6274 -->
 - [ ] Click "Connect"
-- [ ] Transport: `stdio`
+- [ ] Transport: `stdio` (NOT "sse" - SSE-only transport is retired in MCP 2025-11-25)
 - [ ] Command: `C:\github\claude-code\src\.venv\Scripts\python.exe`
 - [ ] Args: `memory_server.py`
 
