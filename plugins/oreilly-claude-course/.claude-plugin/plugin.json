@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "oreilly-claude-course",
+  "version": "0.1.0",
+  "description": "Skills and subagents for Tim Warner's O'Reilly Live Learning course 'Claude Code and Large-Context Reasoning'. Bundles the three repo-scoped skills (mcp-scaffold, review-changes, claude-md-audit) and all five teaching subagents (code-quality-coach, claude-code-tutor, python-mcp-expert, release-manager, terraform-architect) into one installable plugin.",
+  "author": {
+    "name": "Tim Warner",
+    "email": "timothywarner316@gmail.com",
+    "url": "https://github.com/timothywarner"
+  },
+  "homepage": "https://github.com/timothywarner/claude-code",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "oreilly",
+    "training",
+    "skills",
+    "subagents",
+    "mcp"
+  ],
+  "skills": [
+    "skills/mcp-scaffold",
+    "skills/review-changes",
+    "skills/claude-md-audit"
+  ],
+  "agents": [
+    "agents/code-quality-coach.md",
+    "agents/claude-code-tutor.md",
+    "agents/python-mcp-expert.md",
+    "agents/release-manager.md",
+    "agents/terraform-architect.md"
+  ]
+}
