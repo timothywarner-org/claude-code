@@ -1,0 +1,12 @@
+.env
+__pycache__
+.venv
+.DS_Store
+logs/
+app.egg-info/
+
+# Override the global gitignore: this repo's .vscode/launch.json defines the
+# five MCP debugging profiles that learners need on Day 1. Ship it.
+!.vscode/
+!.vscode/launch.json
+!.vscode/settings.json

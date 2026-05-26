@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "T&C DOCS (Candidate Facing Resources)": {
+      "url": "https://docs.linuxfoundation.org/tc-docs/~gitbook/mcp",
+      "type": "http"
+    },
+    "DocumentMCP-GitHubCopilot": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "C:/github/claude-code/mcp-teaching-kit-main",
+        "C:/github/claude-code/mcp-teaching-kit-main/mcp_server.py"
+      ]
+    }
+  },
+  "inputs": []
+}

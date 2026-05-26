@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Repo pre-commit hook: fail if any CLAUDE.md references a path that doesn't
+# exist on disk. Phantom paths in CLAUDE.md poison Claude's context and lead
+# to confident wrong answers on stage.
+#
+# Bypass: set CLAUDE_MD_SKIP=1 git commit ... if you genuinely need to commit
+# a CLAUDE.md that documents a future file. Use sparingly.
+
+set -euo pipefail
+
+if [[ "${CLAUDE_MD_SKIP:-0}" == "1" ]]; then
+  printf 'pre-commit: CLAUDE_MD_SKIP=1, skipping CLAUDE.md path audit.\n' >&2
+  exit 0
+fi
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+# Only run the audit when a CLAUDE.md is part of the staged diff. Otherwise
+# every unrelated commit pays the audit tax.
+if ! git diff --cached --name-only | grep -qE '(^|/)CLAUDE\.md$'; then
+  exit 0
+fi
+
+printf 'pre-commit: CLAUDE.md staged. Auditing path claims...\n'
+
+if ! bash "$repo_root/scripts/check-claude-md-paths.sh"; then
+  printf '\npre-commit: blocked. Fix the missing paths or set CLAUDE_MD_SKIP=1 to override.\n' >&2
+  exit 1
+fi
+
+exit 0

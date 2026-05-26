@@ -20,7 +20,11 @@
     "segment4:workflows": "tsx segment_4_hero/02_production_workflows.ts",
     "segment4:memory": "bash segment_4_hero/memory_server/start.sh",
 
-    "mcp:memory": "bash segment_4_hero/memory_server/start.sh"
+    "mcp:memory": "bash segment_4_hero/memory_server/start.sh",
+
+    "audit:claude-md": "python .claude/skills/claude-md-audit/scripts/audit_claude_md.py --scope all",
+    "audit:paths": "bash scripts/check-claude-md-paths.sh",
+    "hooks:install": "bash scripts/install-git-hooks.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",

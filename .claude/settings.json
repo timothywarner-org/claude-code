@@ -5,6 +5,16 @@
     "microsoft-learn": {
       "type": "http",
       "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "DocumentMCP-ClaudeCode": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "C:/github/claude-code/mcp-teaching-kit-main",
+        "C:/github/claude-code/mcp-teaching-kit-main/mcp_server.py"
+      ]
     }
   }
 }

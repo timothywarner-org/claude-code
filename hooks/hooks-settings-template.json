@@ -1,0 +1,50 @@
+{
+  "_comment": "Merge the 'hooks' block into your .claude/settings.json (project) or ~/.claude/settings.json (user) to enable the five teaching hooks. Paths assume CLAUDE_PROJECT_DIR resolves to the repo root, which Claude Code sets automatically. Bash is invoked explicitly so this works on Windows under Git Bash and on macOS/Linux without a shebang race.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/hooks/scripts/safety-guard.sh\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/hooks/scripts/tool-logger.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/hooks/scripts/auto-format.sh\""
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/hooks/scripts/console-log-detector.sh\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/hooks/scripts/session-summary.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

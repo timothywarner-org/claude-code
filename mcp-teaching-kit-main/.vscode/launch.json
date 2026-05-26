@@ -1,0 +1,92 @@
+{
+  "version": "0.2.0",
+  "//": "Five profiles for inspecting the MCP request/response cycle. Pick by need:",
+  "//1": "  'MCP: chat (normal run)'         - just run the demo, no debugger overhead.",
+  "//2": "  'MCP: chat (debug client)'       - break in main.py, mcp_client.py, core/*.",
+  "//3": "  'MCP: chat (wire-trace server)'  - see every JSON-RPC frame in DEBUG CONSOLE + logs/.",
+  "//4": "  'MCP: server only (attach)'      - debug the server in isolation (run server first).",
+  "//5": "  'MCP: server only (debugpy)'     - launch server with debugpy waiting on :5678.",
+  "configurations": [
+    {
+      "name": "MCP: chat (normal run)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    {
+      "name": "MCP: chat (debug client)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "//": "justMyCode=false lets you step into mcp.client.session and watch the SDK negotiate the wire protocol.",
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "PYDEVD_DISABLE_FILE_VALIDATION": "1"
+      }
+    },
+    {
+      "name": "MCP: chat (wire-trace server)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "//": "MCP_WIRE_TRACE=1 makes main.py spawn scripts/mcp_wire_trace.py instead of the bare server. Every JSON-RPC frame is mirrored to stderr (visible in the integrated terminal) and to logs/mcp_wire_trace.log.",
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WIRE_TRACE": "1"
+      }
+    },
+    {
+      "name": "MCP: server only (debugpy)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/mcp_server.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "python": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "//": "Useful for setting breakpoints inside @mcp.tool / @mcp.prompt bodies. Pair with 'MCP: server only (attach)' if you want to drive it from a separate client process.",
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    {
+      "name": "MCP: server only (attach)",
+      "type": "debugpy",
+      "request": "attach",
+      "//": "Attach to a server that was started with: python -m debugpy --listen 5678 --wait-for-client mcp_server.py",
+      "connect": {
+        "host": "127.0.0.1",
+        "port": 5678
+      },
+      "justMyCode": false,
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "${workspaceFolder}"
+        }
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "MCP: full stack (client + wire trace)",
+      "configurations": ["MCP: chat (wire-trace server)"],
+      "//": "Single-profile compound today; placeholder for adding a parallel server-debugpy attach later if you want simultaneous breakpoints on both sides."
+    }
+  ]
+}
