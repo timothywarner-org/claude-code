@@ -84,7 +84,7 @@ Next steps:
   2. Try: claude "Explain what this project does"
   3. Create a CLAUDE.md file for project context
 
-Continue to Segment 2 to learn about MCP servers.
+Continue to Segment 2 to learn CLAUDE.md at every scope.
 `);
 }
 

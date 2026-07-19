@@ -1,10 +1,10 @@
-# Exercise 1: Analyzing Large Codebases with Claude's 200K Context Window
+# Exercise 1: Analyzing Large Codebases with Claude's 1M Context Window
 
 ## Learning Objectives
 
 By the end of this exercise, you will be able to:
 
-1. Understand the practical implications of Claude's 200K token context window
+1. Understand the practical implications of Claude's 1M token context window
 2. Load and analyze an entire codebase in a single conversation
 3. Ask architectural questions that span multiple files
 4. Identify patterns and anti-patterns across a codebase
@@ -13,13 +13,13 @@ By the end of this exercise, you will be able to:
 ## Prerequisites
 
 - Claude Code CLI installed and authenticated
-- Node.js 18+ and npm installed
+- Node.js 20+ and npm installed
 - Git installed
 - Basic TypeScript/JavaScript knowledge
 
 ## Background
 
-Claude's 200K context window is equivalent to approximately 150,000 words or 500+ pages of text.
+Claude's 1M context window is equivalent to approximately 750,000 words or 2,500+ pages of text.
 This allows you to load entire small-to-medium codebases into a single conversation, enabling:
 
 - Full architectural analysis without context switching
@@ -73,7 +73,7 @@ Expected output:
 ```
 Files loaded: 23
 Estimated tokens: 45,000
-Context utilization: 22.5%
+Context utilization: 4.5%
 ```
 
 ### Step 6: Use Claude Code CLI for Analysis

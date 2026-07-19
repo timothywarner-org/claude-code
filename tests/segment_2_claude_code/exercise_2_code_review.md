@@ -316,4 +316,8 @@ jobs:
 ## Next Steps
 
 After completing this exercise, you will have the skills to integrate Claude Code
-into your team's review workflow. Continue to Segment 3 for MCP server implementation.
+into your team's review workflow. Note: these `tests/` directory names predate the
+current **Zero -> Context -> Agents -> Hero** arc. The MCP exercises under
+`tests/segment_3_mcp/` map to the current **Segment 4 (Hero)**, and the agent-loop
+and permission material is now **Segment 3 (Agents)**. Continue to the MCP exercises
+in `tests/segment_3_mcp/` when you reach the Hero segment.

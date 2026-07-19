@@ -1,20 +1,48 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "_comment": "Project-shared Claude Code settings. Committed to git so learners cloning this repo get the canonical Segment 4 MCP demo target. Personal overrides go in settings.local.json (gitignored).",
-  "mcpServers": {
-    "microsoft-learn": {
-      "type": "http",
-      "url": "https://learn.microsoft.com/api/mcp"
-    },
-    "DocumentMCP-ClaudeCode": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "run",
-        "--project",
-        "C:/github/claude-code/mcp-teaching-kit-main",
-        "C:/github/claude-code/mcp-teaching-kit-main/mcp_server.py"
-      ]
-    }
-  }
+  "permissions": {
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(rm *)",
+      "Bash(Remove-Item:*)",
+      "Bash(Remove-Item *)",
+      "Bash(ri:*)",
+      "Bash(del:*)",
+      "Bash(erase:*)",
+      "Bash(rmdir:*)",
+      "PowerShell(Remove-Item:*)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(ri:*)",
+      "PowerShell(rm:*)",
+      "PowerShell(del:*)",
+      "PowerShell(erase:*)",
+      "PowerShell(rmdir:*)"
+    ]
+  },
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/session-end-memory-marker.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/session-start-memory-prompt.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "_mcpServers_comment": "Project-scoped MCP servers for the Claude Code CLI live in .mcp.json at the repo root (the documented team-share location the CLI reads and prompts to approve on clone), NOT here. See .mcp.json for microsoft-learn and DocumentMCP-ClaudeCode. A parallel .vscode/mcp.json registers the same document server for VS Code's Copilot."
 }

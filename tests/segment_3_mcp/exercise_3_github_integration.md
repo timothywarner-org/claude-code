@@ -196,7 +196,7 @@ function setCache(key: string, data: unknown, ttlSeconds: number): void {
 Register and test with Claude Code:
 
 ```bash
-claude mcp add github-server --command "npx ts-node github_mcp_server.ts"
+claude mcp add github-server -- npx tsx github_mcp_server.ts
 ```
 
 Test with prompts:

@@ -29,6 +29,8 @@ Integrating Claude Code into CI/CD pipelines enables:
 
 This exercise walks you through setting up a production-ready GitHub Actions workflow.
 
+> **Recommended shortcut:** for production use, the official **`anthropics/claude-code-action@v1`** wraps most of the wiring below (install, auth, PR commenting) into a single step. This exercise hand-rolls the workflow on purpose so you understand each moving part. Once you have, prefer the official action.
+
 ## Step-by-Step Instructions
 
 ### Step 1: Set Up Repository Secrets

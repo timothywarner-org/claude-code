@@ -198,27 +198,9 @@ see the raw JSON.
 
 ## Tutorial 2: Using with Claude Code
 
-### Option A: Already Configured (Recommended)
+### Option A: Register it yourself (Recommended)
 
-If you cloned this repo, the server is already registered in
-`.claude/settings.json`. Just start Claude Code:
-
-```bash
-claude
-```
-
-Claude will automatically start the memory server in the background.
-Verify it's connected:
-
-```bash
-claude mcp list
-```
-
-You should see `memory` in the list with status "connected".
-
-### Option B: Manual Registration
-
-If you want to add it to a different project:
+This memory server is **optional build-your-own homework**, so it is **not** pre-registered in the repo. The pre-registered demo servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) live in `.mcp.json` at the repo root. To add this one:
 
 ```bash
 # Positional stdio form (recommended)
@@ -228,12 +210,18 @@ claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 claude mcp add-json memory '{"type":"stdio","command":"bash","args":["segment_4_hero/memory_server/start.sh"]}'
 ```
 
-This writes the server config to your project's `.claude/settings.json`.
+Then start Claude Code and verify it connected:
 
-### Option C: Verify in VS Code
+```bash
+claude
+claude mcp list
+```
 
-If you're using the Claude Code VS Code extension, check
-`.claude/settings.json` contains:
+You should see `memory` in the list. Project-scoped servers prompt for a one-time approval on first launch.
+
+### Option B: Add it to `.mcp.json` for the whole team
+
+To share the server with anyone who clones the repo, add it to `.mcp.json` at the repo root (the location the CLI reads project MCP servers from - **not** `.claude/settings.json`):
 
 ```json
 {
@@ -241,7 +229,7 @@ If you're using the Claude Code VS Code extension, check
     "memory": {
       "type": "stdio",
       "command": "bash",
-      "args": ["segment_4_hero/memory_server/start.sh"]
+      "args": ["${CLAUDE_PROJECT_DIR:-.}/segment_4_hero/memory_server/start.sh"]
     }
   }
 }

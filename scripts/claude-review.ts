@@ -32,7 +32,7 @@ const { values } = parseArgs({
   options: {
     diff: { type: 'string', short: 'd' },
     output: { type: 'string', short: 'o' },
-    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-6' },
+    model: { type: 'string', short: 'm', default: 'claude-sonnet-5' },
   },
 });
 
@@ -68,7 +68,7 @@ Respond with JSON:
 Only report genuine issues. Be specific and actionable. Approve if no critical issues found.`;
 
   const response = await client.messages.create({
-    model: values.model || 'claude-sonnet-4-6',
+    model: values.model || 'claude-sonnet-5',
     max_tokens: 4096,
     system: systemPrompt,
     messages: [

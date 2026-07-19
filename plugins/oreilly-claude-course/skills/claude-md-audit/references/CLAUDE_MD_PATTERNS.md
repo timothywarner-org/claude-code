@@ -100,7 +100,7 @@ Top-level layout. One line per major directory.
 ## Ground-truth facts (do not re-fetch)
 
 - MCP spec **2025-11-25**, transports **stdio** + **Streamable HTTP**. SSE-only is retired.
-- Model lineup: **Opus 4.7** / **Sonnet 4.6** (default) / **Haiku 4.5**.
+- Model lineup: **Sonnet 5** (default, native **1M** context) / **Opus 4.8** / **Haiku 4.5**.
 ```
 
 **Common drift modes**:
@@ -121,7 +121,7 @@ The audit script emits JSON like this:
       "line": 42,
       "severity": "high",
       "category": "ground_truth_drift",
-      "message": "Ground-truth token 'Sonnet 4.6' is missing..."
+      "message": "Ground-truth token 'Sonnet 5' is missing..."
     }
   ]
 }

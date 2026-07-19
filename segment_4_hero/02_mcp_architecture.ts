@@ -229,7 +229,7 @@ async function main(): Promise<void> {
 3. Explore official MCP servers:
    https://github.com/modelcontextprotocol/servers
 
-4. Continue to Segment 3 to learn about agents!
+4. This is the Hero segment. You have already met agents in Segment 3 - here you wire MCP reach onto them.
 `);
 }
 

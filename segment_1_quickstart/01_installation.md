@@ -61,25 +61,30 @@ claude
 
 ## Model selection
 
-> **May 2026 model lineup** ([docs.anthropic.com/en/docs/about-claude/models/overview](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+> **Current model lineup** ([docs.anthropic.com/en/docs/about-claude/models/overview](https://docs.anthropic.com/en/docs/about-claude/models/overview))
 >
-> | Model | API ID | Context | Pricing (in/out / MTok) | Best for |
-> |-------|--------|---------|--------------------------|----------|
-> | **Opus 4.7** | `claude-opus-4-7` | **1M** | $5 / $25 | Agentic coding, deep reasoning |
-> | **Sonnet 4.6** | `claude-sonnet-4-6` | **1M** | $3 / $15 | Default. Best speed-to-intelligence ratio |
-> | **Haiku 4.5** | `claude-haiku-4-5` | 200k | $1 / $5 | Lightweight automation, high-frequency calls |
+> | Model | API ID | Context | Best for |
+> |-------|--------|---------|----------|
+> | **Sonnet 5** | `claude-sonnet-5` | **1M native** | Default in Claude Code. Best speed-to-intelligence ratio |
+> | **Opus 4.8** | `claude-opus-4-8` | 1M (via `opus[1m]`) | Agentic coding, deep reasoning |
+> | **Haiku 4.5** | `claude-haiku-4-5-20251001` | Large | Lightweight automation, high-frequency calls |
 >
-> Deprecated and retiring **2026-06-15**: `claude-sonnet-4-20250514`, `claude-opus-4-20250514`. Migrate before that date.
+> **The context window is 1M tokens.** Sonnet 5 uses the full 1M natively. For Opus, append the
+> `[1m]` variant. Turn it off with `CLAUDE_CODE_DISABLE_1M_CONTEXT=1` if you want to cap context cost.
+> Model IDs move fast - confirm the current lineup at the docs link above before you record.
 
 ```bash
-# Alias for the default tier (resolves to Sonnet 4.6 today)
+# Alias for the default tier (resolves to Sonnet 5 today, native 1M context)
 claude --model sonnet
 
-# Alias for the heavyweight tier (resolves to Opus 4.7 today)
+# Alias for the heavyweight tier (resolves to Opus 4.8 today)
 claude --model opus
 
-# Pin to an exact snapshot (recommended for production scripts)
-claude --model claude-sonnet-4-6
+# Select the 1M-context variant explicitly in the model picker
+claude --model opus[1m]
+
+# Pin to an exact model (recommended for production scripts)
+claude --model claude-sonnet-5
 ```
 
 ## Keyboard shortcuts
@@ -108,7 +113,7 @@ alias ccp="claude -p"  # Print mode for scripts
 export ANTHROPIC_API_KEY=sk-ant-api03-...
 
 # Optional
-export CLAUDE_MODEL=claude-sonnet-4-6
+export CLAUDE_MODEL=claude-sonnet-5
 export CLAUDE_CONFIG_DIR=~/.claude
 ```
 
@@ -128,7 +133,7 @@ Three quick questions. Drop your answers in chat:
 2. What happens to `CLAUDE.md` content at the start of each new session?
 3. What's the smallest useful `CLAUDE.md` you could write for your current project right now?
 
-*Now let's make Claude remember more than just the project root.*
+_Now let's make Claude remember more than just the project root._
 
 ## What you should be able to do now
 

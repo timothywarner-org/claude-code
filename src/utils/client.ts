@@ -10,14 +10,15 @@ import 'dotenv/config';
 
 // Available model IDs
 export type ModelId =
-  | 'claude-opus-4-7'
-  | 'claude-sonnet-4-6'
+  | 'claude-opus-4-8'
+  | 'claude-sonnet-5'
   | 'claude-haiku-4-5-20251001';
 
 // Model pricing (per million tokens as of May 2026)
+// verify current pricing at anthropic.com/pricing
 const MODEL_PRICING: Record<ModelId, { input: number; output: number }> = {
-  'claude-opus-4-7': { input: 5, output: 25 },
-  'claude-sonnet-4-6': { input: 3, output: 15 },
+  'claude-opus-4-8': { input: 5, output: 25 },
+  'claude-sonnet-5': { input: 3, output: 15 },
   'claude-haiku-4-5-20251001': { input: 1, output: 5 },
 };
 
@@ -40,10 +41,10 @@ export function createClient(): Anthropic {
 
 /**
  * Get the configured model ID
- * Falls back to claude-sonnet-4-6 if not specified
+ * Falls back to claude-sonnet-5 if not specified
  */
 export function getModel(): ModelId {
-  const model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
+  const model = process.env.CLAUDE_MODEL || 'claude-sonnet-5';
   return model as ModelId;
 }
 
@@ -66,7 +67,7 @@ export function formatCost(
   outputTokens: number,
   model: ModelId
 ): string {
-  const pricing = MODEL_PRICING[model] || MODEL_PRICING['claude-sonnet-4-6'];
+  const pricing = MODEL_PRICING[model] || MODEL_PRICING['claude-sonnet-5'];
   const inputCost = (inputTokens / 1_000_000) * pricing.input;
   const outputCost = (outputTokens / 1_000_000) * pricing.output;
   const totalCost = inputCost + outputCost;

@@ -35,8 +35,8 @@ Help developers master Claude Code through:
 - Permission levels and tool restrictions
 - When to use vs. avoid full autonomy
 
-### 4. Skills (Custom Commands)
-- Creating skills in `.claude/commands/`
+### 4. Skills (successor to custom commands)
+- Creating skills in `.claude/skills/<name>/SKILL.md`
 - Frontmatter configuration
 - Multi-file skills with scripts
 - Using `$ARGUMENTS` for dynamic input
@@ -116,7 +116,7 @@ sources. Think of it as "plugins" for Claude.
 📚 Lesson: Custom Skills
 
 **What is a Skill?**
-A reusable command you can invoke with /project:skill-name
+A reusable workflow Claude loads when relevant, or that you invoke with /skill-name
 
 **Skill Anatomy:**
 ```markdown
@@ -134,7 +134,7 @@ What to do when this skill is invoked...
 **Exercise: Create Your First Skill**
 
 1. Create the file:
-   `.claude/commands/hello.md`
+   `.claude/skills/hello/SKILL.md`
 
 2. Add this content:
    ```markdown
@@ -148,7 +148,7 @@ What to do when this skill is invoked...
    ```
 
 3. Try it:
-   `/project:hello World`
+   `/hello World`
 ```
 
 ### Lesson: Building an Agent
@@ -165,7 +165,7 @@ specific tools and behaviors.
 |-----------|--------------------|--------------------|
 | Context   | Isolated (fresh)   | Main conversation  |
 | Best for  | Complex tasks      | Knowledge/prompts  |
-| Invocation| Automatic or manual| /project:name      |
+| Invocation| Automatic or manual| Auto or /name       |
 
 **Exercise: Examine Our Agents**
 
@@ -173,7 +173,7 @@ specific tools and behaviors.
    `Read .claude/agents/code-quality-coach.md`
 
 2. Notice:
-   - The `skills: code-review` line (uses our skill!)
+   - How it leans on the real **`review-changes`** skill in `.claude/skills/` for the mechanical pass
    - The `tools:` restrictions
    - The detailed system prompt
 
@@ -236,7 +236,7 @@ segment_3_agents/         ← Agents: autonomy with boundaries
 ├── 03_agent_boundaries.ts  # Permissions and safety
 └── 04_custom_agents.md   # Subagents (Part 2 of the agents story)
 
-segment_4_hero/           ← Hero: skills, subagents, MCP consumption
+segment_4_hero/           ← Hero: skills, subagents, and MCP
 ├── 01_skills_intro.md    # Skills + dynamic context injection
 ├── 02_mcp_architecture.ts  # How MCP works (advanced reference)
 ├── 02_production_workflows.ts  # Real-world patterns
@@ -244,12 +244,17 @@ segment_4_hero/           ← Hero: skills, subagents, MCP consumption
 └── memory_server/        # Optional: build your own MCP server
 
 .claude/                  ← Your customizations
-├── commands/             # Custom skills
-│   ├── code-review/      # Multi-file skill example
-│   └── deploy-prep/      # Another advanced skill
+├── skills/               # Custom skills (successor to .claude/commands/)
+│   ├── review-changes/   # Working-tree review skill
+│   ├── mcp-scaffold/     # Multi-file skill example (scaffolds MCP servers)
+│   ├── claude-md-audit/  # Audits the CLAUDE.md hierarchy for drift
+│   └── azure-bicep-skill/  # Domain skill example
 └── agents/               # Custom agents
     ├── code-quality-coach.md
     ├── release-manager.md
+    ├── python-mcp-expert.md
+    ├── terraform-architect.md
+    ├── azure-principal-architect.md
     └── claude-code-tutor.md  # That's me! 👋
 ```
 

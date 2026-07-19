@@ -34,7 +34,7 @@ An MCP server exposes **three primitives**, mirroring the same control hierarchy
 | **Resources** | App-controlled (CLI loads on demand) | Read-only data: file contents, schema, current state | Skill with dynamic context injection |
 | **Prompts** | User-controlled (you trigger with `/`) | Templates the server provides for you to invoke | Slash-invoked skill |
 
-Today you **consume** MCP servers. Building one is optional homework — the course ships a working Python FastMCP example at `segment_2_context/memory_server/` for learners who want to go that deep.
+Today you **consume** MCP servers. Building one is optional homework — the course ships a working Python FastMCP example at `segment_4_hero/memory_server/` for learners who want to go that deep.
 
 ## Reach hierarchy: where MCP fits
 
@@ -59,7 +59,7 @@ When everything above the line is not enough, MCP is the next step.
 
 ## Consuming an already-registered server
 
-This repo's `.claude/settings.json` registers **microsoft-learn** as a Streamable HTTP server pointing at `https://learn.microsoft.com/api/mcp`. You did not install it. You did not run it. It is already wired up. To see it:
+This repo's `.mcp.json` (repo root) registers **microsoft-learn** as a Streamable HTTP server pointing at `https://learn.microsoft.com/api/mcp`. You did not install it. You did not run it. It is already wired up. To see it:
 
 ```bash
 claude mcp list
@@ -87,7 +87,7 @@ claude mcp list
 claude /mcp
 
 # Add a server via CLI (stdio)
-claude mcp add memory -- bash segment_2_context/memory_server/start.sh
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 
 # Add a server via CLI (Streamable HTTP)
 claude mcp add-json learn '{"type":"http","url":"https://learn.microsoft.com/api/mcp"}'
@@ -119,12 +119,14 @@ That second comparison is the whole point. MCP is the difference between "what C
 
 ## Optional homework: build your own MCP server
 
-The course repo includes a working Python FastMCP server at `segment_2_context/memory_server/`. It demonstrates all three primitives — tools, resources, prompts — backed by a JSON file. Source: `segment_2_context/memory_server/server.py`. Launcher: `start.sh` (handles `uv sync`, stale-process cleanup, signal forwarding).
+The course repo includes a working Python FastMCP server at `segment_4_hero/memory_server/`. It demonstrates all three primitives — tools, resources, prompts — backed by a JSON file. Source: `segment_4_hero/memory_server/server.py`. Launcher: `start.sh` (handles `uv sync`, stale-process cleanup, signal forwarding).
+
+**Is FastMCP "the Anthropic way"?** Yes. **FastMCP** is the high-level server API for the Model Context Protocol. Its decorator model (`@mcp.tool`, `@mcp.resource`, `@mcp.prompt`) is what the official docs teach, and a FastMCP 1.x snapshot is vendored into the official `mcp` Python SDK as `mcp.server.fastmcp`. This server pins the current standalone `fastmcp>=3.0.0`, which is the actively maintained upstream. Either import gives you a standalone **stdio** server that `claude mcp add` can register - which is exactly why the consume-demo above works against it.
 
 To register it locally:
 
 ```bash
-claude mcp add memory -- bash segment_2_context/memory_server/start.sh
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 claude --mcp-debug
 ```
 

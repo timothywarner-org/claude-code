@@ -38,7 +38,7 @@ const { values } = parseArgs({
   options: {
     output: { type: 'string', short: 'o' },
     dir: { type: 'string', short: 'd', default: '.' },
-    model: { type: 'string', short: 'm', default: 'claude-sonnet-4-6' },
+    model: { type: 'string', short: 'm', default: 'claude-sonnet-5' },
   },
 });
 
@@ -76,7 +76,7 @@ function getSourceFiles(dir: string): string[] {
 
 async function scanFile(filePath: string, content: string): Promise<SecurityIssue[]> {
   const response = await client.messages.create({
-    model: values.model || 'claude-sonnet-4-6',
+    model: values.model || 'claude-sonnet-5',
     max_tokens: 2048,
     messages: [
       {

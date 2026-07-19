@@ -14,12 +14,14 @@ Key components include:
 - **Agent Workflows**: Multi-step autonomous operations.
 
 ## Repository Structure
-- `src/`: Core Python-based MCP server implementation.
-  - `memory_server.py`: Main FastMCP server with tools and resources.
-  - `data/`: JSON files for memory persistence.
-- `segment_*`: Training segments for Claude Code CLI, MCP, agents, and skills.
-- `scripts/`: Utility scripts for setup, security, and documentation.
-- `tests/`: Exercises and solutions for each training segment.
+- `segment_1_quickstart/` — Zero: install, CLI, first CLAUDE.md.
+- `segment_2_context/` — Context: the CLAUDE.md hierarchy (user, project, subdirectory scopes).
+- `segment_3_agents/` — Agents: the loop, permissions, subagents.
+- `segment_4_hero/` — Hero: skills, hooks, and MCP. The Python FastMCP memory server is at `segment_4_hero/memory_server/`.
+- `src/`: Supporting Python MCP servers and TypeScript utilities (`utils/`).
+- `scripts/`: TypeScript and shell utility scripts for setup, security, and documentation.
+- `.mcp.json`: Project-scoped MCP servers the CLI reads on startup (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`).
+- `.claude/`: Skills (`.claude/skills/<name>/SKILL.md`), subagents (`.claude/agents/`), and project settings.
 
 ## Development Workflows
 ### Setup
@@ -32,49 +34,48 @@ Key components include:
    npm run verify
    ```
 
-### Build and Run
-- Build TypeScript:
-  ```bash
-  npm run build
-  ```
-- Run demo files:
+### Run
+- There is no `npm run build` step in this course. There is no root `tsconfig.json`; demos run via `npx tsx` (JIT compilation).
+- Run demo files directly:
   ```bash
   npx tsx <path-to-file.ts>
   ```
 
 ### Key Commands
-- **Segment 1**: Quick Start
-  ```bash
-  npm run segment1:verify      # Verify API setup
-  npm run segment1:workflows   # Terminal workflow demos
-  ```
-- **Segment 2**: MCP
-  ```bash
-  npm run segment2:architecture  # MCP architecture visualization
-  npm run segment2:memory        # Start memory server
-  ```
-- **Segment 3**: Agents
-  ```bash
-  npm run segment3:agent-loop   # Agent loop demonstration
-  npm run segment3:boundaries   # Permission boundaries demo
-  ```
-- **Segment 4**: Skills + Agents
-  ```bash
-  npm run segment4:workflows    # Production workflow demos
-  ```
+
+**Segment 2** (Context: The CLAUDE.md Hierarchy) ships no npm scripts. The lesson is markdown and live demos in `segment_2_context/`. The other segments:
+
+```bash
+# Segment 1 (Zero: Install, CLI, First CLAUDE.md)
+npm run segment1:verify        # Verify API setup
+npm run segment1:workflows     # Terminal workflow demos
+
+# Segment 3 (Agents: The Loop, Permissions, Subagents)
+npm run segment3:agent-loop    # Agent loop demonstration
+npm run segment3:boundaries    # Permission boundaries demo
+
+# Segment 4 (Hero: Skills, Subagents, and MCP)
+npm run segment4:workflows     # Production workflow demos
+npm run segment4:architecture  # MCP architecture reference
+npm run segment4:memory        # Start the optional Python FastMCP memory server
+```
 
 ## Conventions
+
 - **TypeScript**: Follow strict typing and modular design.
-- **Python**: Use FastAPI conventions for MCP servers.
-- **JSON Data**: Store memory items in `src/data/`.
-- **Testing**: Exercises are in `tests/` with solutions and starters.
+- **Python**: Use FastMCP (managed by UV) for MCP servers.
+- **Memory storage**: The Segment 4 memory server persists JSON at `segment_4_hero/memory_server/data/memory.json` (override with `MCP_MEMORY_PATH`).
+- **Skills**: Live in `.claude/skills/<name>/SKILL.md`. `.claude/commands/` still works for back-compat but is superseded.
+- **Model defaults**: Sonnet 5 (`claude-sonnet-5`, native 1M-token context) is the Claude Code default. Opus 4.8 (`claude-opus-4-8`) for deepest reasoning, Haiku 4.5 (`claude-haiku-4-5-20251001`) for lightweight work.
 
 ## Integration Points
+
 - **Anthropic API**: Used for Claude Code CLI and demos.
 - **GitHub Workflows**: Automate CI/CD for production workflows.
 
 ## Examples
-- **Memory Server**: See `src/memory_server.py` for resource and tool definitions.
+
+- **Memory Server**: See `segment_4_hero/memory_server/server.py` for resource and tool definitions.
 - **Agent Workflows**: Refer to `segment_3_agents/` for agentic loops and boundaries.
 
 For further details, consult `README.md` and `CLAUDE.md`.

@@ -70,26 +70,28 @@ interface OptimizationResult {
 // these numbers — the lineup turns over roughly every 3-4 months.
 const MODEL_PRICING: Record<string, ModelPricing> = {
   // === Current lineup (May 2026) ===
-  'claude-opus-4-7': {
-    name: 'claude-opus-4-7',
-    displayName: 'Claude Opus 4.7',
-    inputPer1M: 5.0,
-    outputPer1M: 25.0,
+  // Pricing figures below carried over from the prior lineup — verify current
+  // pricing at anthropic.com/pricing before relying on these numbers.
+  'claude-opus-4-8': {
+    name: 'claude-opus-4-8',
+    displayName: 'Claude Opus 4.8',
+    inputPer1M: 5.0, // verify current pricing at anthropic.com/pricing
+    outputPer1M: 25.0, // verify current pricing at anthropic.com/pricing
     contextWindow: 1_000_000,
   },
-  'claude-sonnet-4-6': {
-    name: 'claude-sonnet-4-6',
-    displayName: 'Claude Sonnet 4.6',
-    inputPer1M: 3.0,
-    outputPer1M: 15.0,
+  'claude-sonnet-5': {
+    name: 'claude-sonnet-5',
+    displayName: 'Claude Sonnet 5',
+    inputPer1M: 3.0, // verify current pricing at anthropic.com/pricing
+    outputPer1M: 15.0, // verify current pricing at anthropic.com/pricing
     contextWindow: 1_000_000,
   },
   'claude-haiku-4-5-20251001': {
     name: 'claude-haiku-4-5-20251001',
     displayName: 'Claude Haiku 4.5',
-    inputPer1M: 1.0,
-    outputPer1M: 5.0,
-    contextWindow: 200_000,
+    inputPer1M: 1.0, // verify current pricing at anthropic.com/pricing
+    outputPer1M: 5.0, // verify current pricing at anthropic.com/pricing
+    contextWindow: 1_000_000,
   },
   // === Legacy (still callable, kept here for cost-trajectory exercises) ===
   'claude-opus-4-5-20251101': {
@@ -148,8 +150,8 @@ class CostCalculator {
     const pricing = MODEL_PRICING[model];
 
     if (!pricing) {
-      console.warn(`Unknown model: ${model}, using Claude Sonnet 4.6 pricing as fallback`);
-      return this.calculate('claude-sonnet-4-6', inputTokens, outputTokens);
+      console.warn(`Unknown model: ${model}, using Claude Sonnet 5 pricing as fallback`);
+      return this.calculate('claude-sonnet-5', inputTokens, outputTokens);
     }
 
     const inputCost = (inputTokens / 1_000_000) * pricing.inputPer1M;
@@ -202,8 +204,8 @@ class CostCalculator {
   ): string {
     const recommendations = {
       simple: 'claude-haiku-4-5-20251001',
-      standard: 'claude-sonnet-4-6',
-      complex: 'claude-opus-4-7',
+      standard: 'claude-sonnet-5',
+      complex: 'claude-opus-4-8',
     };
 
     let recommended = recommendations[task];
@@ -393,10 +395,10 @@ class UsageTracker {
     const recommendations: string[] = [];
 
     // Check for Opus usage that could use Sonnet
-    const opusUsage = byModel['claude-opus-4-7'];
+    const opusUsage = byModel['claude-opus-4-8'];
     if (opusUsage && opusUsage.requests > 10) {
       recommendations.push(
-        'Consider using Claude Sonnet 4.6 instead of Opus 4.7 for suitable tasks — same 1M context, roughly 3x cost reduction'
+        'Consider using Claude Sonnet 5 instead of Opus 4.8 for suitable tasks - same 1M context, roughly 3x cost reduction'
       );
     }
 
@@ -580,7 +582,7 @@ function demo() {
   console.log('1. Cost Estimation');
   console.log('-'.repeat(40));
 
-  const estimate = CostCalculator.estimate('claude-sonnet-4-6', samplePrompt);
+  const estimate = CostCalculator.estimate('claude-sonnet-5', samplePrompt);
   console.log(`Input tokens: ${estimate.inputTokens}`);
   console.log(`Expected output: ${estimate.outputTokens}`);
   console.log(`Estimated cost: $${estimate.estimatedCost.toFixed(4)}`);
@@ -607,7 +609,7 @@ function demo() {
   for (let i = 0; i < 5; i++) {
     tracker.log({
       timestamp: new Date(),
-      model: 'claude-sonnet-4-6',
+      model: 'claude-sonnet-5',
       inputTokens: 500 + Math.random() * 500,
       outputTokens: 200 + Math.random() * 300,
       cost: 0.005 + Math.random() * 0.01,

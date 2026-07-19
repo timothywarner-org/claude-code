@@ -2,7 +2,7 @@
  * Exercise 1: Context Window Loader
  *
  * Your task: Implement the loadCodebaseContext() function to prepare
- * a codebase for analysis with Claude's 200K context window.
+ * a codebase for analysis with Claude's 1M context window.
  */
 
 import * as fs from 'fs';
@@ -106,7 +106,7 @@ function printSummary(result: ContextResult): void {
   console.log('\n=== Context Loading Summary ===');
   console.log(`Files loaded: ${result.fileCount}`);
   console.log(`Estimated tokens: ${result.estimatedTokens.toLocaleString()}`);
-  console.log(`Context utilization: ${((result.estimatedTokens / 200000) * 100).toFixed(1)}%`);
+  console.log(`Context utilization: ${((result.estimatedTokens / 1000000) * 100).toFixed(1)}%`);
   console.log('\nFiles included:');
   result.files.forEach((f) => {
     console.log(`  - ${f.path} (${f.lineCount} lines)`);

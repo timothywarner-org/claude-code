@@ -1,6 +1,6 @@
 # Segment 4 (Hero) — Live Demo Punchlist
 
-Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" — Segment 4: Hero (Skills, Subagents, MCP Consumption).
+Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" — Segment 4: Hero (Skills, Subagents, and MCP).
 
 **Goal:** In one continuous demo, show the three reach mechanisms — a **skill** that injects `git diff HEAD`, a **subagent** that adds expert constraint, and an **MCP server** that pulls live Microsoft Learn docs into the conversation.
 
@@ -9,7 +9,7 @@ Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" — Segm
 - [ ] `ANTHROPIC_API_KEY` exported
 - [ ] You are in the course repo: `cd /c/github/claude-code`
 - [ ] Working tree has at least one uncommitted change so `git diff HEAD` is non-empty (if not, edit any file)
-- [ ] `.claude/settings.json` registers `microsoft-learn` (or it is in user-scope MCP config)
+- [ ] `.mcp.json` (repo root) registers `microsoft-learn` (or it is in user-scope MCP config)
 
 ---
 
@@ -74,7 +74,7 @@ cat .claude/agents/code-quality-coach.md | head -20
 
 ## 3. Reach outside the repo (MCP consumption)
 
-The repo's `.claude/settings.json` registers the **microsoft-learn** HTTP MCP server. Confirm it is wired:
+The repo's `.mcp.json` (repo root) registers the **microsoft-learn** HTTP MCP server. Confirm it is wired:
 
 ```bash
 claude mcp list
@@ -145,7 +145,7 @@ cat tests/segment_4_production/capstone_project.md
 2. **Subagents are scoped reasoning.** Frontmatter constrains tools; system prompt constrains expertise; isolated context constrains pollution of your main conversation.
 3. **MCP is reach.** Spec 2025-11-25, two transports (**stdio**, **Streamable HTTP**), three primitives (**tools**, **resources**, **prompts**). SSE-only is retired.
 4. **`microsoft-learn` is consumed, not built.** The server is hosted by Microsoft. You connect; you do not run.
-5. **Optional next step**: `segment_2_context/memory_server/` is a working Python FastMCP server. Build one when you need a primitive nobody else has published.
+5. **Optional next step**: `segment_4_hero/memory_server/` is a working Python FastMCP server. Build one when you need a primitive nobody else has published.
 
 ---
 

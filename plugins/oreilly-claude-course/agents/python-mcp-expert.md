@@ -49,16 +49,16 @@ FastMCP is the recommended framework for Python MCP servers. It provides:
 - Automatic schema generation from type hints
 - Pydantic integration for validation
 - Async-first design
-- Multiple transport options (stdio, HTTP, SSE)
+- Transport options (stdio, Streamable HTTP). The older SSE-only transport is retired as of MCP spec 2025-11-25.
 
 ### Installation
 
 ```bash
-# Install FastMCP
-pip install fastmcp
+# Install FastMCP (pin the major version)
+pip install "fastmcp>=3.0.0"
 
 # Or with optional dependencies
-pip install fastmcp[all]  # Includes auth, deployment extras
+pip install "fastmcp[all]>=3.0.0"  # Includes auth, deployment extras
 ```
 
 ### Minimal Server

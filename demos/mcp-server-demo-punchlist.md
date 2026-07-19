@@ -51,7 +51,7 @@ npx @modelcontextprotocol/inspector
 Tool: search_memory
 Parameters: { "search_term": "context" }
 ```
-**Expected:** Returns mem-007 (200K Context Window patterns)
+**Expected:** Returns mem-007 (1M Context Window patterns)
 
 ### Test 2: Get specific memory
 ```

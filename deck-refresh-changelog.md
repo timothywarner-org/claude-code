@@ -1,4 +1,12 @@
-# Deck Refresh Changelog — 2026-05-25
+# Deck Refresh Changelog
+
+> **2026-07-18 grounding pass:** The "Ground-truth facts pinned for tomorrow" block below was
+> re-grounded to the current Claude Code lineup (**Sonnet 5** default with native **1M** context /
+> **Opus 4.8** / **Haiku 4.5**) and current MCP/skills facts. The dated section headers below record
+> the original **2026-05-25** deck refresh and are left as history. Do not read the old date as the
+> vintage of the ground-truth block.
+
+## Original refresh — 2026-05-25
 
 Source: `warner-claude-code.pptx`, refreshed for 2026-05-26 O'Reilly class delivery ("Claude Code and Large-Context Reasoning").
 
@@ -26,7 +34,7 @@ What was wrong and got fixed: the title slide read "**GitHub Copilot for Almost 
 - **Before (Title 1)**: `GitHub Copilot for Almost Everyone`
 - **After (Title 1)**: `Claude Code and Large-Context Reasoning`
 - **Before (Notes)**: Template-review Q&A scratch notes ("How much flexibility am I allowed with these slide layouts?...") — would have been embarrassing if presenter view shared the screen.
-- **After (Notes)**: Opening narration in Tim's voice. Welcomes the class, names the current model lineup (Opus 4.7 / Sonnet 4.6 / Haiku 4.5), explicitly flags `claude-opus-4-20250514` and `claude-sonnet-4-20250514` as deprecated and retiring 2026-06-15, and sets house rules for Q&A.
+- **After (Notes)**: Opening narration in Tim's voice. Welcomes the class, names the current model lineup (Sonnet 5 default with native 1M context / Opus 4.8 / Haiku 4.5), and sets house rules for Q&A. Note: the original 2026-05-25 narration named the then-current Opus 4.7 / Sonnet 4.6 lineup; re-record the opening to the lineup above.
 - **Reason**: course-branding mismatch and unsuitable speaker-notes content. The model-deprecation callout is preventive — if a learner asks about old IDs, the narration is ready.
 
 ## Slides reviewed but unchanged (and why)
@@ -45,10 +53,11 @@ What was wrong and got fixed: the title slide read "**GitHub Copilot for Almost 
 
 Recorded here so the speaker has the canonical list in front of them and the changelog can be diffed against future refreshes.
 
-- **Opus 4.7**: `claude-opus-4-7` — 1M context, 128k max output, $5/$25 per MTok, Jan 2026 cutoff
-- **Sonnet 4.6**: `claude-sonnet-4-6` — 1M context, 64k max output, $3/$15 per MTok, Aug 2025 cutoff
-- **Haiku 4.5**: `claude-haiku-4-5-20251001` (alias `claude-haiku-4-5`) — 200k context, 64k max output, $1/$5 per MTok, Feb 2025 cutoff
-- **Deprecated, retiring 2026-06-15**: `claude-sonnet-4-20250514`, `claude-opus-4-20250514`
+- **Sonnet 5**: `claude-sonnet-5` - **default in Claude Code**, native **1M** context. Best speed-to-intelligence ratio.
+- **Opus 4.8**: `claude-opus-4-8` - 1M context via the `opus[1m]` variant. Deepest reasoning, agentic coding.
+- **Haiku 4.5**: `claude-haiku-4-5-20251001` (alias `claude-haiku-4-5`) - lightweight, high-frequency automation.
+- **1M context window** is on by default (Sonnet 5 native). Disable with `CLAUDE_CODE_DISABLE_1M_CONTEXT=1`.
+- Pricing and max-output figures move fast - confirm at anthropic.com/pricing and code.claude.com/docs the morning of delivery. Do not quote a price from memory on stage.
 - **MCP spec**: rev **2025-11-25**. Transports: **stdio** (local) + **Streamable HTTP** (remote). **SSE is retired.** Primitives: tools (model-controlled), resources (app-controlled), prompts (user-controlled).
 - **Skills**: "Custom commands have been merged into skills." Skill lives at `.claude/skills/<name>/SKILL.md`. Frontmatter fields: `description`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `model`, `effort`, `context: fork`, `agent`, `paths`, `argument-hint`, `arguments`, `hooks`, `shell`.
 - **Subagents** (term unchanged): live in `.claude/agents/<name>.md` with frontmatter `name` / `description` / `tools` / `model`. Own context window is the value prop. Session-scoped via `claude --agents '{...}'`.

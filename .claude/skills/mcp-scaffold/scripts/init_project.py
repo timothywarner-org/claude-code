@@ -169,7 +169,7 @@ if __name__ == "__main__":
 
     # Create requirements.txt
     requirements = f'''# {name} MCP Server Dependencies
-fastmcp>=2.0.0
+fastmcp>=3.0.0
 pydantic>=2.0.0
 '''
     (cwd / "requirements.txt").write_text(requirements, encoding="utf-8")

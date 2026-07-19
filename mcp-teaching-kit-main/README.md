@@ -22,7 +22,7 @@ CLAUDE_MODEL="claude-haiku-4-5-20251001" # Haiku for cost-efficient POC work
 
 Both are asserted at startup and the app will refuse to run if either is missing.
 
-**Model choice:** Haiku 4.5 is the default for development because it is roughly 12 times cheaper than Sonnet for this workload while preserving about 90 percent of tool-routing accuracy. Switch to `claude-sonnet-4-6` or `claude-opus-4-7` when recording live demos where tool-selection determinism matters more than per-token cost.
+**Model choice:** Haiku 4.5 is the default for development because it is roughly 12 times cheaper than Sonnet for this workload while preserving about 90 percent of tool-routing accuracy. Switch to `claude-sonnet-5` or `claude-opus-4-8` when recording live demos where tool-selection determinism matters more than per-token cost.
 
 ### Step 2: Install dependencies
 

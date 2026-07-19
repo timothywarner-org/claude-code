@@ -136,7 +136,7 @@ const response = await fetch('https://api.anthropic.com/v1/messages', {
     'anthropic-version': '2023-06-01',
   },
   body: JSON.stringify({
-    model: 'claude-sonnet-4-6',
+    model: 'claude-sonnet-5',
     max_tokens: 1024,
     stream: true,
     messages: [{ role: 'user', content: prompt }],
@@ -213,4 +213,4 @@ Key parsing considerations:
 
 ## Next Steps
 
-Once you have completed this exercise, you are ready for Segment 2: Claude Code CLI workflows.
+Once you have completed this exercise, you are ready for Segment 2: The CLAUDE.md Hierarchy (Context). Note: these `tests/` directory names predate the current **Zero -> Context -> Agents -> Hero** arc. This `segment_1_fundamentals/` exercise set maps to Segment 1 (Zero) and the API fundamentals that carry into later segments.

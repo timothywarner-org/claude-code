@@ -15,7 +15,7 @@ Before starting, ensure you have:
 
 ```bash
 # Clone the repository
-git clone https://github.com/timothywarner/claude-code.git
+git clone https://github.com/timothywarner-org/claude-code.git
 cd claude-code
 
 # Install dependencies
@@ -90,16 +90,17 @@ claude
 
 ### 5. Configure MCP Servers (Optional)
 
-For Segment 3, you'll set up MCP servers:
+The project-scoped MCP servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) are already declared in **`.mcp.json`** at the repo root. The CLI reads them on first `claude` launch and prompts you to approve them once. No manual setup required to consume them in Segment 4.
+
+To build and register your own memory server (optional Segment 4 homework, Python/UV):
 
 ```bash
-# Add the memory server
-cd mcp_servers/memory
-npm install
-npm run build
+# The memory server is a Python FastMCP server managed by UV
+cd segment_4_hero/memory_server
+uv sync
 
 # Register with Claude Code
-claude mcp add memory -- node /path/to/memory/dist/index.js
+claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 ```
 
 ## IDE Setup
@@ -126,25 +127,26 @@ Cursor works out of the box with TypeScript. No additional setup needed.
 
 ## Running Examples
 
-Each segment has runnable examples:
+Demos run via `npx tsx` (JIT compilation). There is no root `tsconfig.json` and no `npm run build` step in this course.
 
 ```bash
-# Segment 1: Fundamentals
-npx tsx segment_1_fundamentals/01_context_window_demo.ts
-npx tsx segment_1_fundamentals/02_streaming_responses.ts
-npx tsx segment_1_fundamentals/03_tool_use.ts
+# Segment 1: Zero (Install, CLI, First CLAUDE.md)
+npx tsx segment_1_quickstart/02_verify_setup.ts
+npx tsx segment_1_quickstart/03_terminal_workflows.ts
+# See segment_1_quickstart/01_installation.md for CLI install
 
-# Segment 2: Claude Code CLI
-# See segment_2_claude_code/01_installation.md for CLI usage
-npx tsx segment_2_claude_code/02_code_review_workflow.ts
+# Segment 2: Context (The CLAUDE.md Hierarchy)
+# No TypeScript demos. The lesson is markdown and live demos:
+#   segment_2_context/01_claude_md_at_every_scope.md
 
-# Segment 3: MCP Servers
-npx tsx segment_3_mcp/01_mcp_architecture.ts
-# Start memory server: see mcp_servers/memory/README.md
+# Segment 3: Agents (The Loop, Permissions, Subagents)
+npx tsx segment_3_agents/02_agent_loop.ts
+npx tsx segment_3_agents/03_agent_boundaries.ts
 
-# Segment 4: Production
-npx tsx segment_4_production/02_documentation_pipeline.ts
-npx tsx segment_4_production/03_code_review_bot.ts
+# Segment 4: Hero (Skills, Subagents, and MCP)
+npx tsx segment_4_hero/02_production_workflows.ts
+npx tsx segment_4_hero/02_mcp_architecture.ts
+# Optional memory server: see segment_4_hero/memory_server/README.md
 ```
 
 ## Verify Everything Works
@@ -155,7 +157,7 @@ Run the verification script:
 npx tsx scripts/verify-setup.ts
 ```
 
-You should see all green checkmarks:
+You should see the core environment checks pass:
 
 ```
 🔍 Claude Code Course - Environment Check
@@ -169,13 +171,10 @@ You should see all green checkmarks:
 ✅ Git                  git version x.x.x
 ✅ Dependencies         All dependencies installed
 ✅ package.json         Valid configuration
-✅ tsconfig.json        TypeScript configured
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📊 Results: 9 passed, 0 warnings, 0 failed
-
-✅ All checks passed! Environment is ready for the course.
 ```
+
+**Note:** This course has no root `tsconfig.json` on purpose. Demos run via `npx tsx` (JIT compilation), so there is no `npm run build` step. If the verify script reports a `tsconfig.json` check, treat it as informational, not a blocker for the course workflow.
 
 ## Troubleshooting
 
@@ -192,5 +191,7 @@ Running these examples uses the Anthropic API and incurs costs:
 | Running all Segment 3 examples | ~$0.10 |
 | Running all Segment 4 examples | ~$0.20 |
 | **Total course** | **~$0.55** |
+
+These estimates are approximate and predate the current Sonnet 5 / Opus 4.8 / Haiku 4.5 lineup. Verify current per-token rates at [anthropic.com/pricing](https://www.anthropic.com/pricing) before budgeting.
 
 Monitor your usage at [console.anthropic.com](https://console.anthropic.com/).

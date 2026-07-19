@@ -61,6 +61,8 @@ Common issues and solutions for the Claude Code course.
 
 ## TypeScript Issues
 
+**Note:** This course has no root `tsconfig.json`. Demos run via `npx tsx` (JIT compilation), so `npm run build` (tsc) is not part of the workflow. The `tsconfig.json` snippets below apply only if you scaffold your own standalone TypeScript MCP project.
+
 ### "Cannot find module"
 
 **Cause:** Dependencies not installed or import path issues.
@@ -185,12 +187,12 @@ Common issues and solutions for the Claude Code course.
 
 **Solutions:**
 
-1. **Test server manually:**
+1. **Test the memory server manually** (Python FastMCP, managed by UV):
 
    ```bash
-   cd mcp_servers/memory
-   npm run dev
-   # Should show "running on stdio"
+   cd segment_4_hero/memory_server
+   uv run python server.py
+   # Should show the server starting on stdio
    ```
 
 2. **Check Claude Code MCP config:**
@@ -199,11 +201,13 @@ Common issues and solutions for the Claude Code course.
    claude mcp list
    ```
 
-3. **Remove and re-add:**
+   Project-scoped servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) are declared in `.mcp.json` at the repo root, not in `.claude/settings.json`. The CLI prompts you to approve them once on first launch.
+
+3. **Remove and re-add the memory server:**
 
    ```bash
    claude mcp remove memory
-   claude mcp add memory -- npx tsx /path/to/server.ts
+   claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
    ```
 
 ## Network Issues
@@ -350,7 +354,7 @@ npx tsx -e "
 import Anthropic from '@anthropic-ai/sdk';
 const client = new Anthropic();
 const msg = await client.messages.create({
-  model: 'claude-sonnet-4-6',
+  model: 'claude-sonnet-5',
   max_tokens: 10,
   messages: [{role: 'user', content: 'Hi'}]
 });

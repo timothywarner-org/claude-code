@@ -95,7 +95,7 @@ Pick *zero, one, or both* depending on time. The capstone passes without these.
 
 Either:
 
-- Register a useful MCP server in `.claude/settings.json` (Microsoft Learn, GitHub, your team's internal one) and demonstrate it answering a question that would otherwise require copy-paste, OR
+- Register a useful MCP server in `.mcp.json` at the repo root (Microsoft Learn, GitHub, your team's internal one) and demonstrate it answering a question that would otherwise require copy-paste, OR
 - Use the `segment_4_hero/memory_server/` FastMCP example as a starting point and ship a server with at least one tool, one resource, and one prompt.
 
 ### Track B: Code-review GitHub Action (10 pts)

@@ -1,0 +1,7 @@
+{
+  "chat.mcp.serverSampling": {
+    "claude-code/.vscode/mcp.json: DocumentMCP-GitHubCopilot": {
+      "allowedModels": []
+    }
+  }
+}

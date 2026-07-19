@@ -31,10 +31,10 @@ What's wired and what isn't. Be honest with learners; cryptic JSON-RPC errors co
 
 ```
 ANTHROPIC_API_KEY="..."
-CLAUDE_MODEL="claude-haiku-4-5-20251001"   # Haiku for cost-efficient POC; bump to Sonnet for live class
+CLAUDE_MODEL="claude-haiku-4-5-20251001"   # Haiku for cost-efficient POC; bump to Sonnet 5 for live class
 ```
 
-Both are asserted at startup in `main.py` and will hard-fail if missing. **Default for dev is Haiku 4.5** (~12x cheaper than Sonnet, ~3x cheaper than Opus, ~90% tool-routing accuracy). Switch to `claude-sonnet-4-6` or `claude-opus-4-7` when recording live demos where tool-selection determinism matters.
+Both are asserted at startup in `main.py` and will hard-fail if missing. **Default for dev is Haiku 4.5** (~12x cheaper than Sonnet, ~3x cheaper than Opus, ~90% tool-routing accuracy). Switch to `claude-sonnet-5` or `claude-opus-4-8` when recording live demos where tool-selection determinism matters.
 
 ## Commands
 

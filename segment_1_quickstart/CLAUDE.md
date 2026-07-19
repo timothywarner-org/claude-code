@@ -13,7 +13,7 @@ This directory teaches **install + first contact** with Claude Code. The lesson 
 - **TypeScript only**, run via `npx tsx <file.ts>`. No build step. No `tsc`. No compiled output committed.
 - **No class state.** Demos are top-level scripts or pure functions. We're teaching mental models, not OOP.
 - **Keep examples under 60 lines.** If a demo grows past that, split it — learners need to read it on a projector.
-- **Real model IDs in strings.** Use `claude-sonnet-4-6` literally, not a placeholder. Aliases (`sonnet`, `opus`) are fine in shell examples.
+- **Real model IDs in strings.** Use `claude-sonnet-5` literally, not a placeholder. Aliases (`sonnet`, `opus`) are fine in shell examples.
 - **No `@anthropic-ai/sdk` calls.** This segment is CLI-only. SDK usage belongs to later segments.
 
 ## Voice

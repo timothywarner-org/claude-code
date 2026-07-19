@@ -148,10 +148,15 @@ check('package.json', () => {
 });
 
 // Check tsconfig.json
+// This course runs demos via `npx tsx` (JIT), so there is intentionally no root
+// tsconfig.json and no `npm run build` step. A missing file here is expected, not a failure.
 check('tsconfig.json', () => {
   const tsconfigPath = join(process.cwd(), 'tsconfig.json');
   if (!existsSync(tsconfigPath)) {
-    return { status: 'fail', message: 'tsconfig.json not found' };
+    return {
+      status: 'pass',
+      message: 'No root tsconfig.json (expected - demos run via npx tsx, no build step)'
+    };
   }
 
   return { status: 'pass', message: 'TypeScript configured' };

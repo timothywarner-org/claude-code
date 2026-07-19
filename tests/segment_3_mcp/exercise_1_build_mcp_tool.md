@@ -1,5 +1,7 @@
 # Exercise 1: Build a Custom MCP Tool from Scratch
 
+> **Arc note:** this `tests/segment_3_mcp/` directory name predates the current course arc. In the current **Zero -> Context -> Agents -> Hero** arc, **MCP is Segment 4 (Hero)**, not Segment 3 (which is now Agents). The directory name is kept so paths and npm scripts stay stable. Do this exercise set when you reach the Hero segment.
+
 ## Learning Objectives
 
 By the end of this exercise, you will be able to:
@@ -12,7 +14,7 @@ By the end of this exercise, you will be able to:
 
 ## Prerequisites
 
-- Node.js 18+ installed
+- Node.js 20+ installed
 - TypeScript basics
 - Claude Code CLI installed and authenticated
 - Familiarity with JSON-RPC 2.0 (helpful but not required)
@@ -27,7 +29,7 @@ Key MCP concepts:
 
 - **Server**: A process that exposes tools to Claude
 - **Tool**: A callable function with a defined schema
-- **Transport**: Communication layer (stdio, HTTP, WebSocket)
+- **Transport**: Communication layer. The MCP spec (2025-11-25) defines two: **stdio** (local) and **Streamable HTTP** (remote). The older SSE-only transport is retired.
 
 ## Step-by-Step Instructions
 
@@ -117,7 +119,7 @@ npx ts-node exercise_1_starter.ts
 Add your MCP server to Claude Code's configuration:
 
 ```bash
-claude mcp add weather-server --command "npx ts-node exercise_1_starter.ts"
+claude mcp add weather-server -- npx tsx exercise_1_starter.ts
 ```
 
 ### Step 8: Test with Claude

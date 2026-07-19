@@ -80,7 +80,7 @@ Same name across scopes? Enterprise overrides personal, personal overrides proje
 | `allowed-tools` | Tools the skill may use without permission prompts. | `Read, Glob, Bash(git:*)` |
 | `argument-hint` | Autocomplete hint. | `[branch] [--dry-run]` |
 | `arguments` | Named positional arguments for `$name` substitution. | `[issue, branch]` |
-| `model` | Override model. | `claude-sonnet-4-6` |
+| `model` | Override model. | `claude-sonnet-5` |
 | `effort` | `low`, `medium`, `high`, `xhigh`, `max`. | `high` |
 | `context` | `fork` runs the skill in an isolated subagent. | `fork` |
 | `agent` | Subagent type when forking. | `Explore`, `Plan`, `general-purpose` |
@@ -122,7 +122,7 @@ description: Research a topic thoroughly across the codebase
 context: fork
 agent: Explore
 allowed-tools: Read, Glob, Grep
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 ---
 
 Research $ARGUMENTS thoroughly:

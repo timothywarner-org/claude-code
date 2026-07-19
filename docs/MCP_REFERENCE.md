@@ -13,7 +13,7 @@ The Model Context Protocol (MCP) is an open standard that enables AI assistants 
 ## Architecture Overview
 
 ```
-┌─────────────────┐     stdio/SSE      ┌─────────────────┐
+┌─────────────────┐  stdio / HTTP      ┌─────────────────┐
 │   Claude Code   │◄──────────────────►│   MCP Server    │
 │    (Client)     │                    │  (Your Code)    │
 └─────────────────┘                    └─────────────────┘
@@ -256,16 +256,16 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 ```
 
-### SSE (Server-Sent Events)
+### Streamable HTTP
 
-For web deployments:
+For web and remote deployments. As of MCP spec 2025-11-25, Streamable HTTP is the standard remote transport (the older HTTP+SSE transport is retired):
 
 ```typescript
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import express from 'express';
 
 const app = express();
-const transport = new SSEServerTransport('/mcp', app);
+const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
 await server.connect(transport);
 app.listen(3000);
 ```
@@ -299,7 +299,7 @@ claude mcp remove server-name
 
 ### Configuration File
 
-MCP servers are configured in `~/.claude/settings.json`:
+Project-scoped MCP servers (the ones you commit to git so everyone on the team gets them) live in **`.mcp.json` at the repo root**. The Claude Code CLI reads project MCP servers from this file, not from the `mcpServers` key in `.claude/settings.json`. On first launch the CLI prompts each user to approve the project servers once.
 
 ```json
 {
@@ -309,15 +309,23 @@ MCP servers are configured in `~/.claude/settings.json`:
       "args": ["/path/to/memory/dist/index.js"]
     },
     "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "ghp_..."
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
       }
     }
   }
 }
 ```
+
+Scope reference:
+
+| File | Scope | Committed to git? |
+|------|-------|-------------------|
+| `.mcp.json` (repo root) | Project (shared with the team) | Yes |
+| `~/.claude.json` | User (all your projects) | No |
+| `.claude/settings.local.json` | Personal per-project override | No (gitignored) |
 
 ## Best Practices
 

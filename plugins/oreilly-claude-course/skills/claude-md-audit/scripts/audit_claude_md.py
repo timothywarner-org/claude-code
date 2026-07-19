@@ -44,9 +44,10 @@ GROUND_TRUTH_TOKENS: tuple[str, ...] = (
     "2025-11-25",
     "stdio",
     "Streamable HTTP",
-    "Opus 4.7",
-    "Sonnet 4.6",
+    "Sonnet 5",
+    "Opus 4.8",
     "Haiku 4.5",
+    "1M",
     "${CLAUDE_SKILL_DIR}",
 )
 

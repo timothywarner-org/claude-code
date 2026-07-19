@@ -215,34 +215,54 @@ function showCICDPatterns(): void {
   logger.subsection('CI/CD Integration Patterns');
 
   console.log(`
-GITHUB ACTION EXAMPLE
-─────────────────────
+GITHUB ACTION EXAMPLE (official action, current)
+────────────────────────────────────────────────
 
-name: Claude Code Review
-on: [pull_request]
+# Responds to @claude mentions in PR and issue comments, and reads your
+# CLAUDE.md so reviews follow the same conventions as your local sessions.
+
+name: Claude Code
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  claude:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: \${{ secrets.ANTHROPIC_API_KEY }}
+
+
+AUTO-REVIEW EVERY PR (no @claude mention needed)
+────────────────────────────────────────────────
+
+name: Claude PR Review
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: \${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "Review this PR for security issues and CLAUDE.md violations."
+          claude_args: "--max-turns 5"
 
-      - name: Get PR diff
-        run: |
-          gh pr diff \${{ github.event.pull_request.number }} > diff.txt
 
-      - name: Claude Review
-        env:
-          ANTHROPIC_API_KEY: \${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          claude -p "Review this diff for security issues" \\
-            --allowedTools "Read" \\
-            --output-format json > review.json
+UNDER THE HOOD (what the action wraps - headless mode)
+──────────────────────────────────────────────────────
 
-      - name: Post Review
-        run: |
-          # Parse review.json and post as PR comment
-          node scripts/post-review.js
+# The same review, hand-rolled with the CLI in a step. Useful when you need
+# full control, but the action above is the maintained path.
+git diff | claude -p "Review this diff for security issues" \\
+  --allowedTools "Read" --output-format json > review.json
 
 
 SCRIPTED USAGE
@@ -266,7 +286,7 @@ function showSkillAgentCombo(): void {
   logger.subsection('Skills + Agents Combination');
 
   console.log(`
-SKILL FILE: .claude/commands/full-deploy.md
+SKILL FILE: .claude/skills/full-deploy/SKILL.md
 ───────────────────────────────────────────
 
 # Full Deployment Workflow
@@ -297,7 +317,7 @@ USAGE
 ─────
 
 $ claude --allowedTools "Read,Glob,Grep,Bash"
-> /project:full-deploy
+> /full-deploy
 
 Claude will execute each step, stopping if any check fails.
 
@@ -308,7 +328,7 @@ PROGRAMMATIC SKILL INVOCATION
 import { execSync } from 'child_process';
 
 const result = execSync(
-  'claude -p "/project:full-deploy" --output-format json',
+  'claude -p "/full-deploy" --output-format json',
   { encoding: 'utf-8' }
 );
 

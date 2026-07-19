@@ -202,8 +202,8 @@ ${'='.repeat(60)}
   const estimatedTokens = estimateTokens(totalContent);
 
   // Warn if approaching context limit
-  if (estimatedTokens > 180000) {
-    console.warn('\nWARNING: Approaching 200K token limit!');
+  if (estimatedTokens > 900000) {
+    console.warn('\nWARNING: Approaching 1M token limit!');
     console.warn(`Estimated tokens: ${estimatedTokens.toLocaleString()}`);
     console.warn('Consider filtering files or using incremental loading.\n');
   }
@@ -223,7 +223,7 @@ function printSummary(result: ContextResult): void {
   console.log('\n=== Context Loading Summary ===');
   console.log(`Files loaded: ${result.fileCount}`);
   console.log(`Estimated tokens: ${result.estimatedTokens.toLocaleString()}`);
-  console.log(`Context utilization: ${((result.estimatedTokens / 200000) * 100).toFixed(1)}%`);
+  console.log(`Context utilization: ${((result.estimatedTokens / 1000000) * 100).toFixed(1)}%`);
 
   if (result.files.length > 0) {
     console.log('\nFiles included:');

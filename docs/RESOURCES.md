@@ -1,6 +1,6 @@
 # Awesome Resources for Claude Code and Large-Context Reasoning
 
-A curated collection of essential documentation, specifications, and best practices for mastering Claude's 200K context window, MCP servers, and production AI workflows.
+A curated collection of essential documentation, specifications, and best practices for mastering Claude's 1M context window, MCP servers, and production AI workflows.
 
 ---
 
@@ -32,7 +32,7 @@ A curated collection of essential documentation, specifications, and best practi
 
 | Resource | Description |
 |----------|-------------|
-| [Long Context Window Tips](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) | Strategies for effective use of 200K context |
+| [Long Context Window Tips](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) | Strategies for effective use of the 1M context window |
 | [Prompt Caching Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) | Reduce costs and latency with cached prompts |
 | [Token Counting](https://docs.anthropic.com/en/docs/build-with-claude/token-counting) | Accurate token estimation techniques |
 

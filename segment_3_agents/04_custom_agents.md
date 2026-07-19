@@ -6,7 +6,7 @@
 
 ## Cold open
 
-One agent driving fifteen tools without asking is useful. A **team** of small specialized agents, each with its own context window, each scoped to a single job, is a force multiplier. A code reviewer subagent can chew through a 200K-token diff and hand you back a 2K-token summary. Your main conversation never sees the noise. That is the trick.
+One agent driving fifteen tools without asking is useful. A **team** of small specialized agents, each with its own context window, each scoped to a single job, is a force multiplier. A code reviewer subagent can chew through a 1M-token diff and hand you back a 2K-token summary. Your main conversation never sees the noise. That is the trick.
 
 ## The mental model
 
@@ -38,7 +38,7 @@ Agents are Markdown files with YAML frontmatter:
 name: my-agent
 description: When Claude should use this agent
 tools: Read, Glob, Grep, Bash
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 skills: code-review
 ---
 
@@ -54,7 +54,7 @@ You are [agent persona]. When invoked, you...
 | `name` | Yes | Unique identifier (lowercase, hyphens) |
 | `description` | Yes | Plain-English trigger — Claude reads this to decide when to delegate. Be specific. |
 | `tools` | No | Allowed tools (inherits the parent allowlist if omitted). Restrict to enforce safety. |
-| `model` | No | `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5`, the short aliases `opus`/`sonnet`/`haiku`, or `inherit` |
+| `model` | No | `claude-opus-4-8`, `claude-sonnet-5`, `claude-haiku-4-5-20251001`, the short aliases `opus`/`sonnet`/`haiku`, or `inherit` |
 | `skills` | No | Skills preloaded into the agent's context at startup |
 | `permissionMode` | No | `default`, `acceptEdits`, `dontAsk`, or `plan` |
 | `hooks` | No | PreToolUse, PostToolUse, Stop handlers scoped to this agent |
@@ -70,7 +70,7 @@ Location: `.claude/agents/code-quality-coach.md`
 name: code-quality-coach
 description: Senior developer mentor that reviews code and teaches best practices
 tools: Read, Glob, Grep, Bash
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 skills: code-review
 ---
 ```
@@ -95,7 +95,7 @@ Location: `.claude/agents/release-manager.md`
 name: release-manager
 description: DevOps specialist that guides through release preparation
 tools: Read, Glob, Grep, Bash
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 skills: deploy-prep
 ---
 ```
@@ -120,7 +120,7 @@ Location: `.claude/agents/claude-code-tutor.md`
 name: claude-code-tutor
 description: Interactive tutor for learning Claude Code concepts
 tools: Read, Glob, Grep, Bash
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 ---
 ```
 
@@ -145,7 +145,7 @@ claude --agents '{
     "description": "Quick read-only code review",
     "prompt": "You are a senior code reviewer. Focus on security and clarity.",
     "tools": ["Read", "Glob", "Grep"],
-    "model": "claude-haiku-4-5"
+    "model": "claude-haiku-4-5-20251001"
   }
 }'
 ```
@@ -159,7 +159,7 @@ claude --agents @'
     "description": "Quick read-only code review",
     "prompt": "You are a senior code reviewer. Focus on security and clarity.",
     "tools": ["Read", "Glob", "Grep"],
-    "model": "claude-haiku-4-5"
+    "model": "claude-haiku-4-5-20251001"
   }
 }
 '@
@@ -186,7 +186,7 @@ touch ~/.claude/agents/my-agent.md
 name: my-agent
 description: Clear description of when to use this agent
 tools: Read, Glob, Grep  # Only what's needed
-model: claude-sonnet-4-6
+model: claude-sonnet-5
 ---
 ```
 
@@ -375,7 +375,7 @@ claude --agents @'
     "description": "Scans a repo and produces a one-page Markdown index of all documentation files with one-line summaries.",
     "prompt": "You are a documentation cartographer. Read every Markdown file under the current directory, summarize each in one sentence, and return a single Markdown table. Do not edit anything. Do not run shell commands.",
     "tools": ["Read", "Glob", "Grep"],
-    "model": "claude-haiku-4-5"
+    "model": "claude-haiku-4-5-20251001"
   }
 }
 '@

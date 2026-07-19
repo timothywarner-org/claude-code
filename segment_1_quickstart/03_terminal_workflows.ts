@@ -188,7 +188,7 @@ These patterns work great in Claude Code's interactive mode:
 
 The key is Claude's ability to understand your full codebase context.
 
-Continue to Segment 2 to add persistent memory with MCP servers.
+Continue to Segment 2 to give Claude persistent project context with CLAUDE.md.
 `);
 }
 
