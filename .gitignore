@@ -147,6 +147,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .claude/settings.local.json
+# Hook-generated runtime state (session markers, logs). Transient, never commit.
+.claude/state/
+.claude/logs/
 # Microsoft Office lock files (leading ~$). Never commit these.
 ~$*.pptx
 ~$*.docx
