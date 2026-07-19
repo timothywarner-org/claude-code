@@ -23,6 +23,8 @@
 
     "audit:claude-md": "python .claude/skills/claude-md-audit/scripts/audit_claude_md.py --scope all",
     "audit:paths": "bash scripts/check-claude-md-paths.sh",
+    "audit:drift": "bash scripts/check-drift.sh",
+    "predeliver": "bash scripts/predeliver.sh",
     "hooks:install": "bash scripts/install-git-hooks.sh"
   },
   "dependencies": {

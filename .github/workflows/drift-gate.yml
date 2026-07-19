@@ -1,0 +1,46 @@
+name: Drift Gate
+
+# Fails the build if the course docs drift back to stale facts (retired model IDs,
+# the 200K context claim, deprecated MCP config locations, old GitHub Action syntax,
+# deprecated skill paths). Keeps the grounding pass from silently rotting between
+# deliveries. Run the same check locally with: bash scripts/check-drift.sh
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: Course fact drift
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false # the gate reads text only; no need to pull the LFS deck
+
+      - name: Run drift checks
+        run: bash scripts/check-drift.sh
+
+  markdownlint:
+    name: Markdown lint (informational)
+    runs-on: ubuntu-latest
+    # Non-blocking: the repo carries some pre-existing markdown style debt. This job
+    # surfaces lint issues without failing the build, so the drift gate stays the
+    # authoritative pass/fail signal. Flip continue-on-error to false once the
+    # backlog is clean if you want lint to block too.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Lint course markdown
+        run: npx markdownlint-cli2 --config .markdownlint.json "**/*.md" "#node_modules" "#**/.venv"
