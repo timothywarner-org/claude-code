@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Memory MCP Server — "Remember This"
+Memory MCP Server - "Remember This"
 
 A teaching-focused MCP server that persists conversation context to local JSON.
 Demonstrates all three MCP primitives (MCP spec 2025-11-25):
@@ -73,7 +73,7 @@ class Convention(BaseModel):
 
 
 class Note(BaseModel):
-    """A freeform note — anything worth saving."""
+    """A freeform note - anything worth saving."""
 
     id: str
     title: str
@@ -143,7 +143,7 @@ async def lifespan(server: FastMCP):
         f"{len(mem.conventions)} conventions, {len(mem.notes)} notes",
         file=sys.stderr,
     )
-    # Yield a dict — FastMCP 3.x lifespan contract
+    # Yield a dict - FastMCP 3.x lifespan contract
     yield {"state": AppState(memory=mem, path=MEMORY_PATH)}
 
     _save(mem, MEMORY_PATH)
@@ -171,7 +171,7 @@ def _state(ctx: Context) -> AppState:
 
 
 # =============================================================================
-# TOOLS — Actions the LLM can execute
+# TOOLS - Actions the LLM can execute
 # =============================================================================
 
 # ── Decisions ────────────────────────────────────────────────────────────────
@@ -188,7 +188,7 @@ async def remember_decision(
     ctx: Context,
     title: str = Field(description="One-line summary, e.g. 'Use PostgreSQL for user data'"),
     description: str = Field(description="Full description of what was decided"),
-    rationale: str = Field(description="Why this decision was made — trade-offs, constraints"),
+    rationale: str = Field(description="Why this decision was made - trade-offs, constraints"),
     tags: list[str] = Field(default=[], description="Categorization tags"),
 ) -> str:
     s = _state(ctx)
@@ -271,7 +271,7 @@ async def get_conventions(
 @mcp.tool(
     name="save_note",
     description=(
-        "Save a freeform note — meeting minutes, research findings, "
+        "Save a freeform note - meeting minutes, research findings, "
         "context worth remembering. The 'remember this' catch-all."
     ),
 )
@@ -358,7 +358,7 @@ async def memory_summary(ctx: Context) -> dict[str, Any]:
 
 
 # =============================================================================
-# RESOURCES — Read-only data the LLM can pull into context
+# RESOURCES - Read-only data the LLM can pull into context
 # =============================================================================
 
 @mcp.resource(
@@ -423,7 +423,7 @@ async def resource_summary(ctx: Context) -> str:
 
 
 # =============================================================================
-# PROMPTS — Reusable templates the LLM can invoke
+# PROMPTS - Reusable templates the LLM can invoke
 # =============================================================================
 
 @mcp.prompt(
@@ -447,11 +447,11 @@ def prompt_decision_record(
     parts.append("""
 ## Analysis Requested
 For each option, evaluate:
-1. Technical Fit — Does it solve the problem well?
-2. Complexity — Implementation and ongoing maintenance cost
-3. Team Impact — Learning curve and familiarity
-4. Scalability — Behavior at 10x growth
-5. Reversibility — Cost to change later
+1. Technical Fit - Does it solve the problem well?
+2. Complexity - Implementation and ongoing maintenance cost
+3. Team Impact - Learning curve and familiarity
+4. Scalability - Behavior at 10x growth
+5. Reversibility - Cost to change later
 
 Then provide a Recommendation with rationale, Risks, and Next Steps.
 Format as an ADR suitable for storing with `remember_decision`.""")
@@ -472,12 +472,12 @@ def prompt_convention_proposal(
 {problem}
 
 Please define:
-1. Rule — One sentence: what to always/never do
-2. Rationale — Why this matters
-3. Good Examples — 2-3 code snippets showing correct usage
-4. Bad Examples — 2-3 code snippets showing what to avoid
-5. Exceptions — When it's OK to deviate
-6. Enforcement — Linter rule, PR checklist, or automated check
+1. Rule - One sentence: what to always/never do
+2. Rationale - Why this matters
+3. Good Examples - 2-3 code snippets showing correct usage
+4. Bad Examples - 2-3 code snippets showing what to avoid
+5. Exceptions - When it's OK to deviate
+6. Enforcement - Linter rule, PR checklist, or automated check
 
 Format so it can be saved with `add_convention`."""
 
@@ -494,11 +494,11 @@ def prompt_memory_review() -> str:
 - memory://context
 
 Provide:
-1. Decisions Summary — Key decisions and whether any are outdated
-2. Convention Health — Are conventions clear and consistent?
-3. Knowledge Gaps — What's missing that should be documented?
-4. Conflicts — Any decisions or conventions that contradict each other?
-5. Recommendations — Concrete next steps to improve the knowledge base"""
+1. Decisions Summary - Key decisions and whether any are outdated
+2. Convention Health - Are conventions clear and consistent?
+3. Knowledge Gaps - What's missing that should be documented?
+4. Conflicts - Any decisions or conventions that contradict each other?
+5. Recommendations - Concrete next steps to improve the knowledge base"""
 
 
 @mcp.prompt(
@@ -511,11 +511,11 @@ def prompt_onboarding_guide(
     return f"""A new **{role}** is joining the project.
 
 Using the memory resources, create an onboarding guide covering:
-1. Must-Know Decisions — The 3-5 most important architectural choices
-2. Coding Standards — Conventions they need to follow from day one
-3. Project Context — Background info that isn't obvious from the code
-4. Gotchas — Common pitfalls captured in notes
-5. Quick Reference — Key-value context entries they should know about
+1. Must-Know Decisions - The 3-5 most important architectural choices
+2. Coding Standards - Conventions they need to follow from day one
+3. Project Context - Background info that isn't obvious from the code
+4. Gotchas - Common pitfalls captured in notes
+5. Quick Reference - Key-value context entries they should know about
 
 Keep it concise and actionable."""
 

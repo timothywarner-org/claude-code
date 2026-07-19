@@ -120,12 +120,12 @@ Prompts and their arguments auto-complete on Tab.
 
 The server ships six audience-calibrated documents (two `.md`, two `.pdf`, one `.docx`, one `.txt`), each substantive enough for the `/format` prompt to produce real Markdown:
 
-- `mcp-overview.md` — the MCP primitives at a glance
-- `azure-ai-foundry.pdf` — Foundry Agent Service primer
-- `copilot-studio-faq.docx` — Copilot Studio vs Foundry, licensing, auth
-- `ckav1.35-objectives.pdf` — CKA v1.35 domain weights
-- `langgraph-hybrid-rag.md` — WARNERCO Schematica pipeline overview
-- `incident-runbook.txt` — on-call runbook example
+- `mcp-overview.md` - the MCP primitives at a glance
+- `azure-ai-foundry.pdf` - Foundry Agent Service primer
+- `copilot-studio-faq.docx` - Copilot Studio vs Foundry, licensing, auth
+- `ckav1.35-objectives.pdf` - CKA v1.35 domain weights
+- `langgraph-hybrid-rag.md` - WARNERCO Schematica pipeline overview
+- `incident-runbook.txt` - on-call runbook example
 
 ### Demonstrating the four advanced primitives
 

@@ -251,10 +251,10 @@ Deviation from these defaults requires an explicit justification in the response
 
 ## Bundled scripts
 
-- `scripts/validate-bicep.ps1` — Runs all four pre-deploy gates (build, lint, AVM version-pin scan, what-if) in one shot. PowerShell 7+. Use locally before commit and in CI as a gate. See the **Validation commands** section above for invocation examples.
+- `scripts/validate-bicep.ps1` - Runs all four pre-deploy gates (build, lint, AVM version-pin scan, what-if) in one shot. PowerShell 7+. Use locally before commit and in CI as a gate. See the **Validation commands** section above for invocation examples.
 
 ## Reference files
 
-- `references/AVM-GUIDE.md` — Azure Verified Modules catalog, registry naming, version-pinning strategy
+- `references/AVM-GUIDE.md` - Azure Verified Modules catalog, registry naming, version-pinning strategy
 
 Additional reference files (`NAMING-AND-TAGGING.md`, `SECURITY.md`, `CI-CD.md`) and starter templates under `assets/templates/` may be added as the skill matures. Until then, follow the inline guidance in this SKILL.md and the AVM guide.

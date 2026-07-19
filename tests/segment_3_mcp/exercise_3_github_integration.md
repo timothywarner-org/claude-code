@@ -19,7 +19,7 @@ By the end of this exercise, you will be able to:
 
 ## Background
 
-Integrating GitHub with Claude via MCP enables powerful workflows:
+Wiring GitHub into Claude via MCP opens up workflows like these:
 
 - Automated code review and PR management
 - Issue triage and labeling

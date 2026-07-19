@@ -2,7 +2,7 @@
 
 ## Overview
 
-Take the **Zero -> Context -> Agents -> Hero** arc and apply it end to end on a repo you actually own. The deliverable is a system another human can read, audit, and extend — not a one-shot demo.
+Take the **Zero -> Context -> Agents -> Hero** arc and apply it end to end on a repo you actually own. The deliverable is a system another human can read, audit, and extend - not a one-shot demo.
 
 **Time estimate**: 3-4 hours
 **Difficulty**: Advanced
@@ -18,9 +18,9 @@ A working, committed **context system** that demonstrates everything the course 
 4. At least one custom subagent with a constrained tool allowlist and an explicit model choice
 5. **Optional advanced track**: build or consume an MCP server, and an automated code-review GitHub Action
 
-Skip the "ship a toy MCP server" reflex — only build one if it earns its place. The point is **a system that makes you faster on a real codebase**, not a demo zoo.
+Skip the "ship a toy MCP server" reflex - only build one if it earns its place. The point is **a system that makes you faster on a real codebase**, not a demo zoo.
 
-## Part 1 — CLAUDE.md hierarchy (35 points)
+## Part 1 - CLAUDE.md hierarchy (35 points)
 
 Stand up the three-scope cascade in your own repo.
 
@@ -34,10 +34,10 @@ Stand up the three-scope cascade in your own repo.
 
 **Evidence:**
 
-- Screenshot or transcript showing Claude answering the *same* prompt differently from inside two subdirectories — driven entirely by scope, not by your wording.
+- Screenshot or transcript showing Claude answering the *same* prompt differently from inside two subdirectories - driven entirely by scope, not by your wording.
 - A short `HIERARCHY.md` that lists every CLAUDE.md you added and one sentence explaining what each one owns.
 
-## Part 2 — Boundary-spec CLAUDE.md (15 points)
+## Part 2 - Boundary-spec CLAUDE.md (15 points)
 
 Apply the Segment 3 lesson to your own repo: a subdirectory CLAUDE.md that defines a real **kill switch**.
 
@@ -52,14 +52,14 @@ Apply the Segment 3 lesson to your own repo: a subdirectory CLAUDE.md that defin
 - One demonstration where Claude refuses a destructive request and cites your CLAUDE.md.
 - One demonstration where you edit the boundary spec mid-session and the next tool call respects the new rule. No restart.
 
-## Part 3 — A custom skill with dynamic context injection (20 points)
+## Part 3 - A custom skill with dynamic context injection (20 points)
 
 Build a skill that earns its place because you would type it more than once a week.
 
 **Required:**
 
 - [ ] Lives at `.claude/skills/<your-skill-name>/SKILL.md` (canonical path)
-- [ ] Uses at least one `` !`<bash>` `` dynamic context injection — the kind that runs at render time, before Claude sees the prompt
+- [ ] Uses at least one `` !`<bash>` `` dynamic context injection - the kind that runs at render time, before Claude sees the prompt
 - [ ] Has a `description` field specific enough that Claude can auto-invoke when the trigger phrase appears
 - [ ] Has an `allowed-tools` field that restricts to the minimum
 - [ ] At least one bundled supporting file (script, reference, or template) loaded via `${CLAUDE_SKILL_DIR}/<file>`
@@ -71,7 +71,7 @@ Build a skill that earns its place because you would type it more than once a we
 
 **Worked patterns** to crib from: `/review-changes` (Segment 4 cold open), `pr-summary` (multiple `gh` injections), `deep-research` (`context: fork` into an Explore agent).
 
-## Part 4 — A custom subagent (20 points)
+## Part 4 - A custom subagent (20 points)
 
 Author a subagent in `.claude/agents/<name>.md` that does one job well in an isolated context window.
 
@@ -136,7 +136,7 @@ The third item is the one that tells the instructor whether you actually used yo
 - **Start with the project CLAUDE.md.** Get it right at one scope before fanning out.
 - **Write your boundary spec early.** Then put it under test by trying to coax Claude into breaking it.
 - **One skill, one subagent.** Resist the urge to ship a dozen. A single skill you actually use beats a fleet of demos.
-- **Diff everything.** If your CLAUDE.md is not in git, it does not exist.
+- **Diff everything.** If your CLAUDE.md isn't in git, it doesn't exist.
 - **Commit messages matter.** Use conventional commits. Future-you will read them.
 
 ## Frequently asked questions

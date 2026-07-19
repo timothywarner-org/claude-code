@@ -380,7 +380,7 @@ Production workflow patterns:
 6. SKILLS + AGENTS
    Create reusable workflows with custom skills.
 
-These patterns combine to create powerful, automated development workflows.
+Stack these patterns together and you have real automation across your dev workflow.
 `);
 }
 

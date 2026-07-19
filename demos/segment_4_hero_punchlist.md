@@ -1,8 +1,8 @@
-# Segment 4 (Hero) — Live Demo Punchlist
+# Segment 4 (Hero) - Live Demo Punchlist
 
-Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" — Segment 4: Hero (Skills, Subagents, and MCP).
+Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" - Segment 4: Hero (Skills, Subagents, and MCP).
 
-**Goal:** In one continuous demo, show the three reach mechanisms — a **skill** that injects `git diff HEAD`, a **subagent** that adds expert constraint, and an **MCP server** that pulls live Microsoft Learn docs into the conversation.
+**Goal:** In one continuous demo, show the three reach mechanisms - a **skill** that injects `git diff HEAD`, a **subagent** that adds expert constraint, and an **MCP server** that pulls live Microsoft Learn docs into the conversation.
 
 **Prerequisites:**
 - [ ] Claude Code on PATH (`claude --version` returns a semver)
@@ -68,7 +68,7 @@ cat .claude/agents/code-quality-coach.md | head -20
 
 **Expected behavior:** Claude spins up the `code-quality-coach` subagent in an isolated context. The subagent reads files, applies its system prompt, and returns a focused review. Your main conversation gets the summary, not the file-read churn.
 
-**Teaching point:** Subagents are **parallel reasoning** plus **scoped tool access**. Spin up three at once for a security review, a perf review, and a style review — they do not interfere with each other because each runs in its own context window.
+**Teaching point:** Subagents are **parallel reasoning** plus **scoped tool access**. Spin up three at once for a security review, a perf review, and a style review - they don't step on each other because each runs in its own context window.
 
 ---
 
@@ -125,7 +125,7 @@ Final flourish to show the three reach mechanisms in one continuous chain:
 
 **Expected behavior:** Claude invokes the skill (gets the diff), delegates to the subagent (does the review), and during the review the subagent calls the MCP server (gets live Azure context). All three reach mechanisms in one prompt.
 
-**Teaching point:** Skills, subagents, and MCP servers are **composable**. They are not three separate features — they are one system with three control surfaces.
+**Teaching point:** Skills, subagents, and MCP servers are **composable**. They aren't three separate features - they're one system with three control surfaces.
 
 ---
 
@@ -173,8 +173,8 @@ claude mcp list
 ## Cleanup After Demo
 
 ```bash
-# Keep the skill — it is genuinely useful
-# Keep the subagent — already in repo
+# Keep the skill - it is genuinely useful
+# Keep the subagent - already in repo
 # Nothing to tear down on the MCP side; the server is remote
 ```
 

@@ -25,7 +25,7 @@ The script outputs JSON. Read the `status` field first:
 
 ## When drift is found
 
-1. **Load `references/CLAUDE_MD_PATTERNS.md`** — it documents the five canonical patterns and the common drift modes. Read it only when needed (progressive disclosure).
+1. **Load `references/CLAUDE_MD_PATTERNS.md`** - it documents the five canonical patterns and the common drift modes. Read it only when needed (progressive disclosure).
 2. **Group findings by severity**. Address `high` first.
 3. **For each finding**, propose the minimal correction. Cite the file and line.
 4. **If the user passed `--fix`**, the script already corrected obvious path typos. Re-run without `--fix` to confirm.

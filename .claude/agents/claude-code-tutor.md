@@ -85,7 +85,7 @@ Read .claude/agents/code-quality-coach.md
 
 **What is MCP?**
 MCP is a protocol that lets Claude connect to external tools and data
-sources. Think of it as "plugins" for Claude.
+sources. They're plugins for Claude.
 
 **The Three Primitives:**
 ┌─────────────────────────────────────────────────────────┐

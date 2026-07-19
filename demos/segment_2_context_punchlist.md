@@ -1,8 +1,8 @@
-# Segment 2 — CLAUDE.md at Every Scope Demo Punchlist
+# Segment 2 - CLAUDE.md at Every Scope Demo Punchlist
 
 Live demo script for O'Reilly "Claude Code and Large-Context Reasoning," Segment 2 (Context).
 
-**Goal:** show learners that **scope** is the missing variable. The *same* prompt gets *different* answers depending on which CLAUDE.md applies — and that's a feature, not a bug.
+**Goal:** show learners that **scope** is the missing variable. The *same* prompt gets *different* answers depending on which CLAUDE.md applies - and that's a feature, not a bug.
 
 **Prerequisites:**
 
@@ -30,9 +30,9 @@ code C:/github/claude-code/segment_3_agents/CLAUDE.md
 code C:/github/claude-code/segment_4_hero/CLAUDE.md
 ```
 
-**Talking point:** the user file is your *stable identity* (voice, defaults). The project file is your *codebase* (commands, architecture). The subdirectory files are *local rules* (what belongs here, what doesn't). Lower layers don't override — they **add detail**.
+**Talking point:** the user file is your *stable identity* (voice, defaults). The project file is your *codebase* (commands, architecture). The subdirectory files are *local rules* (what belongs here, what doesn't). Lower layers don't override - they **add detail**.
 
-**Expected aha:** the user CLAUDE.md says "Node-first, Python-second." The project CLAUDE.md says "but this repo has Python MCP servers managed by UV." The subdirectory CLAUDE.md for `segment_2_context/` says "no MCP topics here — they moved to Segment 4." Each layer narrows the focus without contradicting the one above it.
+**Expected aha:** the user CLAUDE.md says "Node-first, Python-second." The project CLAUDE.md says "but this repo has Python MCP servers managed by UV." The subdirectory CLAUDE.md for `segment_2_context/` says "no MCP topics here - they moved to Segment 4." Each layer narrows the focus without contradicting the one above it.
 
 ---
 
@@ -61,7 +61,7 @@ claude
 ```
 
 ```
-> Same question — adding a new file in this directory. What goes where?
+> Same question - adding a new file in this directory. What goes where?
 ```
 
 **Expected:** Claude tells you **not** to add MCP-server-building topics (they moved to Segment 4) and points you at the Segment 2 lesson structure.
@@ -102,7 +102,7 @@ Re-run the question from Step 2 inside `segment_2_context/`. Watch Claude lose t
 git -C C:/github/claude-code mv segment_2_context/_CLAUDE.md.disabled segment_2_context/CLAUDE.md
 ```
 
-**Talking point:** subdirectory CLAUDE.md is **load-bearing**. Lose it and Claude doesn't fail noisily — it just drifts.
+**Talking point:** the subdirectory CLAUDE.md is doing real work. Lose it and Claude doesn't fail noisily - it just drifts.
 
 ---
 
@@ -123,5 +123,5 @@ Back in the lesson view:
 1. **Three scopes, one cascade.** User, project, subdirectory. Top to bottom. Each layer adds detail.
 2. **Subdirectory CLAUDE.md is on-demand.** It loads when Claude touches files under that subtree, not when the session starts.
 3. **`@path/file.md` is your friend.** Big CLAUDE.md files become unreadable. Split them.
-4. **Drift is silent.** If a subdirectory CLAUDE.md is missing, Claude doesn't error — it guesses. The rest of this course is about reducing that guess space.
-5. **Next up — Segment 3:** memory only matters if Claude can act on it. We'll let it act, with bounded agents.
+4. **Drift is silent.** If a subdirectory CLAUDE.md is missing, Claude doesn't error - it guesses. The rest of this course is about reducing that guess space.
+5. **Next up - Segment 3:** memory only matters if Claude can act on it. We'll let it act, with bounded agents.

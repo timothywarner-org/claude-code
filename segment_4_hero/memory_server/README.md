@@ -58,21 +58,21 @@ sequenceDiagram
     participant S as Memory Server
     participant D as data/memory.json
 
-    Note over U,D: 1. TOOL — Save something
+    Note over U,D: 1. TOOL - Save something
     U->>C: "Remember we chose PostgreSQL for JSONB support"
     C->>S: tools/call: remember_decision(title, description, rationale)
     S->>D: Write to disk
     S-->>C: "Decision saved (ID: 1742...)"
-    C-->>U: "Got it — decision recorded."
+    C-->>U: "Got it - decision recorded."
 
-    Note over U,D: 2. RESOURCE — Read back data
+    Note over U,D: 2. RESOURCE - Read back data
     U->>C: "Show me all our decisions"
     C->>S: resources/read: memory://decisions
     S->>D: Read from disk
     S-->>C: JSON array of all decisions
     C-->>U: Formatted list of decisions
 
-    Note over U,D: 3. PROMPT — Use a template
+    Note over U,D: 3. PROMPT - Use a template
     U->>C: "Help me write an ADR for our caching strategy"
     C->>S: prompts/get: decision_record(topic="caching", options="Redis, Memcached")
     S-->>C: Pre-filled ADR template with analysis structure
@@ -81,7 +81,7 @@ sequenceDiagram
 
 ## What's Inside
 
-### Tools (9) — Actions the LLM Can Execute
+### Tools (9) - Actions the LLM Can Execute
 
 | Tool | What It Does |
 |------|-------------|
@@ -89,13 +89,13 @@ sequenceDiagram
 | `recall_decisions` | Search past decisions by keyword or tag |
 | `add_convention` | Record a coding convention with rule and examples |
 | `get_conventions` | List conventions, optionally filtered by category |
-| `save_note` | Save a freeform note — the "remember this" tool |
+| `save_note` | Save a freeform note - the "remember this" tool |
 | `search_notes` | Search notes by keyword |
 | `set_context` | Store a key-value pair (project metadata) |
 | `get_context` | Retrieve one key or the full context dictionary |
 | `memory_summary` | Quick overview: counts and last-updated timestamp |
 
-### Resources (5) — Read-Only Data the LLM Can Pull
+### Resources (5) - Read-Only Data the LLM Can Pull
 
 | URI | Description |
 |-----|-------------|
@@ -105,7 +105,7 @@ sequenceDiagram
 | `memory://context` | Key-value context as JSON |
 | `memory://summary` | Item counts and metadata |
 
-### Prompts (4) — Reusable Templates
+### Prompts (4) - Reusable Templates
 
 | Prompt | Parameters | Description |
 |--------|------------|-------------|
@@ -118,8 +118,8 @@ sequenceDiagram
 
 You need two things installed:
 
-1. **Python 3.11+** — [python.org/downloads](https://www.python.org/downloads/)
-2. **UV** — The fast Python package manager
+1. **Python 3.11+** - [python.org/downloads](https://www.python.org/downloads/)
+2. **UV** - The fast Python package manager
 
 ```bash
 # Install UV (if you don't have it)
@@ -164,14 +164,14 @@ their descriptions, parameter schemas, and input types. Try this:
 3. Click **Run**
 4. You should see: `Note saved: 'My first memory' (ID: ...)`
 
-Now try **`search_notes`** with query `"first"` — your note should come back.
+Now try **`search_notes`** with query `"first"` - your note should come back.
 
 ### Step 3: Browse the Resources Tab
 
 Click the **Resources** tab. You'll see 5 URIs:
 
-1. Click **`memory://notes`** — you'll see the JSON for the note you just saved
-2. Click **`memory://summary`** — you'll see `{ "notes": 1, ... }`
+1. Click **`memory://notes`** - you'll see the JSON for the note you just saved
+2. Click **`memory://summary`** - you'll see `{ "notes": 1, ... }`
 
 Resources are read-only views of the data. They're how an LLM can pull
 context into its conversation without calling a tool.
@@ -188,7 +188,7 @@ Click the **Prompts** tab. Try this:
 3. Click **Get Prompt**
 
 You'll see the pre-filled template that would be sent to the LLM. Prompts
-don't execute anything — they generate structured input for the model.
+don't execute anything - they generate structured input for the model.
 
 ### Step 5: Verify Persistence
 
@@ -269,7 +269,7 @@ Claude: [called memory_summary]
 You:  "Help me write an ADR for choosing between REST and GraphQL"
 
 Claude: [uses decision_record prompt template]
-        # ADR: API Style — REST vs GraphQL
+        # ADR: API Style - REST vs GraphQL
         ## Options
         ...analysis using the structured template...
 ```
@@ -367,7 +367,7 @@ like after a few interactions:
 
 ```
 memory_server/
-├── server.py          # The MCP server — single file, ~400 lines
+├── server.py          # The MCP server - single file, ~400 lines
 ├── pyproject.toml     # UV/pip dependency specification
 ├── uv.lock            # Locked dependency versions (auto-generated)
 ├── .gitignore         # Ignores data/, .venv/, __pycache__/
@@ -428,7 +428,7 @@ flowchart LR
 |-----------|---------|-----------|-------------|
 | **Tool** | A function call | Client -> Server -> Client | When the LLM needs to _do_ something (save, search, compute) |
 | **Resource** | A GET endpoint | Client <- Server | When the LLM needs to _read_ data (pull context, check state) |
-| **Prompt** | A template | Server -> Client | When the server wants to _guide_ the LLM (structured workflows) |
+| **Prompt** | A template | Server -> Client | For guiding the LLM through a structured workflow |
 
 ### Why All Three Matter
 
@@ -436,9 +436,9 @@ flowchart LR
   available data without side effects, and prompts let the server author
   define reusable workflows.
 
-- **Resources alone** are read-only — you can't save anything.
+- **Resources alone** are read-only - you can't save anything.
 
-- **Prompts alone** don't interact with data — they just generate text.
+- **Prompts alone** don't interact with data - they just generate text.
 
 The power comes from **combining them**: a prompt template references
 resources the LLM should read, and the LLM uses tools to act on what it
@@ -468,7 +468,7 @@ The server uses FastMCP's `lifespan` async context manager to:
 2. **Yield** an `AppState` object that all tools access via `ctx.state`
 3. **Save** memory back to disk when the server shuts down
 
-Each tool also calls `_save()` after mutations for crash safety — if the
+Each tool also calls `_save()` after mutations for crash safety - if the
 server dies unexpectedly, you only lose the last incomplete operation.
 
 ### Transport: stdio
@@ -481,7 +481,7 @@ JSON-RPC messages. This is the standard transport for local MCP servers
 - **stderr** carries log messages at any level (the 2025-11-25 spec expanded stderr from errors-only to any log level)
 - The client (Claude Code, MCP Inspector) spawns the server as a child process
 
-This is why `print(..., file=sys.stderr)` is used for logging — printing
+This is why `print(..., file=sys.stderr)` is used for logging - printing
 to stdout would corrupt the JSON-RPC stream.
 
 The other standard transport is **Streamable HTTP** (remote servers, POSTs to `/mcp`).
@@ -492,7 +492,7 @@ The older SSE-only transport is retired as of MCP 2025-11-25.
 | Problem | Solution |
 |---------|----------|
 | `uv: command not found` | Install UV: `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| Server starts but Claude can't connect | Check `claude mcp list` — server should show as "connected" |
+| Server starts but Claude can't connect | Check `claude mcp list` - server should show as "connected" |
 | Data not persisting | Check that `data/` directory is writable; check `MCP_MEMORY_PATH` |
 | Inspector won't open | Try `uv run -- fastmcp dev server.py --port 6275` (different port) |
 | `ModuleNotFoundError: fastmcp` | Run `uv sync` in the `memory_server/` directory |
@@ -500,7 +500,7 @@ The older SSE-only transport is retired as of MCP 2025-11-25.
 
 ## Further Reading
 
-- [MCP Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) — The full protocol spec
-- [FastMCP Documentation](https://gofastmcp.com/) — The framework this server is built with
-- [Claude Code MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp-servers) — How Claude Code uses MCP servers
-- [MCP Inspector](https://github.com/modelcontextprotocol/inspector) — The testing UI
+- [MCP Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25) - The full protocol spec
+- [FastMCP Documentation](https://gofastmcp.com/) - The framework this server is built with
+- [Claude Code MCP Guide](https://docs.anthropic.com/en/docs/claude-code/mcp-servers) - How Claude Code uses MCP servers
+- [MCP Inspector](https://github.com/modelcontextprotocol/inspector) - The testing UI

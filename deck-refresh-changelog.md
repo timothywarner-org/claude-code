@@ -6,7 +6,7 @@
 > the original **2026-05-25** deck refresh and are left as history. Do not read the old date as the
 > vintage of the ground-truth block.
 
-## Original refresh — 2026-05-25
+## Original refresh - 2026-05-25
 
 Source: `warner-claude-code.pptx`, refreshed for 2026-05-26 O'Reilly class delivery ("Claude Code and Large-Context Reasoning").
 
@@ -25,28 +25,28 @@ This deck is **almost entirely image-based**. Slides 10 through 32 are picture-o
 
 If any of those facts need updating, the source-of-truth is the image assets themselves, not the slide text frames. That is out of scope for this refresh (and would require re-rendering screenshots, which I was told not to do).
 
-What was wrong and got fixed: the title slide read "**GitHub Copilot for Almost Everyone**" — wrong course branding for tomorrow's class. The slide-1 speaker notes were template-review Q&A scratch ("How much flexibility am I allowed with these slide layouts?" etc.), not narration. Both fixed below.
+What was wrong and got fixed: the title slide read "**GitHub Copilot for Almost Everyone**" - wrong course branding for tomorrow's class. The slide-1 speaker notes were template-review Q&A scratch ("How much flexibility am I allowed with these slide layouts?" etc.), not narration. Both fixed below.
 
 ## Slide-by-slide
 
-### Slide 1 — Title slide
+### Slide 1 - Title slide
 
 - **Before (Title 1)**: `GitHub Copilot for Almost Everyone`
 - **After (Title 1)**: `Claude Code and Large-Context Reasoning`
-- **Before (Notes)**: Template-review Q&A scratch notes ("How much flexibility am I allowed with these slide layouts?...") — would have been embarrassing if presenter view shared the screen.
+- **Before (Notes)**: Template-review Q&A scratch notes ("How much flexibility am I allowed with these slide layouts?...") - would have been embarrassing if presenter view shared the screen.
 - **After (Notes)**: Opening narration in Tim's voice. Welcomes the class, names the current model lineup (Sonnet 5 default with native 1M context / Opus 4.8 / Haiku 4.5), and sets house rules for Q&A. Note: the original 2026-05-25 narration named the then-current Opus 4.7 / Sonnet 4.6 lineup; re-record the opening to the lineup above.
-- **Reason**: course-branding mismatch and unsuitable speaker-notes content. The model-deprecation callout is preventive — if a learner asks about old IDs, the narration is ready.
+- **Reason**: course-branding mismatch and unsuitable speaker-notes content. The model-deprecation callout is preventive - if a learner asks about old IDs, the narration is ready.
 
 ## Slides reviewed but unchanged (and why)
 
 | Slide | Title | Why unchanged |
 |------|------|---------------|
 | 2 | Tim Warner | Bio. No dated technical claims. |
-| 3 | Course Flow (Central Time Zone) | Segments labeled "Foundations / MCP / Agents / Skills" — already reflects post-merge Skills terminology. Schedule and segment names are correct. |
+| 3 | Course Flow (Central Time Zone) | Segments labeled "Foundations / MCP / Agents / Skills" - already reflects post-merge Skills terminology. Schedule and segment names are correct. |
 | 4 | Course materials | Vanity URL only. |
-| 5–8 | Session Recording + Badge | Title-only over image. No technical text to refresh. |
+| 5-8 | Session Recording + Badge | Title-only over image. No technical text to refresh. |
 | 9 | Questions? | Q&A logistics only. |
-| 10–32 | (image-only teaching slides) | Title placeholder is a single space. All content is in PICTURE shapes. No editable text. **Out of scope for a text refresh.** |
+| 10-32 | (image-only teaching slides) | Title placeholder is a single space. All content is in PICTURE shapes. No editable text. **Out of scope for a text refresh.** |
 | 33 | Thank you! | Closing slide. No technical claims. |
 
 ## Ground-truth facts pinned for tomorrow (reference, not changes)

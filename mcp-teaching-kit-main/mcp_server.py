@@ -163,7 +163,7 @@ def edit_document(
     name="summarize_via_sampling",
     description=(
         "Summarize a document by asking the client's own LLM to do it. "
-        "Demonstrates MCP sampling — the server delegates generation back to the client."
+        "Demonstrates MCP sampling - the server delegates generation back to the client."
     ),
 )
 async def summarize_via_sampling(
@@ -203,7 +203,7 @@ async def summarize_via_sampling(
     name="list_allowed_roots",
     description=(
         "Show the filesystem locations the client has declared as in-scope. "
-        "Demonstrates MCP roots — the client tells the server which paths it "
+        "Demonstrates MCP roots - the client tells the server which paths it "
         "is permitted to operate on for this session."
     ),
 )
@@ -240,7 +240,7 @@ class EditConfirmation(BaseModel):
     name="edit_document_safely",
     description=(
         "Edit a document, but elicit user confirmation first. "
-        "Demonstrates MCP elicitation — the server pauses mid-execution to ask the human."
+        "Demonstrates MCP elicitation - the server pauses mid-execution to ask the human."
     ),
 )
 async def edit_document_safely(
@@ -256,7 +256,7 @@ async def edit_document_safely(
 
     # Roots gate: refuse the edit unless the client has explicitly declared
     # the docs namespace as in-scope for this session. Graceful degradation
-    # is intentional — older clients without roots support should still see
+    # is intentional - older clients without roots support should still see
     # the elicitation flow rather than a hard failure.
     try:
         roots_result = await ctx.session.list_roots()
@@ -332,7 +332,7 @@ async def delete_document(
         return f"No change: '{doc_id}' does not exist."
 
     # Same roots gate as edit_document_safely. Destructive operations should
-    # share the same authorization surface — diverging here would be a footgun.
+    # share the same authorization surface - diverging here would be a footgun.
     try:
         roots_result = await ctx.session.list_roots()
         declared = [str(r.uri) for r in roots_result.roots]
@@ -365,7 +365,7 @@ async def delete_document(
 
     if result.data.typed_doc_id != doc_id:
         # Mismatch is treated as a cancel, not an error. The user typed
-        # something — they were paying attention — they just typed wrong.
+        # something - they were paying attention - they just typed wrong.
         return (
             f"Delete cancelled: typed '{result.data.typed_doc_id}' did not "
             f"match '{doc_id}'."

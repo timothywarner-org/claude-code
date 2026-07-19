@@ -58,7 +58,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize FastMCP server
 mcp = FastMCP(
     name="Memory Server",
     instructions="MCP server for Claude Code course memory management. Store project notes, PRDs, code patterns, and context. Use get_optimized_memory for token-efficient retrieval with DeepSeek optimization."
@@ -529,7 +528,7 @@ def delete_memory(memory_id: str) -> dict:
     """
     Delete a memory by ID (in-memory only).
 
-    Does not modify the source JSON file. Use reset_memory to restore.
+    Doesn't modify the source JSON file. Use reset_memory to restore.
 
     Args:
         memory_id: The memory ID to delete

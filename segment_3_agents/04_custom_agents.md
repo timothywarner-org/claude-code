@@ -2,7 +2,7 @@
 
 <!-- src: https://code.claude.com/docs/en/sub-agents (May 2026) -->
 
-> **This is part 2 of one story.** Part 1 is `01_agents_intro.md` — read it first for the **agent loop** framing (`--allowedTools`, CLAUDE.md as kill switch, the Plan → Execute → Observe → Adjust loop). This file picks up where that one ended: same model, same loop, but now running in **its own context window**.
+> **This is part 2 of one story.** Part 1 is `01_agents_intro.md` - read it first for the **agent loop** framing (`--allowedTools`, CLAUDE.md as kill switch, the Plan → Execute → Observe → Adjust loop). This file picks up where that one ended: same model, same loop, but now running in **its own context window**.
 
 ## Cold open
 
@@ -27,7 +27,7 @@ The boundary primitives you learned in part 1 (`--allowedTools`, CLAUDE.md) stil
 | **Invocation** | Claude delegates by description match, or you spawn one with `--agents` | You type `/<name>`, or Claude auto-invokes when the description matches |
 | **Best for** | Heavyweight side tasks, parallel exploration | Reusable workflows, knowledge injection, parameterized commands |
 | **Can use skills?** | Yes, via `skills:` frontmatter (preloaded at startup) | N/A |
-| **Custom commands?** | N/A | Custom commands have merged into skills (May 2026) — `.claude/commands/*.md` still works for backward compatibility |
+| **Custom commands?** | N/A | Custom commands have merged into skills (May 2026) - `.claude/commands/*.md` still works for backward compatibility |
 
 ## Agent File Format
 
@@ -52,7 +52,7 @@ You are [agent persona]. When invoked, you...
 | Field | Required | Description |
 |-------|----------|-------------|
 | `name` | Yes | Unique identifier (lowercase, hyphens) |
-| `description` | Yes | Plain-English trigger — Claude reads this to decide when to delegate. Be specific. |
+| `description` | Yes | Plain-English trigger - Claude reads this to decide when to delegate. Be specific. |
 | `tools` | No | Allowed tools (inherits the parent allowlist if omitted). Restrict to enforce safety. |
 | `model` | No | `claude-opus-4-8`, `claude-sonnet-5`, `claude-haiku-4-5-20251001`, the short aliases `opus`/`sonnet`/`haiku`, or `inherit` |
 | `skills` | No | Skills preloaded into the agent's context at startup |
@@ -318,7 +318,7 @@ tools: Read, Write, Edit, Bash
 
 ### 3. Combine with Skills
 
-Leverage existing skills for complex workflows:
+Put existing skills to work for complex workflows:
 
 ```yaml
 skills: code-review, deploy-prep, documentation
@@ -395,7 +395,7 @@ Then in the session:
 2. You want a subagent that can run `npm test` but cannot edit any file. Which two frontmatter fields do you set, and to what?
 3. When does Claude decide to delegate to a subagent automatically (vs you spawning one explicitly)?
 
-Answers: **zero — the isolation is the entire point**; **`tools: Read, Glob, Grep, Bash` and write a `description` that makes the read-only test-runner role unambiguous**; **Claude matches the user's request against each agent's `description` field, so write descriptions like trigger phrases, not job titles**.
+Answers: **zero - the isolation is the entire point**; **`tools: Read, Glob, Grep, Bash` and write a `description` that makes the read-only test-runner role unambiguous**; **Claude matches the user's request against each agent's `description` field, so write descriptions like trigger phrases, not job titles**.
 
 ## What you should be able to do now
 

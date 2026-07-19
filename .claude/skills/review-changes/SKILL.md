@@ -50,10 +50,10 @@ Review the changes above. Flag bugs, anti-patterns, missing tests, and any viola
 
 ```
 ## Blockers
-- file:line — issue — proposed fix
+- file:line - issue - proposed fix
 
 ## Soft findings
-- file:line — note
+- file:line - note
 
 ## What's working
 - one or two things the diff got right (keep it brief, no glazing)

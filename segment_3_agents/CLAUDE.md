@@ -1,4 +1,4 @@
-# Agent Boundaries — Segment 3 Working Directory
+# Agent Boundaries - Segment 3 Working Directory
 
 > This file is the lesson. Claude reads it on **every turn** when working under `segment_3_agents/`. Edit the markdown, change the autonomous behavior. No restart required.
 

@@ -2,7 +2,7 @@
 /**
  * Generate Release Notes Script
  *
- * Uses Claude to generate comprehensive release notes from git history.
+ * Uses Claude to generate release notes from git history.
  * Used by GitHub Actions for automated releases.
  *
  * Run: npx tsx scripts/generate-release-notes.ts --from v1.0.0 --to v2.0.0 --output release_notes.md

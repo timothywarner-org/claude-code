@@ -1,13 +1,13 @@
-# Segment 4 — Hero (Skills, Subagents, and MCP)
+# Segment 4 - Hero (Skills, Subagents, and MCP)
 
-This file is per-segment context for Claude Code. It tells Claude what lives in this directory and how to think about it. **The fact that this file exists, in this directory, and is being read right now, is part of the lesson** — that is exactly the subdirectory-scoped CLAUDE.md pattern Segment 2 introduced.
+This file is per-segment context for Claude Code. It tells Claude what lives in this directory and how to think about it. **The fact that this file exists, in this directory, and is being read right now, is part of the lesson** - that is exactly the subdirectory-scoped CLAUDE.md pattern Segment 2 introduced.
 
 ## What lives here
 
-- `01_skills_intro.md` — Skills, slash commands, dynamic context injection
-- `04_mcp_consumption.md` — MCP as **reach** when CLAUDE.md hierarchy is not enough
-- `02_production_workflows.ts` — Production multi-skill workflow demo (TypeScript)
-- `MCP_SPEC_CHANGELOG.md` — Spec-version reference for advanced learners
+- `01_skills_intro.md` - Skills, slash commands, dynamic context injection
+- `04_mcp_consumption.md` - MCP as **reach** when CLAUDE.md hierarchy is not enough
+- `02_production_workflows.ts` - Production multi-skill workflow demo (TypeScript)
+- `MCP_SPEC_CHANGELOG.md` - Spec-version reference for advanced learners
 
 Demo punchlist for live walkthrough: `demos/segment_4_hero_punchlist.md`.
 Hands-on exercises: `tests/segment_4_production/`.

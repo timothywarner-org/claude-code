@@ -67,10 +67,10 @@ interface OptimizationResult {
 
 // Pricing snapshot as of May 2026. Always verify against
 // docs.anthropic.com/en/docs/about-claude/models/overview before relying on
-// these numbers — the lineup turns over roughly every 3-4 months.
+// these numbers - the lineup turns over roughly every 3-4 months.
 const MODEL_PRICING: Record<string, ModelPricing> = {
   // === Current lineup (May 2026) ===
-  // Pricing figures below carried over from the prior lineup — verify current
+  // Pricing figures below carried over from the prior lineup - verify current
   // pricing at anthropic.com/pricing before relying on these numbers.
   'claude-opus-4-8': {
     name: 'claude-opus-4-8',

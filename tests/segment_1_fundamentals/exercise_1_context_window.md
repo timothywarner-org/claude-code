@@ -8,7 +8,7 @@ By the end of this exercise, you will be able to:
 2. Load and analyze an entire codebase in a single conversation
 3. Ask architectural questions that span multiple files
 4. Identify patterns and anti-patterns across a codebase
-5. Generate comprehensive documentation from existing code
+5. Generate full documentation from existing code
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ This allows you to load entire small-to-medium codebases into a single conversat
 
 - Full architectural analysis without context switching
 - Cross-file refactoring suggestions
-- Comprehensive code reviews
+- Whole-codebase code reviews
 - Accurate dependency mapping
 
 ## Step-by-Step Instructions

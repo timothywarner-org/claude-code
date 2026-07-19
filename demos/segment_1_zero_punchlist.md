@@ -1,13 +1,13 @@
-# Segment 1 (Zero) — Live Demo Punchlist
+# Segment 1 (Zero) - Live Demo Punchlist
 
-Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" — Segment 1: Zero.
+Live demo script for O'Reilly "Claude Code and Large-Context Reasoning" - Segment 1: Zero.
 
-**Goal:** Show learners that Claude is stateless, and that a 10-line `CLAUDE.md` is the cheapest, highest-leverage fix.
+**Goal:** Show learners that Claude is stateless, and that a 10-line `CLAUDE.md` is the cheapest fix that buys the most.
 
 **Prerequisites:**
 - [ ] Node.js 20+ installed
 - [ ] `ANTHROPIC_API_KEY` exported in current shell
-- [ ] A scratch directory (not the course repo — we want a clean stage)
+- [ ] A scratch directory (not the course repo - we want a clean stage)
 
 ---
 
@@ -29,7 +29,7 @@ claude --version
 ## 2. Start the REPL in a project with no context
 
 ```bash
-# Brand new scratch directory — nothing for Claude to read
+# Brand new scratch directory - nothing for Claude to read
 mkdir /tmp/zero-demo && cd /tmp/zero-demo
 git init -q
 echo "console.log('hello')" > index.js
@@ -91,7 +91,7 @@ claude
 > what is this project?
 ```
 
-**Expected behavior:** Claude now answers with specifics from `CLAUDE.md` — "throwaway project for the O'Reilly Segment 1 demo," names the conventions, names the run command.
+**Expected behavior:** Claude now answers with specifics from `CLAUDE.md` - "throwaway project for the O'Reilly Segment 1 demo," names the conventions, names the run command.
 
 **Optional follow-up to drive the point home:**
 
@@ -118,11 +118,11 @@ git commit -m "Add CLAUDE.md so Claude stops guessing"
 
 ## Demo Talking Points
 
-1. **Stateless by default** — Claude does not "learn" your project between sessions. Every turn re-reads disk.
-2. **`CLAUDE.md` is not magic** — it's just markdown that gets prepended to context. You can read it, diff it, blame it.
-3. **Smallest useful version is ~10 lines** — what is this, how do I run it, what conventions matter. Resist the urge to write a novel.
-4. **It belongs in git** — team-shared, reviewable, version-controlled. Not a `~/.claude` user-level file.
-5. **This is the memory spine for the rest of the course** — Segments 2 (Context), 3 (Agents), and 4 (Hero) all build on top of `CLAUDE.md`.
+1. **Stateless by default** - Claude doesn't "learn" your project between sessions. Every turn re-reads disk.
+2. **`CLAUDE.md` isn't magic** - it's just markdown that gets prepended to context. You can read it, diff it, blame it.
+3. **Smallest useful version is ~10 lines** - what is this, how do I run it, what conventions matter. Resist the urge to write a novel.
+4. **It belongs in git** - team-shared, reviewable, version-controlled. Not a `~/.claude` user-level file.
+5. **This is the memory spine for the rest of the course** - Segments 2 (Context), 3 (Agents), and 4 (Hero) all build on top of `CLAUDE.md`.
 
 ---
 

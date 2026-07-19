@@ -8,7 +8,7 @@ from anthropic.types import Message, ToolResultBlockParam
 class ToolManager:
     @classmethod
     async def get_all_tools(cls, clients: dict[str, MCPClient]) -> list[Tool]:
-        """Gets all tools from the provided clients."""
+        """Flatten every connected client's tools into one Anthropic-shaped list."""
         tools = []
         for client in clients.values():
             tool_models = await client.list_tools()
@@ -26,7 +26,7 @@ class ToolManager:
     async def _find_client_with_tool(
         cls, clients: list[MCPClient], tool_name: str
     ) -> Optional[MCPClient]:
-        """Finds the first client that has the specified tool."""
+        """Route a tool call to its owning server. First match wins on name collision."""
         for client in clients:
             tools = await client.list_tools()
             tool = next((t for t in tools if t.name == tool_name), None)
@@ -41,7 +41,6 @@ class ToolManager:
         text: str,
         status: Literal["success"] | Literal["error"],
     ) -> ToolResultBlockParam:
-        """Builds a tool result part dictionary."""
         return {
             "tool_use_id": tool_use_id,
             "type": "tool_result",
@@ -53,7 +52,6 @@ class ToolManager:
     async def execute_tool_requests(
         cls, clients: dict[str, MCPClient], message: Message
     ) -> List[ToolResultBlockParam]:
-        """Executes a list of tool requests against the provided clients."""
         tool_requests = [
             block for block in message.content if block.type == "tool_use"
         ]

@@ -14,10 +14,10 @@ Key components include:
 - **Agent Workflows**: Multi-step autonomous operations.
 
 ## Repository Structure
-- `segment_1_quickstart/` — Zero: install, CLI, first CLAUDE.md.
-- `segment_2_context/` — Context: the CLAUDE.md hierarchy (user, project, subdirectory scopes).
-- `segment_3_agents/` — Agents: the loop, permissions, subagents.
-- `segment_4_hero/` — Hero: skills, hooks, and MCP. The Python FastMCP memory server is at `segment_4_hero/memory_server/`.
+- `segment_1_quickstart/` - Zero: install, CLI, first CLAUDE.md.
+- `segment_2_context/` - Context: the CLAUDE.md hierarchy (user, project, subdirectory scopes).
+- `segment_3_agents/` - Agents: the loop, permissions, subagents.
+- `segment_4_hero/` - Hero: skills, hooks, and MCP. The Python FastMCP memory server is at `segment_4_hero/memory_server/`.
 - `src/`: Supporting Python MCP servers and TypeScript utilities (`utils/`).
 - `scripts/`: TypeScript and shell utility scripts for setup, security, and documentation.
 - `.mcp.json`: Project-scoped MCP servers the CLI reads on startup (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`).

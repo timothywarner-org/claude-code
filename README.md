@@ -69,7 +69,7 @@ claude-code/
 │   └── CLAUDE.md                       # Segment 1 subdirectory rules
 │
 ├── segment_2_context/                  # Context: CLAUDE.md at every scope
-│   ├── 01_claude_md_at_every_scope.md  # The load-bearing lesson
+│   ├── 01_claude_md_at_every_scope.md  # The lesson the whole course rests on
 │   └── CLAUDE.md                       # Lives as a worked example
 │
 ├── segment_3_agents/                   # Agents: autonomy with boundaries
@@ -159,7 +159,7 @@ npm run segment1:verify      # Verify Claude API setup
 npm run segment1:workflows   # Terminal workflow demos
 
 # Segment 2: Context (CLAUDE.md at every scope)
-# No npm scripts — the lesson is markdown and live demos. See:
+# No npm scripts - the lesson is markdown and live demos. See:
 #   segment_2_context/01_claude_md_at_every_scope.md
 #   demos/segment_2_context_punchlist.md
 
@@ -182,7 +182,7 @@ npm run format               # Run Prettier
 
 ## Segment Summaries
 
-### Segment 1: Zero — Install, CLI, First CLAUDE.md
+### Segment 1: Zero - Install, CLI, First CLAUDE.md
 
 **Cold open:** "You just told Claude about your project. Congratulations, it forgot the moment you closed the terminal."
 
@@ -204,9 +204,9 @@ claude --allowedTools "Read"  # Restrict tools
 
 ---
 
-### Segment 2: Context — The CLAUDE.md Hierarchy
+### Segment 2: Context - The CLAUDE.md Hierarchy
 
-**Cold open:** "You explained your tech stack on Monday. On Tuesday, Claude was guessing again. The fix is not just one CLAUDE.md — it's CLAUDE.md at the right scope."
+**Cold open:** "You explained your tech stack on Monday. On Tuesday, Claude was guessing again. The fix isn't just one CLAUDE.md - it's CLAUDE.md at the right scope."
 
 **What you'll learn:**
 
@@ -215,11 +215,11 @@ claude --allowedTools "Read"  # Restrict tools
 - Five real CLAUDE.md files shipped in this repo as a worked example
 - Context engineering as disciplined CLAUDE.md authoring
 
-**No new commands** — the lesson lives entirely in the markdown hierarchy. Walk the punchlist at `demos/segment_2_context_punchlist.md`.
+**No new commands** - the lesson lives entirely in the markdown hierarchy. Walk the punchlist at `demos/segment_2_context_punchlist.md`.
 
 ---
 
-### Segment 3: Agents — The Loop, Permissions, Subagents
+### Segment 3: Agents - The Loop, Permissions, Subagents
 
 **Cold open:** "You can let Claude drive ten tools in a row without asking. That is an agent. The same trick that saves you an hour can torch your branch in thirty seconds."
 
@@ -240,16 +240,16 @@ claude --dangerously-skip-permissions     # Full autonomy (throwaway branches on
 
 **Example agents shipped:**
 
-- `code-quality-coach` — Mentoring agent that leans on the `review-changes` skill
-- `release-manager` — DevOps agent for versioning and release prep
-- `claude-code-tutor` — Teaching agent for this course
-- `python-mcp-expert` — Pair for FastMCP server building
-- `terraform-architect` — IaC expert for Azure infrastructure
-- `azure-principal-architect` — Azure Well-Architected design and review
+- `code-quality-coach` - Mentoring agent that leans on the `review-changes` skill
+- `release-manager` - DevOps agent for versioning and release prep
+- `claude-code-tutor` - Teaching agent for this course
+- `python-mcp-expert` - Pair for FastMCP server building
+- `terraform-architect` - IaC expert for Azure infrastructure
+- `azure-principal-architect` - Azure Well-Architected design and review
 
 ---
 
-### Segment 4: Hero — Skills, Subagents, and MCP
+### Segment 4: Hero - Skills, Subagents, and MCP
 
 **Cold open:** "A skill is the answer to 'I just typed this exact 12-step prompt for the fourth time.'"
 
@@ -303,7 +303,7 @@ The `microsoft-learn` server is pre-wired in `.mcp.json` at the repo root (the C
 > Use the microsoft-learn server to find the GA version of AKS today.
 ```
 
-Claude calls `microsoft_docs_search`, then optionally `microsoft_docs_fetch` for depth. No server code to write — just consume.
+Claude calls `microsoft_docs_search`, then optionally `microsoft_docs_fetch` for depth. No server code to write - just consume.
 
 ### Building Your Own MCP Server (Optional Homework)
 
@@ -381,9 +381,9 @@ Three `gh` commands run at render time. Claude only sees the rendered prompt wit
 
 ### Related O'Reilly Content
 
-- [How to Prompt Like a Pro](https://learning.oreilly.com/search/?q=tim%20warner%2C%20how%20to%20prompt%20like%20a%20pro&type=live-course) — Tim Warner
-- [GitHub Copilot for Developers](https://www.oreilly.com/library/view/github-copilot-for/9780135382813/) — Tim Warner
-- [Prompt Engineering for Generative AI](https://www.oreilly.com/library/view/prompt-engineering-for/9781098153427/) — James Phoenix & Mike Taylor
+- [How to Prompt Like a Pro](https://learning.oreilly.com/search/?q=tim%20warner%2C%20how%20to%20prompt%20like%20a%20pro&type=live-course) - Tim Warner
+- [GitHub Copilot for Developers](https://www.oreilly.com/library/view/github-copilot-for/9780135382813/) - Tim Warner
+- [Prompt Engineering for Generative AI](https://www.oreilly.com/library/view/prompt-engineering-for/9781098153427/) - James Phoenix & Mike Taylor
 
 ## Troubleshooting
 
@@ -410,7 +410,7 @@ npm run segment1:verify
 
 ## Instructor
 
-**Tim Warner** — Microsoft MVP (Azure AI and Cloud/Datacenter Management), Microsoft Certified Trainer (25+ years)
+**Tim Warner** - Microsoft MVP (Azure AI and Cloud/Datacenter Management), Microsoft Certified Trainer (25+ years)
 
 - [LinkedIn](https://www.linkedin.com/in/intrepidtechie/)
 - [Website](https://techtrainertim.com/)

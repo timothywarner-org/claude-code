@@ -29,7 +29,6 @@ from dataclasses import dataclass
 
 from fastmcp import FastMCP, Context
 
-# Initialize FastMCP server
 mcp = FastMCP(
     name="Copilot Tips Server",
     instructions="MCP server for GitHub Copilot tips and tricks. Use tools to search, retrieve, and manage tips. Use resources to get categories and statistics."
@@ -269,7 +268,7 @@ def get_random_tip(
 @mcp.tool()
 def delete_tip(tip_id: str) -> dict:
     """
-    Delete a tip by its ID (in-memory only - does not modify the source file).
+    Delete a tip by its ID (in-memory only - doesn't modify the source file).
 
     This is useful for demonstrating CRUD operations. Use reset_tips() to restore
     all deleted tips.

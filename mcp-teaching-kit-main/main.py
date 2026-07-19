@@ -75,7 +75,7 @@ async def _elicitation_handler(_ctx, params: types.ElicitRequestParams):
 async def _list_roots_handler(_ctx) -> types.ListRootsResult:
     """MCP roots: tell the server which locations are in-scope for this session.
 
-    The protocol restricts Root.uri to file:// (see mcp/types.py — `uri: FileUrl`),
+    The protocol restricts Root.uri to file:// (see mcp/types.py - `uri: FileUrl`),
     so the in-memory document namespace is exposed as a virtual file:// path
     rather than a custom scheme. The server matches on this sentinel to gate
     edits in `edit_document_safely`.

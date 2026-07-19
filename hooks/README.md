@@ -1,7 +1,7 @@
 # Claude Code hooks (teaching kit)
 
 Five sample hooks that show every event class Claude Code fires. None of these
-are speculative — they all run end-to-end on Windows (Git Bash), macOS, and
+are speculative - they all run end-to-end on Windows (Git Bash), macOS, and
 Linux as long as `bash` and `jq` are on PATH.
 
 ## What's here
@@ -47,7 +47,7 @@ each event:
 - `CLAUDE_PROJECT_DIR` is set by the harness to the absolute repo root. Use it
   instead of `$PWD` if your hook might run from a subdirectory.
 - Stop hooks should `cat >/dev/null` to drain stdin even if they don't need
-  the payload — otherwise a SIGPIPE can show up in your logs.
+  the payload - otherwise a SIGPIPE can show up in your logs.
 
 ## Adapting
 

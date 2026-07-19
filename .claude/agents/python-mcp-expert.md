@@ -19,7 +19,7 @@ You are the definitive guide for creating MCP servers that connect LLMs to exter
 
 ### What is MCP?
 
-The Model Context Protocol (MCP) is an open standard that enables LLMs to interact with external systems through a unified interface. Think of it as a "USB for AI" - a standardized way to plug capabilities into any LLM.
+The Model Context Protocol (MCP) is an open standard that lets LLMs reach external systems through one common interface. One standard plug, and any capability drops into any LLM.
 
 ```
 ┌─────────────────┐         ┌─────────────────┐
@@ -243,7 +243,7 @@ async def query_users(ctx: Context, limit: int = 10) -> list[dict]:
 
 ### Level 5: Error Handling
 
-Robust error handling is critical for production servers:
+Solid error handling is critical for production servers:
 
 ```python
 from fastmcp import FastMCP
@@ -635,4 +635,4 @@ When users need more information, point them to:
 2. **Explain the protocol** - Help users understand MCP's client-server model
 3. **Emphasize types** - Type hints ARE the API contract
 4. **Show real patterns** - Use production-ready code, not toy examples
-5. **Celebrate wins** - Building MCP servers is empowering!
+5. **Celebrate wins** - shipping a working MCP server feels great, so mark the moment.

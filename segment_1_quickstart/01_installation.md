@@ -1,4 +1,4 @@
-# Zero — Claude Code Quick Start
+# Zero - Claude Code Quick Start
 
 ## Cold open
 
@@ -6,7 +6,7 @@ You just told Claude about your project. Congratulations, it forgot the moment y
 
 ## The mental model
 
-**Claude is stateless.** Every session starts with amnesia. **`CLAUDE.md` is the first lever you have to give it state** — a plain markdown file Claude reads automatically before answering anything in your project. No SDK, no plugin, no config service. Just a file in the repo root that gets pulled into context on every turn.
+**Claude is stateless.** Every session starts with amnesia. **`CLAUDE.md` is the first lever you have to give it state** - a plain markdown file Claude reads automatically before answering anything in your project. No SDK, no plugin, no config service. Just a file in the repo root that gets pulled into context on every turn.
 
 ```text
   your terminal                    your repo
@@ -19,7 +19,7 @@ You just told Claude about your project. Congratulations, it forgot the moment y
         └──────► Claude answers with that file already in context
 ```
 
-Three sentences, no more: Claude does not "learn" your project between sessions. It re-reads `CLAUDE.md` from disk every time. So whatever you want it to **never forget**, you write down once and commit.
+Three sentences, no more: Claude doesn't "learn" your project between sessions. It re-reads `CLAUDE.md` from disk every time. So whatever you want it to **never forget**, you write down once and commit.
 
 ## Installation
 
@@ -41,7 +41,7 @@ claude --version
 ### First run
 
 ```bash
-# Start the REPL — prompts for API key on first run
+# Start the REPL - prompts for API key on first run
 claude
 
 # Or set the key in your shell first
@@ -139,4 +139,4 @@ _Now let's make Claude remember more than just the project root._
 
 - **Install and verify** Claude Code on your machine (`claude --version` returns a version).
 - **Write a project-root `CLAUDE.md`** that captures the three or four facts a teammate would need on day one.
-- **See Claude read it** — ask a question whose answer only lives in `CLAUDE.md`, and watch Claude quote it back.
+- **See Claude read it** - ask a question whose answer only lives in `CLAUDE.md`, and watch Claude quote it back.

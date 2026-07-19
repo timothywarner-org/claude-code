@@ -4,15 +4,15 @@ A FastMCP server for storing and retrieving project notes, PRDs, and code contex
 
 ## Features
 
-- 📝 **Memory Management** — Store notes, PRDs, code snippets, decisions, patterns, configs, and troubleshooting guides
-- 🏷️ **Smart Tagging** — 7 predefined course-relevant tags for easy categorization
-- 🔍 **Powerful Search** — Find memories by keyword, tag, type, or project
-- 🤖 **DeepSeek Optimization** — Condense memories for token-efficient context injection
-- 📋 **Pre-computed Summaries** — Each memory includes a ~25-token summary for quick retrieval
-- 💾 **Intelligent Caching** — 1-hour TTL cache to avoid redundant API calls
-- 🎯 **7 Memory Types** — Note, PRD, snippet, decision, pattern, config, troubleshooting
-- 📊 **Statistics & Token Counts** — Track usage and token budgets across memories
-- 🔌 **API Testing** — Built-in connectivity tests for DeepSeek and GitHub
+- 📝 **Memory Management** - Store notes, PRDs, code snippets, decisions, patterns, configs, and troubleshooting guides
+- 🏷️ **Smart Tagging** - 7 predefined course-relevant tags for easy categorization
+- 🔍 **Search** - Find memories by keyword, tag, type, or project
+- 🤖 **DeepSeek Optimization** - Condense memories for token-efficient context injection
+- 📋 **Pre-computed Summaries** - Each memory includes a ~25-token summary for quick retrieval
+- 💾 **Intelligent Caching** - 1-hour TTL cache to avoid redundant API calls
+- 🎯 **7 Memory Types** - Note, PRD, snippet, decision, pattern, config, troubleshooting
+- 📊 **Statistics & Token Counts** - Track usage and token budgets across memories
+- 🔌 **API Testing** - Built-in connectivity tests for DeepSeek and GitHub
 
 ## Quick Start
 
@@ -32,11 +32,11 @@ chmod +x setup.sh
 ```
 
 This creates a `.venv` virtual environment and installs all dependencies including:
-- `fastmcp` — FastMCP server framework
-- `python-dotenv` — Environment variable loading
-- `openai` — DeepSeek API client (OpenAI-compatible)
-- `tiktoken` — Token counting
-- `pydantic` — Data validation
+- `fastmcp` - FastMCP server framework
+- `python-dotenv` - Environment variable loading
+- `openai` - DeepSeek API client (OpenAI-compatible)
+- `tiktoken` - Token counting
+- `pydantic` - Data validation
 
 ### 2. Configure Environment Variables
 
@@ -172,23 +172,23 @@ result = get_optimized_memory("mem-003", max_tokens=400)
 
 ### 7 Memory Types
 
-1. **note** — General project notes and observations
-2. **prd** — Product requirements documents and specifications
-3. **snippet** — Code snippets and implementation examples
-4. **decision** — Architecture decisions and technical choices
-5. **pattern** — Design patterns and best practices
-6. **config** — Configuration files and settings
-7. **troubleshooting** — Error solutions and debugging guides
+1. **note** - General project notes and observations
+2. **prd** - Product requirements documents and specifications
+3. **snippet** - Code snippets and implementation examples
+4. **decision** - Architecture decisions and technical choices
+5. **pattern** - Design patterns and best practices
+6. **config** - Configuration files and settings
+7. **troubleshooting** - Error solutions and debugging guides
 
 ### 7 Predefined Tags
 
-1. **mcp-server** — Model Context Protocol development
-2. **claude-api** — Claude API usage and optimization
-3. **tool-use** — Function calling and tool schemas
-4. **context-window** — Large context strategies
-5. **production-workflow** — CI/CD and automation
-6. **debugging** — Troubleshooting and solutions
-7. **cost-optimization** — Token budgets and efficiency
+1. **mcp-server** - Model Context Protocol development
+2. **claude-api** - Claude API usage and optimization
+3. **tool-use** - Function calling and tool schemas
+4. **context-window** - Large context strategies
+5. **production-workflow** - CI/CD and automation
+6. **debugging** - Troubleshooting and solutions
+7. **cost-optimization** - Token budgets and efficiency
 
 ## Sample Data
 
@@ -199,16 +199,16 @@ The server includes 10 realistic course memories, each with:
 
 **Memory Topics:**
 
-1. **mem-001** — MCP Memory Server architecture patterns
-2. **mem-002** — DeepSeek integration and token optimization config
-3. **mem-003** — FastMCP vs Raw MCP SDK decision record
-4. **mem-004** — Course structure and learning objectives
-5. **mem-005** — Python MCP tool implementation reference
-6. **mem-006** — Common MCP server issues and solutions
-7. **mem-007** — Project file structure and organization
-8. **mem-008** — Memory Server PRD and requirements
-9. **mem-009** — MCP Inspector usage reference
-10. **mem-010** — In-memory state vs file persistence decision
+1. **mem-001** - MCP Memory Server architecture patterns
+2. **mem-002** - DeepSeek integration and token optimization config
+3. **mem-003** - FastMCP vs Raw MCP SDK decision record
+4. **mem-004** - Course structure and learning objectives
+5. **mem-005** - Python MCP tool implementation reference
+6. **mem-006** - Common MCP server issues and solutions
+7. **mem-007** - Project file structure and organization
+8. **mem-008** - Memory Server PRD and requirements
+9. **mem-009** - MCP Inspector usage reference
+10. **mem-010** - In-memory state vs file persistence decision
 
 ## VS Code Integration
 

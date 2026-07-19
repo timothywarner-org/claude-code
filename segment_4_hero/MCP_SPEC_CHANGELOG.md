@@ -5,7 +5,7 @@ Tim: skim this on the train. Three things actually matter for class.
 
 ---
 
-## 1. stderr Logging — Now Any Level (was: errors only)
+## 1. stderr Logging - Now Any Level (was: errors only)
 
 **Before (2025-06-18):** stdio servers were expected to write only error-level
 messages to stderr. Log output at info/debug level to stderr was technically
@@ -15,7 +15,7 @@ outside the spec.
 The spec formally acknowledges stderr as the logging channel for all
 diagnostic output in stdio transport.
 
-**Impact on your code:** Nothing to change — you were already doing
+**Impact on your code:** Nothing to change - you were already doing
 `print(..., file=sys.stderr)` for everything. This just makes it official.
 
 **Teaching moment:** This is why `print(..., file=sys.stderr)` is the pattern,
@@ -40,7 +40,7 @@ Streamable HTTP servers. If you're running stdio (which the course memory
 server does), this requirement does not apply.
 
 **Teaching moment:** This is why you don't just expose `http://localhost:8000/mcp`
-to the world — the Origin check is the CSRF defense for MCP servers.
+to the world - the Origin check is the CSRF defense for MCP servers.
 
 ---
 
@@ -60,10 +60,10 @@ and received messages via a separate POST endpoint.
 
 **Impact on your code:** If you're wiring up an Inspector connection manually,
 select **stdio** (for local servers) or **streamable-http** (for remote).
-Do NOT select "sse" — that option may still appear in older Inspector builds
+Do NOT select "sse" - that option may still appear in older Inspector builds
 but targets the retired transport.
 
-**Teaching moment:** The unified `/mcp` endpoint is cleaner — one URL, one
+**Teaching moment:** The unified `/mcp` endpoint is cleaner - one URL, one
 content-type negotiation, no separate GET+POST dance.
 
 ---
@@ -115,7 +115,7 @@ All course servers have been updated to the FastMCP 3.x pattern.
 
 | Change | Spec Rev | Affects stdio | Affects HTTP | Action Required |
 |--------|----------|---------------|--------------|-----------------|
-| stderr: any log level now allowed | 2025-11-25 | Yes | Yes | None — you were already doing this |
+| stderr: any log level now allowed | 2025-11-25 | Yes | Yes | None - you were already doing this |
 | HTTP: 403 on bad Origin is mandatory | 2025-11-25 | No | Yes | FastMCP handles it automatically |
 | SSE-only transport retired | 2025-11-25 | No | Yes | Use "stdio" or "streamable-http" in Inspector |
 | Tool/Resource/Prompt shape | Unchanged | - | - | None |
