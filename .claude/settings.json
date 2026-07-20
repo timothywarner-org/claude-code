@@ -22,7 +22,6 @@
     ]
   },
   "hooks": {
-    "_comment": "Hooks run shell commands on Claude Code lifecycle events. type:command runs a script; timeout is in seconds. ${CLAUDE_PROJECT_DIR} resolves to the repo root. The two memory hooks below are LIVE. The commented blocks under _disabled_* are teaching examples: copy one up into its matching event array to activate it.",
     "SessionEnd": [
       {
         "hooks": [
@@ -44,37 +43,38 @@
           }
         ]
       }
-    ],
-    "_disabled_PostToolUse_example": {
-      "_comment": "TEACHING EXAMPLE (inactive because the key is _disabled_*, not a real event name). Rename to PostToolUse to activate. This runs Ruff to auto-format any Python file right after Claude edits it, so demo code is always clean on screen. The matcher scopes it to file-writing tools. The hook script is expected at hooks/scripts/auto-format-python.sh.",
-      "value": [
-        {
-          "matcher": "Edit|Write|MultiEdit",
-          "hooks": [
-            {
-              "type": "command",
-              "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/auto-format-python.sh",
-              "timeout": 30
-            }
-          ]
-        }
-      ]
-    },
-    "_disabled_PreToolUse_example": {
-      "_comment": "TEACHING EXAMPLE (inactive). Rename to PreToolUse to activate. This is where a secret-scan guard would sit: a script that inspects a pending Write/Edit for a hardcoded key and exits non-zero (exit 2 = deny) to block the write. Enforces the secrets-security rule at the tool boundary, not just by convention.",
-      "value": [
-        {
-          "matcher": "Edit|Write|MultiEdit",
-          "hooks": [
-            {
-              "type": "command",
-              "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/secret-scan-guard.sh",
-              "timeout": 15
-            }
-          ]
-        }
-      ]
-    }
+    ]
+  },
+  "_hooks_comment": "Hooks run shell commands on Claude Code lifecycle events. type:command runs a script; timeout is in seconds. ${CLAUDE_PROJECT_DIR} resolves to the repo root. The two memory hooks under hooks{} (SessionEnd, SessionStart) are LIVE. The two _hooks_disabled_*_example keys below are teaching examples: copy one into the hooks{} object under its matching event name to activate it. They are NOT nested under hooks{} because the settings loader validates every key there as a lifecycle event name and warns on anything else.",
+  "_hooks_disabled_PostToolUse_example": {
+    "_comment": "TEACHING EXAMPLE (inactive). Move this array into hooks.PostToolUse to activate. This runs Ruff to auto-format any Python file right after Claude edits it, so demo code is always clean on screen. The matcher scopes it to file-writing tools. The hook script is expected at hooks/scripts/auto-format-python.sh.",
+    "value": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/auto-format-python.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "_hooks_disabled_PreToolUse_example": {
+    "_comment": "TEACHING EXAMPLE (inactive). Move this array into hooks.PreToolUse to activate. This is where a secret-scan guard would sit: a script that inspects a pending Write/Edit for a hardcoded key and exits non-zero (exit 2 = deny) to block the write. Enforces the secrets-security rule at the tool boundary, not just by convention.",
+    "value": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PROJECT_DIR}/hooks/scripts/secret-scan-guard.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
   },
   "_commands_comment": "Slash commands are NOT declared here. They are markdown files in .claude/commands/. This repo ships two GenAI-on-Azure commands: /deploy-genai (pre-deploy gate + azd deploy walkthrough) and /eval-prompts (run the prompt-eval suite). Open .claude/commands/*.md to read or edit them. Type / in the CLI to list all available commands.",
   "_mcpServers_comment": "Project-scoped MCP servers for the Claude Code CLI live in .mcp.json at the repo root (the documented team-share location the CLI reads and prompts to approve on clone), NOT here. See .mcp.json for microsoft-learn, oreilly-july20-documentmcp, oreilly-july20-memorymcp, and github. A parallel .vscode/mcp.json registers the document server for VS Code's Copilot."
