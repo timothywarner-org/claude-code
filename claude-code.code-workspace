@@ -4,5 +4,22 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"mcp": {
+			"servers": {
+				"io.github.wonderwhy-er/desktop-commander": {
+					"type": "stdio",
+					"command": "npx",
+					"args": [
+						"--registry",
+						"https://registry.npmjs.org",
+						"@wonderwhy-er/desktop-commander@0.2.44"
+					],
+					"gallery": "https://api.mcp.github.com",
+					"version": "0.2.44"
+				}
+			},
+			"inputs": []
+		}
+	}
 }

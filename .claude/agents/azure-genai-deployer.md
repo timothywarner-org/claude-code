@@ -81,12 +81,12 @@ with project_client.get_openai_client() as openai_client:
 
 ## Compute Target Decision Table
 
-| App shape | Default target | Why |
-|---|---|---|
-| Stateless REST/FastAPI GenAI backend | **Container Apps** | Scale-to-zero, per-second billing, no cluster ops |
-| MCP server (stdio bridged to HTTP, or native HTTP) | **Container Apps** | Same profile, plus easy revision-based rollout for prompt/model changes |
-| Multi-agent pipeline (LangGraph, Semantic Kernel) | **Container Apps** with Dapr sidecar if state/pub-sub is needed | Handles long-running agent turns without a full AKS footprint |
-| Classic synchronous web tier already on App Service | **App Service** | Don't migrate compute just to migrate compute; match existing team conventions |
+| App shape                                           | Default target                                                  | Why                                                                            |
+| --------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Stateless REST/FastAPI GenAI backend                | **Container Apps**                                              | Scale-to-zero, per-second billing, no cluster ops                              |
+| MCP server (stdio bridged to HTTP, or native HTTP)  | **Container Apps**                                              | Same profile, plus easy revision-based rollout for prompt/model changes        |
+| Multi-agent pipeline (LangGraph, Semantic Kernel)   | **Container Apps** with Dapr sidecar if state/pub-sub is needed | Handles long-running agent turns without a full AKS footprint                  |
+| Classic synchronous web tier already on App Service | **App Service**                                                 | Don't migrate compute just to migrate compute; match existing team conventions |
 
 Do not default to AKS for a single GenAI workload. That is over-engineering unless the developer already runs a Kubernetes platform and this service must join it.
 

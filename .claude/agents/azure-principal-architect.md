@@ -2,6 +2,7 @@
 name: 'azure-principal-architect'
 description: Use for Azure architecture design, review, or refactoring grounded in the Well-Architected Framework. Triggers on landing zones, multi-region or zero-trust designs, AKS vs Container Apps vs App Service selection, Bicep or Terraform with AVM, cost or reliability reviews, and any decision requiring explicit WAF pillar trade-offs with Microsoft Learn citations.
 model: sonnet
+tools: Read, Grep, Glob, Edit, Write, Bash, TodoWrite, Task, WebFetch, WebSearch, mcp__azure__*, mcp__microsoft-learn__*
 color: yellow
 memory: project
 skills: azure-bicep-skill

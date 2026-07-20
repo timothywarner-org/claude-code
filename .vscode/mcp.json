@@ -1,19 +1,50 @@
 {
-  "servers": {
-    "T&C DOCS (Candidate Facing Resources)": {
-      "url": "https://docs.linuxfoundation.org/tc-docs/~gitbook/mcp",
-      "type": "http"
-    },
-    "DocumentMCP-GitHubCopilot": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "run",
-        "--project",
-        "C:/github/claude-code/mcp-teaching-kit-main",
-        "C:/github/claude-code/mcp-teaching-kit-main/mcp_server.py"
-      ]
-    }
-  },
-  "inputs": []
+	"servers": {
+		"T&C DOCS (Candidate Facing Resources)": {
+			"url": "https://docs.linuxfoundation.org/tc-docs/~gitbook/mcp",
+			"type": "http"
+		},
+		"DocumentMCP-GitHubCopilot": {
+			"type": "stdio",
+			"command": "uv",
+			"args": [
+				"run",
+				"--project",
+				"C:/github/claude-code/mcp-teaching-kit-main",
+				"C:/github/claude-code/mcp-teaching-kit-main/mcp_server.py"
+			]
+		},
+		"io.github.wonderwhy-er/desktop-commander": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"--registry",
+				"https://registry.npmjs.org",
+				"@wonderwhy-er/desktop-commander@0.2.44"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.2.44"
+		},
+		"firecrawl/firecrawl-mcp-server": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"firecrawl-mcp@latest"
+			],
+			"env": {
+				"FIRECRAWL_API_KEY": "${input:api_key}"
+			},
+			"gallery": "https://api.mcp.github.com",
+			"version": "1.0.0"
+		}
+	},
+	"inputs": [
+		{
+			"id": "api_key",
+			"type": "promptString",
+			"description": "your API key",
+			"password": true
+		}
+	]
 }

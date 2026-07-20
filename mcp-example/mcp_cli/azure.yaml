@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: documentmcp-demo
+metadata:
+  template: documentmcp-demo@0.1.0
+
+# Single service, containerized. `language: docker` because the stock azd
+# Python packager does not know about the _http_launch.py shim or the uv-based
+# build; the Dockerfile owns the full build path instead.
+services:
+  documentmcp-server:
+    project: .
+    language: docker
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .

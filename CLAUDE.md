@@ -127,6 +127,8 @@ The course carries pinned facts (model lineup, MCP spec, file paths) that go sta
 ```bash
 npm run audit:claude-md   # Audit the CLAUDE.md hierarchy for stale ground-truth tokens
 npm run audit:paths       # Verify backticked file paths in CLAUDE.md files resolve on disk
+npm run audit:drift       # Run the full drift gate (check-drift.sh) across pinned facts
+npm run predeliver        # Pre-delivery ritual: drift gate + audits in one shot before a live class
 npm run hooks:install     # Install the repo git hooks (safety-guard, tool-logger, etc.)
 ```
 
