@@ -20,7 +20,7 @@ Key components include:
 - `segment_4_hero/` - Hero: skills, hooks, and MCP. The Python FastMCP memory server is at `segment_4_hero/memory_server/`.
 - `src/`: Supporting Python MCP servers and TypeScript utilities (`utils/`).
 - `scripts/`: TypeScript and shell utility scripts for setup, security, and documentation.
-- `.mcp.json`: Project-scoped MCP servers the CLI reads on startup (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`).
+- `.mcp.json`: Project-scoped MCP servers the CLI reads on startup (`microsoft-learn`, `oreilly-july20-documentmcp`, `oreilly-july20-memorymcp`, `github`).
 - `.claude/`: Skills (`.claude/skills/<name>/SKILL.md`), subagents (`.claude/agents/`), and project settings.
 
 ## Development Workflows

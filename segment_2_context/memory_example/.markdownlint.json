@@ -1,0 +1,5 @@
+{
+  "_comment": "Memory files intentionally start with frontmatter or an HTML comment, not an H1 - that is the real Claude Code memory format. MD041 (first-line-heading) does not apply to this teaching folder.",
+  "extends": "../../.markdownlint.json",
+  "MD041": false
+}

@@ -205,7 +205,7 @@ see the raw JSON.
 
 ### Option A: Register it yourself (Recommended)
 
-This memory server is **optional build-your-own homework**, so it is **not** pre-registered in the repo. The pre-registered demo servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) live in `.mcp.json` at the repo root. To add this one:
+This memory server is now pre-registered in the repo as **`oreilly-july20-memorymcp`** (stdio, via `uv run --project segment_4_hero/memory_server server.py`), alongside `microsoft-learn`, `oreilly-july20-documentmcp`, and `github` in `.mcp.json` at the repo root. If you want to register it under a different name or launch it via `start.sh` instead, here is the manual form:
 
 ```bash
 # Positional stdio form (recommended)

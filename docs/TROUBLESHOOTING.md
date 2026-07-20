@@ -201,7 +201,7 @@ Common issues and solutions for the Claude Code course.
    claude mcp list
    ```
 
-   Project-scoped servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) are declared in `.mcp.json` at the repo root, not in `.claude/settings.json`. The CLI prompts you to approve them once on first launch.
+   Project-scoped servers (`microsoft-learn`, `oreilly-july20-documentmcp`, `oreilly-july20-memorymcp`, `github`) are declared in `.mcp.json` at the repo root, not in `.claude/settings.json`. The CLI prompts you to approve them once on first launch.
 
 3. **Remove and re-add the memory server:**
 

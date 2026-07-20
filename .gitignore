@@ -154,3 +154,6 @@ vite.config.ts.timestamp-*
 ~$*.pptx
 ~$*.docx
 ~$*.xlsx
+
+# Runtime MCP memory store written when a memory/doc server runs from repo root (not repo content)
+/data/memory.json

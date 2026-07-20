@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Last revised: 2026-07-18
+Last revised: 2026-07-20
 
 ## How this repo teaches CLAUDE.md
 
@@ -15,6 +15,8 @@ This repo is the worked example for Segment 2 of the course. Five CLAUDE.md file
 - `segment_4_hero/CLAUDE.md` - skills/agents/MCP directory conventions
 
 Open all five side-by-side. Each one is loaded automatically by Claude Code when working inside that subtree. See `segment_2_context/01_claude_md_at_every_scope.md` for the full lesson.
+
+For the memory half of context engineering, `segment_2_context/memory_example/` is an inert teaching example of Claude Code's file-based memory: `MEMORY.example.md` is the index (one line per fact, loaded each session), `user_prefers_uv.example.md` is a `feedback` memory, and `project_azure_keyless.example.md` is a `project` memory. The `.example.md` suffix keeps the demo from being read as a live store. See `segment_2_context/memory_example/README.md`.
 
 ## Project Overview
 
@@ -92,7 +94,7 @@ The working pattern is **two pieces**: run the server on HTTP with reload off, t
 
 ### MCP Teaching Kit (`mcp-teaching-kit-main/`)
 
-Standalone Python project adapted from Anthropic Academy's MCP courses. Demonstrates **every major MCP primitive** (tools, resources, prompts, sampling, elicitation, roots) wired through a `prompt_toolkit` CLI to Claude. This is the **test MCP server** registered as `DocumentMCP-ClaudeCode` in `.mcp.json` at the repo root so the CLI discovers it automatically (with a one-time approval prompt).
+Standalone Python project adapted from Anthropic Academy's MCP courses. Demonstrates **every major MCP primitive** (tools, resources, prompts, sampling, elicitation, roots) wired through a `prompt_toolkit` CLI to Claude. It is **not** registered in the repo-root `.mcp.json` for the Claude Code CLI; a parallel `.vscode/mcp.json` registers it as `DocumentMCP-GitHubCopilot` for VS Code's GitHub Copilot. The CLI's pre-registered stdio document server is the simpler `oreilly-july20-documentmcp` (see `mcp-example/mcp_cli/`).
 
 ```bash
 # Install deps
@@ -173,11 +175,11 @@ launch. (This is NOT `.claude/settings.json` - the CLI does not read project MCP
 there. Personal overrides go in `~/.claude.json` or `settings.local.json`, both gitignored.)
 
 - `microsoft-learn` - HTTP MCP server at `https://learn.microsoft.com/api/mcp`. Segment 4 "consume" demo target.
-- `DocumentMCP-ClaudeCode` - stdio server spawned via `uv run --project mcp-teaching-kit-main mcp_server.py`. The bundled document corpus, sampling, elicitation, and roots primitives demo. Uses `${CLAUDE_PROJECT_DIR:-.}` so it resolves from any clone location.
+- `oreilly-july20-documentmcp` - stdio server spawned via `uv run --project mcp-example/mcp_cli mcp_server.py`. The simple in-memory DocumentMCP server (tools `read_doc_contents`/`edit_document`, `docs://` resources, a `format` prompt). Uses `${CLAUDE_PROJECT_DIR:-.}` so it resolves from any clone location. Drive it in the Inspector with `scripts/Start-DocumentInspector.ps1`.
+- `oreilly-july20-memorymcp` - stdio server spawned via `uv run --project segment_4_hero/memory_server server.py`. The FastMCP memory server (9 tools). Drive it in the Inspector with `scripts/Start-MemoryInspector.ps1`.
 - `github` - HTTP MCP server at `https://api.githubcopilot.com/mcp/` (Bearer `${GITHUB_TOKEN}`). GitHub tooling for the Segment 3 and 4 PR/issue demos.
-- `memory` (optional, not pre-registered) - Local FastMCP memory server. Add it yourself with `claude mcp add memory -- bash segment_4_hero/memory_server/start.sh` if you want to build, not just consume.
 
-A parallel `.vscode/mcp.json` registers `DocumentMCP-GitHubCopilot` (same server, different client) plus a Linux Foundation T&C HTTP MCP for VS Code's GitHub Copilot integration. Keep the two stdio entries in sync if you rename the kit.
+A parallel `.vscode/mcp.json` registers `DocumentMCP-GitHubCopilot` (the `mcp-teaching-kit-main/` server, for VS Code's GitHub Copilot) plus a Linux Foundation T&C HTTP MCP. That kit server is intentionally VS-Code-only; the Claude Code CLI's document server is the separate `oreilly-july20-documentmcp` in `.mcp.json`.
 
 ### Hooks (`hooks/`)
 
@@ -213,6 +215,8 @@ Skills live in `.claude/skills/<name>/SKILL.md` (the successor to `.claude/comma
 - `review-changes/` - Reviews uncommitted changes for bugs and missing tests (Segment 4 skill demo)
 - `claude-md-audit/` - Audits CLAUDE.md files across scopes (backs `npm run audit:claude-md`)
 - `azure-bicep-skill/` - Azure Bicep authoring helper
+- `azure-ai-deploy/` - Ships a Python GenAI app to Azure keyless via `DefaultAzureCredential` and azd; includes `resources/references/` (AZURE-AUTH.md, DEPLOY-CHECKLIST.md), `resources/templates/` (azure.yaml, chat_client.py), and `resources/scripts/preflight.py`
+- `genai-prompt-eval/` - Scores GenAI outputs on groundedness, relevance, coherence, and safety before ship; includes `resources/references/EVAL-DIMENSIONS.md`, `resources/templates/eval_cases.jsonl`, and `resources/scripts/run_eval.py`
 
 ### Custom Agents (`.claude/agents/`)
 
@@ -222,6 +226,25 @@ Skills live in `.claude/skills/<name>/SKILL.md` (the successor to `.claude/comma
 - `python-mcp-expert.md` - Expert guide for building Python MCP servers with FastMCP
 - `terraform-architect.md` - Terraform IaC expert for Azure/GCP infrastructure
 - `azure-principal-architect.md` - Azure Well-Architected design and review
+- `azure-genai-deployer.md` - Deploys Python GenAI apps to Azure via azd, enforcing keyless auth (`DefaultAzureCredential`, managed identity) with no API keys in code
+- `genai-eval-runner.md` - Runs evaluation suites (groundedness, relevance, safety, regression) against GenAI outputs and gives a pass/fail verdict before a deploy ships
+
+### Project Rules (`.claude/rules/`)
+
+Focused rule files that set project conventions for the Python GenAI-on-Azure track. Claude Code reads them alongside CLAUDE.md when working in this repo:
+
+- `python-genai.md` - Python generative-AI coding conventions
+- `azure-deployment.md` - Azure deployment rules (azd-first, keyless auth)
+- `secrets-security.md` - Secret handling and security guardrails
+- `testing.md` - Testing requirements for GenAI code
+- `project-conventions.md` - General project conventions
+
+### Custom Commands (`.claude/commands/`)
+
+Slash commands that drive the GenAI-on-Azure workflows. `.claude/settings.json` carries commented hook examples and a commands pointer:
+
+- `deploy-genai.md` - `/deploy-genai` walks a Python GenAI app through the pre-deploy gate and azd deploy to Azure, keyless
+- `eval-prompts.md` - `/eval-prompts` runs the prompt-eval suite and reports scores against the ship thresholds
 
 ### Key Dependencies
 

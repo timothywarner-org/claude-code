@@ -49,10 +49,10 @@ Ports here (6290 / 6284 / 6287) differ from the memory server's Inspector launch
 
 ## 2. Claude Code
 
-`mcp_server.py` is registered in the repo-root [`.mcp.json`](../../.mcp.json) as **`DocumentMCP-ClaudeCode`** (stdio transport, spawned via `uv run --project mcp-example/mcp_cli mcp_server.py`). Launch `claude` from the **repo root** and Claude Code discovers this server automatically after a one-time approval prompt:
+`mcp_server.py` is registered in the repo-root [`.mcp.json`](../../.mcp.json) as **`oreilly-july20-documentmcp`** (stdio transport, spawned via `uv run --project mcp-example/mcp_cli mcp_server.py`). Launch `claude` from the **repo root** and Claude Code discovers this server automatically after a one-time approval prompt:
 
 ```powershell
-claude mcp list   # confirm DocumentMCP-ClaudeCode is registered and connects
+claude mcp list   # confirm oreilly-july20-documentmcp is registered and connects
 ```
 
 From then on Claude Code can call `read_doc_contents` / `edit_document`, read the `docs://` resources, and invoke the `format` prompt as part of a normal session. This is the Segment 4 "consume an MCP server" demo target.

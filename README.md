@@ -70,7 +70,8 @@ claude-code/
 │
 ├── segment_2_context/                  # Context: CLAUDE.md at every scope
 │   ├── 01_claude_md_at_every_scope.md  # The lesson the whole course rests on
-│   └── CLAUDE.md                       # Lives as a worked example
+│   ├── memory_example/                 # Inert teaching example of file-based memory
+│   └── CLAUDE.md                       # A worked example at subdirectory scope
 │
 ├── segment_3_agents/                   # Agents: autonomy with boundaries
 │   ├── 01_agents_intro.md              # Agent loop, --allowedTools, kill switch
@@ -98,18 +99,31 @@ claude-code/
 ├── .mcp.json                           # Project MCP wiring (microsoft-learn, DocumentMCP, github)
 ├── .claude/
 │   ├── settings.json                   # Hooks and project settings
+│   ├── rules/                          # Project rules for the GenAI-on-Azure track
+│   │   ├── python-genai.md
+│   │   ├── azure-deployment.md
+│   │   ├── secrets-security.md
+│   │   ├── testing.md
+│   │   └── project-conventions.md
+│   ├── commands/                       # Slash commands
+│   │   ├── deploy-genai.md             # /deploy-genai: pre-deploy gate + azd deploy
+│   │   └── eval-prompts.md             # /eval-prompts: run the prompt-eval suite
 │   ├── agents/                         # Subagents
 │   │   ├── code-quality-coach.md
 │   │   ├── release-manager.md
 │   │   ├── claude-code-tutor.md
 │   │   ├── python-mcp-expert.md
 │   │   ├── terraform-architect.md
-│   │   └── azure-principal-architect.md
+│   │   ├── azure-principal-architect.md
+│   │   ├── azure-genai-deployer.md     # Deploys Python GenAI apps to Azure, keyless
+│   │   └── genai-eval-runner.md        # Runs eval suites before a deploy ships
 │   └── skills/                         # Custom skills (canonical location)
 │       ├── mcp-scaffold/               # FastMCP server scaffolding
 │       ├── claude-md-audit/            # Audits CLAUDE.md hierarchy for drift
 │       ├── review-changes/             # Reviews the working tree before commit
-│       └── azure-bicep-skill/          # Azure Bicep authoring
+│       ├── azure-bicep-skill/          # Azure Bicep authoring
+│       ├── azure-ai-deploy/            # Ships a Python GenAI app to Azure, keyless
+│       └── genai-prompt-eval/          # Scores GenAI outputs before ship
 │
 └── docs/
     ├── SETUP.md                        # Detailed setup guide
@@ -246,6 +260,10 @@ claude --dangerously-skip-permissions     # Full autonomy (throwaway branches on
 - `python-mcp-expert` - Pair for FastMCP server building
 - `terraform-architect` - IaC expert for Azure infrastructure
 - `azure-principal-architect` - Azure Well-Architected design and review
+- `azure-genai-deployer` - Deploys Python GenAI apps to Azure via azd, keyless (`DefaultAzureCredential`, managed identity)
+- `genai-eval-runner` - Runs eval suites (groundedness, relevance, safety, regression) and gates the deploy on a pass/fail verdict
+
+The **GenAI-on-Azure track** ships as a set alongside these agents: rules in `.claude/rules/`, the `/deploy-genai` and `/eval-prompts` commands in `.claude/commands/`, and the `azure-ai-deploy` and `genai-prompt-eval` skills in `.claude/skills/`.
 
 ---
 

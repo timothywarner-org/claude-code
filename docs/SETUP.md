@@ -90,7 +90,7 @@ claude
 
 ### 5. Configure MCP Servers (Optional)
 
-The project-scoped MCP servers (`microsoft-learn`, `DocumentMCP-ClaudeCode`, `github`) are already declared in **`.mcp.json`** at the repo root. The CLI reads them on first `claude` launch and prompts you to approve them once. No manual setup required to consume them in Segment 4.
+The project-scoped MCP servers (`microsoft-learn`, `oreilly-july20-documentmcp`, `oreilly-july20-memorymcp`, `github`) are already declared in **`.mcp.json`** at the repo root. The CLI reads them on first `claude` launch and prompts you to approve them once. No manual setup required to consume them in Segment 4.
 
 To build and register your own memory server (optional Segment 4 homework, Python/UV):
 

@@ -1,0 +1,14 @@
+# azd configuration for a Python generative-AI container app.
+# Copy into the project root, then run: azd provision && azd deploy
+# Schema reference: https://aka.ms/azd-schema
+name: contoso-genai-chat
+metadata:
+  template: contoso-genai-chat@1.0.0
+services:
+  chat:
+    # Path to the Python project that holds the app and its pyproject.toml.
+    project: ./src
+    language: python
+    # Container Apps hosts the service and supplies a managed identity
+    # that DefaultAzureCredential resolves at runtime. No key is passed.
+    host: containerapp
