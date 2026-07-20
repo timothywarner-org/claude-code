@@ -140,16 +140,21 @@ offers before connecting it to Claude Code.
 
 ### Step 1: Start the Inspector
 
-```bash
-cd segment_4_hero/memory_server
-uv run -- fastmcp dev server.py
+On Windows (PowerShell 7), use the launcher in `scripts/` - it starts the server and the Inspector together and force-frees any stale ports first. It runs from any cwd:
+
+```powershell
+.\scripts\Start-MemoryInspector.ps1 -NoAuth
 ```
 
-This does three things:
+Then in the Inspector browser tab, connect with **Transport = Streamable HTTP**, **URL = `http://127.0.0.1:6280/mcp`**, and click **Connect**.
 
-1. Creates a `.venv` and installs dependencies (first run only)
-2. Starts the memory server
-3. Opens MCP Inspector at `http://localhost:6274` in your browser
+> **Version note (fastmcp 3.3.1 / MCP Inspector 1.0.0):** the older one-shot `fastmcp dev server.py` is broken - the `dev` subcommand moved to `dev inspector`, and its forced `--reload` self-conflicts and kills the server on spawn. Run the server and the standalone Inspector as two pieces instead (that is what the launcher does). See the root `CLAUDE.md` for the full breakdown.
+
+The launcher does three things:
+
+1. Starts the memory server on `http://127.0.0.1:6280/mcp` (reload off, so elicitation and sampling work)
+2. Waits for it to bind, then starts the MCP Inspector
+3. Opens the Inspector at `http://localhost:6274` in your browser
 
 ### Step 2: Explore the Tools Tab
 

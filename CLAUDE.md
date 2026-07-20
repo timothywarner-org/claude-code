@@ -63,8 +63,8 @@ The memory server is a Python FastMCP server managed by UV (not npm/tsx). It lau
 cd segment_4_hero/memory_server
 uv run python server.py
 
-# Start via MCP Inspector for debugging
-uv run -- fastmcp dev server.py
+# Start the server on HTTP (reload OFF - see drift note), then connect Inspector
+.venv/Scripts/python.exe -m fastmcp.cli run server.py --transport http --port 6280 --no-banner
 
 # Add to Claude Code
 claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
@@ -72,6 +72,23 @@ claude mcp add memory -- bash segment_4_hero/memory_server/start.sh
 # List MCP servers
 claude mcp list
 ```
+
+**fastmcp + Inspector drift (breaking, confirmed on fastmcp 3.3.1 / MCP Inspector 1.0.0, Python 3.14):** The one-shot `fastmcp dev server.py` from older docs is dead three ways over:
+
+1. The subcommand moved to `fastmcp dev inspector <script>` (bare `dev` errors `Failed to canonicalize script path`).
+2. The `fastmcp.exe` console-script trampoline can't resolve its interpreter on this Python 3.14 venv (same canonicalize error, emitted by the launcher shim). Use the venv `python.exe` directly.
+3. Worse, `dev inspector` always forces `--reload`, and fastmcp 3.3.1's reload watcher passes `--no-reload` to a subcommand that rejects it, so the server dies on spawn (`Unknown option: "--no-reload"`) and the Inspector shows no server. Reload also disables **elicitation** and **sampling**, which the `delete_document` and `summarize_via_sampling` demos need.
+
+The working pattern is **two pieces**: run the server on HTTP with reload off, then point the **standalone** Inspector at it. In the Inspector UI: **Transport = Streamable HTTP**, **URL = `http://127.0.0.1:6280/mcp`**, **Connect**.
+
+**Bulletproof restart / post-reboot start (Windows, PS7):** `scripts/Start-MemoryInspector.ps1` does all of it - force-frees ports **6280** (server), **6274** (UI), **6277** (proxy), reaps orphaned children scoped to this server, starts the server, waits for it to bind, then launches the Inspector. Idempotent; run it from any state:
+
+```powershell
+# From Windows Terminal. -NoAuth = tokenless local class mode.
+& 'C:\github\claude-code\scripts\Start-MemoryInspector.ps1' -NoAuth
+```
+
+**After a host reboot, that one command brings the whole demo back up.** `ANTHROPIC_API_KEY` is read from the process env (session key wins; `.env` is the fallback since `load_dotenv()` does not override an already-set var).
 
 ### MCP Teaching Kit (`mcp-teaching-kit-main/`)
 
