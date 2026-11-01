@@ -44,7 +44,7 @@ A curated collection of essential documentation, specifications, and best practi
 
 | Resource | Description |
 |----------|-------------|
-| [MCP Specification (Latest)](https://modelcontextprotocol.io/specification/2025-11-25) | Complete protocol specification (Nov 2025) |
+| [MCP Specification (Latest)](https://modelcontextprotocol.io/specification/2026-07-28) | Complete protocol specification (July 2026) |
 | [MCP Introduction](https://modelcontextprotocol.io/introduction) | Getting started with Model Context Protocol |
 | [MCP Architecture](https://modelcontextprotocol.io/docs/concepts/architecture) | Core architecture and design principles |
 | [MCP Registry Specification](https://github.com/modelcontextprotocol/registry) | Official MCP server registry spec |
